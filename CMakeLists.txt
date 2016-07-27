@@ -10,13 +10,17 @@ set(SOURCE_FILES
         expansion.cpp
         solver.cpp
         quadtree.cpp
-        solver_test.cpp solver_test.h)
+        solver_test.cpp
+        fields.cpp
+        )
 
 set(HEADER_FILES
         expansion.h
         solver.h
         quadtree.h
-        solver_test.cpp solver_test.h)
+        solver_test.h
+        fields.h
+        )
 
 add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
 
