@@ -21,7 +21,7 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
 /*
  * This function computes the vorticity of the particles by taking the curl of the velocity.
  */
-void vorticity();
+void vorticity(const int N, const value_type h, value_type * const u, value_type * const v, value_type * const q);
 
 /*
  * This function computes the spread of vorticity resulting from diffusion, using a Crank Nicholson scheme.

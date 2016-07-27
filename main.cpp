@@ -9,7 +9,7 @@ using namespace std;
 
 int main(){
 
-    cout << velocity_test() << endl;
+    cout << vorticity_test() << endl;
 
     return 0;
 }

@@ -13,5 +13,10 @@ typedef double value_type;
  */
 bool velocity_test();
 
+/*
+ * A function to test the vorticity() function
+ */
+bool vorticity_test();
+
 
 #endif //VORTEX_SOLVER_TEST_H
