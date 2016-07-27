@@ -2,7 +2,7 @@
 // Created by Isabelle Tan on 27-07-16.
 //
 
-#include "kernels.h"
+#include "expansion.h"
 
 /*
  * The particle to expansion kernel. This function computes the alpha_k coefficients and stores their real and imaginary

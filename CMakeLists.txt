@@ -7,12 +7,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -mavx -mfma -O3")   
 
 set(SOURCE_FILES
         main.cpp
-        kernels.cpp
-        )
+        expansion.cpp
+        solver.cpp solver.h)
 
 set(HEADER_FILES
-        kernels.h
-        )
+        expansion.h
+        solver.cpp solver.h)
 
 add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
 
