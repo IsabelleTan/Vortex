@@ -3,12 +3,13 @@
 //
 
 #include <iostream>
+#include "solver_test.h"
 
 using namespace std;
 
 int main(){
 
-    cout << "Hello World!" << endl;
+    cout << velocity_test() << endl;
 
     return 0;
 }

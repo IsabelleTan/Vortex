@@ -16,7 +16,7 @@ void potential();
 /*
  * This function computes the velocity of the particles by taking the curl of the streamfunction.
  */
-void velocity();
+void velocity(const int N, const value_type h, value_type * const u, value_type * const v, value_type * const phi);
 
 /*
  * This function computes the vorticity of the particles by taking the curl of the velocity.
