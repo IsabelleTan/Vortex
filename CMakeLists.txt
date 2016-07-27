@@ -8,11 +8,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -mavx -mfma -O3")   
 set(SOURCE_FILES
         main.cpp
         expansion.cpp
-        solver.cpp solver.h)
+        solver.cpp
+        quadtree.cpp
+        )
 
 set(HEADER_FILES
         expansion.h
-        solver.cpp solver.h)
+        solver.h
+        quadtree.h
+        )
 
 add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
 
