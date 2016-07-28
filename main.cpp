@@ -3,13 +3,13 @@
 //
 
 #include <iostream>
-#include "solver_test.h"
+#include "fields_test.h"
 
 using namespace std;
 
 int main(){
 
-    cout << vorticity_test() << endl;
+    cout << grid_test() << endl;
 
     return 0;
 }

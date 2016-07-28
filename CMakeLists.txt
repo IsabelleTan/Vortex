@@ -12,6 +12,7 @@ set(SOURCE_FILES
         quadtree.cpp
         solver_test.cpp
         fields.cpp
+        fields_test.cpp
         )
 
 set(HEADER_FILES
@@ -20,6 +21,7 @@ set(HEADER_FILES
         quadtree.h
         solver_test.h
         fields.h
+        fields_test.h
         )
 
 add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
