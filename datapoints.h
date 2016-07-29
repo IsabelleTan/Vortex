@@ -10,6 +10,9 @@ typedef double value_type;
 // for layout, look at commentaries inside function body
 void load_data_from_file(const char* fname, int& N, value_type** x, value_type** y);
 
+// same as below, but filling only one vector with random values
+void load_data_random(int N, value_type** q);
+
 // load N random floats into arrays x and y 
 // the random values will be between [-5.0, 5.0)
 void load_data_random(int N, value_type** x, value_type** y);

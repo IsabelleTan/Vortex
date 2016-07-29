@@ -58,7 +58,7 @@ double time_sort(const int N, int* index, int* keys){
 	return sort_time/samplesize;
 }
 
-double time_reorder(const int N, const int* const keys, const double* const x, const double* const y, double* xsorted, double* ysorted){
+double time_reorder(const int N, const int* const keys, const double* const x, const double* const y, const double* const q, double* xsorted, double* ysorted, double* qsorted){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	auto end   = std::chrono::high_resolution_clock::now();
@@ -66,7 +66,7 @@ double time_reorder(const int N, const int* const keys, const double* const x, c
 	
 	for(size_t i=0; i<100; i++){
 		start = std::chrono::high_resolution_clock::now();
-		reorder(N, keys, x, y, xsorted, ysorted); 
+		reorder(N, keys, x, y, q, xsorted, ysorted, qsorted); 
 		end = std::chrono::high_resolution_clock::now();
 		reorder_time += static_cast<std::chrono::duration<double>>(end-start).count();
 	}
@@ -76,29 +76,31 @@ double time_reorder(const int N, const int* const keys, const double* const x, c
 
 void time_all(){														// time all functions and display times 
 	// declare the variables and vectors needed
-	double *x, *y, *xsorted, *ysorted;
+	double *x, *y, *q, *xsorted, *ysorted, *qsorted;
 	int *index, *keys; 
 	double xmin, ymin, ext; 
 	std::chrono::time_point< std::chrono::high_resolution_clock > start , end;
-	
+		
 	// fill x and y up and memory-align them as well 
 	load_data_random(numberdatapoints, &x, &y);
+	load_data_random(numberdatapoints, &q);
 	
 	// memory-align the other vectors
 	posix_memalign( (void**)&xsorted, 32, sizeof(double)*numberdatapoints);
 	posix_memalign( (void**)&ysorted, 32, sizeof(double)*numberdatapoints);
+	posix_memalign( (void**)&qsorted, 32, sizeof(double)*numberdatapoints);
 	posix_memalign( (void**)&index  , 32, sizeof(int)  *numberdatapoints);
 	posix_memalign( (void**)&keys   , 32, sizeof(int)  *numberdatapoints);
 	
 	// fill up the "keys"-vector
 	for(unsigned int i(0); i<numberdatapoints; i++)
 		keys[i] = i; 
-	
+		
 	// execute functions and perform time measurements
 	const double ext_time(time_extent(numberdatapoints, x, y, xmin, ymin, ext));	
 	const double morton_time(time_morton(numberdatapoints, x, y, xmin, ymin, ext, index));	
-	const double sort_time(time_sort(numberdatapoints, index, keys));	
-	const double reorder_time(time_reorder(numberdatapoints, keys, x, y, xsorted, ysorted));	
+	const double sort_time(time_sort(numberdatapoints, index, keys));
+	const double reorder_time(time_reorder(numberdatapoints, keys, x, y, q, xsorted, ysorted, qsorted));
 	const double total_time = ext_time + morton_time + sort_time + reorder_time ;
 	
 	// display time measurements and percentage of total time
@@ -119,6 +121,7 @@ void time_all(){														// time all functions and display times
 	// liberate the allocated memory  	
 	free(x); 
 	free(y);
+	free(q);
 	free(xsorted); 
 	free(ysorted); 
 	free(index); 

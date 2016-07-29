@@ -105,21 +105,24 @@ void test_sort()
 void test_all(int n)
 {
 	// declare the variables and vectors needed
-	double *x, *y, *xsorted, *ysorted;
+	double *x, *y, *q, *xsorted, *ysorted, *qsorted;
 	int *index, *keys; 
 	double xmin, ymin, ext; 
 	std::chrono::time_point< std::chrono::high_resolution_clock > start , end;
-	
+		
 	// fill x and y up and memory-align them as well 
 	if(n<0){													// if n<0, then: read data from a file 
 		load_data_from_file("test_datasets/test-0.blob", n, &x, &y);
+		load_data_random(n, &q);
 	} else {													// if n>=0, then: set random values
 		load_data_random(n, &x, &y);
+		load_data_random(n, &q);
 	}
 		
 	// memory-align the other vectors
 	posix_memalign( (void**)&xsorted, 32, sizeof(double)*n);
 	posix_memalign( (void**)&ysorted, 32, sizeof(double)*n);
+	posix_memalign( (void**)&qsorted, 32, sizeof(double)*n);
 	posix_memalign( (void**)&index  , 32, sizeof(int)  *n);
 	posix_memalign( (void**)&keys   , 32, sizeof(int)  *n);
 	
@@ -144,7 +147,7 @@ void test_all(int n)
 	const double sort_time = static_cast<std::chrono::duration<double>>(end-start).count();
 	
 	start = std::chrono::high_resolution_clock::now();
-	reorder(n, keys, x, y, xsorted, ysorted); 
+	reorder(n, keys, x, y, q, xsorted, ysorted, qsorted); 
 	end = std::chrono::high_resolution_clock::now();
 	const double reorder_time = static_cast<std::chrono::duration<double>>(end-start).count();
 	
@@ -168,6 +171,7 @@ void test_all(int n)
 	// liberate the allocated memory  	
 	free(x); 
 	free(y);
+	free(q);
 	free(xsorted); 
 	free(ysorted); 
 	free(index); 

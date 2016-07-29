@@ -28,12 +28,12 @@ void build(const value_type* const x, const value_type* const y, const value_typ
 /*
  * A function that splits a parent node recursively as long as there are more than k particles inside
  */
-void split(Node* parent, Node* tree, int depth, uint32_t* index, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, int k, int *newNodeIndex);
+void split(Node* parent, Node* tree, int depth, int* index, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, int k, int *newNodeIndex);
 
 /*
  * Subdivide a parent node
  */
-void assignParticles(Node* parent, Node* children, int depth, uint32_t* index);
+void assignParticles(Node* parent, Node* children, int depth, int* index);
 
 /*
  * Compute the center of mass and the total mass in 4 children nodes.

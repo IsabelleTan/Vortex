@@ -11,6 +11,11 @@
 #include "simulation.h"		// because of the parameter "depth"
 
 /*
+ * Put some random values in the arrays
+ */
+void initialize(const int N, value_type* x, value_type* y, value_type* mass);
+
+/*
  * Compute the extent, i.e. the size of smallest square including all data points
  */
 void extent(const int N, const double* const x, const double* const y, double& xmin, double& ymin, double& ext); 								// set 2, question 1, a)
@@ -28,6 +33,6 @@ void sort(const int N, int* index, int* keys) ;																									// set 2
 /*
  * Reorder them
  */
-void reorder(const int N, const int* const keys, const double* const x, const double* const y, double* xsorted, double* ysorted);	 			// set 2, question 1, d)
+void reorder(const int N, const int* const keys, const double* const x, const double* const y, const double* const q, double* xsorted, double* ysorted, double* qsorted);// set 2, question 1, d)
 
 #endif //VORTEX_MORTON_H

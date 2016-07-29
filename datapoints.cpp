@@ -40,6 +40,25 @@ void load_data_from_file(const char* fname, int& N, value_type** x, value_type**
 
 // load N random floats into arrays x and y 
 // the random values will be between [-5.0, 5.0)
+void load_data_random(int N, value_type** q)
+{
+	// INPUT 
+	// N		# of data points
+	// q		non memory-aligned empty array
+	// OUTPUT 
+	// q		memory-aligned array filled with N random values
+	
+	// do the memory-alignment 
+	posix_memalign( (void**) q, 32, sizeof(value_type)*N );
+	
+	// fill up the vectors 
+	for(unsigned int i(0); i<N; i++){
+		(*q)[i] = (drand48() - 0.5) * 10.; 
+	}
+}
+
+// load N random floats into arrays x and y 
+// the random values will be between [-5.0, 5.0)
 void load_data_random(int N, value_type** x, value_type** y)
 {
 	// INPUT 

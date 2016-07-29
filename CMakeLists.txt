@@ -16,6 +16,7 @@ set(SOURCE_FILES
         morton_test.cpp
         morton_time.cpp
         quadtree.cpp
+        quadtree_test.cpp
         solver_test.cpp
         fields.cpp
         fields_test.cpp
@@ -33,15 +34,16 @@ set(HEADER_FILES
         fields_test.h
         )
 
-#add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES}) 				# Shoshi: I'm sorry, I commented this because it's a bit mysterious to me ... I prefer writing each build command separately so I know exactly what it does 
 add_executable(datapoints_test datapoints_test.cpp datapoints.cpp)		# tested: OK 
-add_executable(morton_time morton_time.cpp morton.cpp datapoints.cpp) 
-add_executable(morton_test morton_test.cpp morton.cpp datapoints.cpp) 
+add_executable(morton_time morton_time.cpp morton.cpp datapoints.cpp) 	# tested: OK 
+add_executable(morton_test morton_test.cpp morton.cpp datapoints.cpp) 	# tested: OK
+add_executable(quadtree_test quadtree_test.cpp morton.cpp quadtree.cpp) # tested: OK, except for very weird error mesage all the way at the end of execution ... ???
 
+#add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES}) 				# Shoshi: I'm sorry, I commented this because it's a bit mysterious to me ... I prefer writing each build command separately so I can compile one executable at a time if needed, and I have a better overview of the dependancies ... 
  
-##################
-### Compile flags
-##################
+#---------------------#
+#   Compile flags     #
+#---------------------#
 
 # -std=c++11                                # Use c++11
 

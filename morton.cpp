@@ -1,6 +1,15 @@
 
 #include "morton.h"
 
+// Put some random values in the arrays
+void initialize(const int N, value_type* x, value_type* y, value_type* mass){
+    for (int i = 0; i < N; ++i) {
+        x[i] = drand48();
+        y[i] = drand48();
+        mass[i] = drand48();
+    }
+}
+
 void extent(const int N, const double* const x, const double* const y, double& xmin, double& ymin, double& ext) 								// set 2, question 1, a)
 {
 	// N	# of data points
@@ -117,7 +126,7 @@ void sort(const int N, int* index, int* keys) 																									// set 2,
 	free(temp);												// free the memory assigned by posix_memalign
 }
 
-void reorder(const int N, const int* const keys, const double* const x, const double* const y, double* xsorted, double* ysorted) 				// set 2, question 1, d)
+void reorder(const int N, const int* const keys, const double* const x, const double* const y, const double* const q, double* xsorted, double* ysorted, double* qsorted) 				// set 2, question 1, d)
 {
 	// INPUT
 	// N		# of data points
@@ -127,6 +136,7 @@ void reorder(const int N, const int* const keys, const double* const x, const do
 	// OUTPUT 
 	// xsorted  array of x-coordinates sorted wrt keys
 	// ysorted  ........ y-coordinates ...............
+	// qsorted  ........ masses        ...............
 	// 
 	
 	/// why do we refill a different array (xsorted, ysorted) instead of just sorting the arrays x and y themselves directly? 
@@ -137,6 +147,7 @@ void reorder(const int N, const int* const keys, const double* const x, const do
 		const int key(keys[i]);		// pre-fetch value so I don't have to do a random access in the "keys"-array twice.
 		xsorted[i] = x[key];
 		ysorted[i] = y[key];
+		qsorted[i] = q[key];
 	}
 }
 

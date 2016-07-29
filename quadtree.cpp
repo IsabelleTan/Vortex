@@ -5,20 +5,18 @@
 #include <iostream>
 #include "quadtree.h"
 
-using namespace std;
-
-
 /*
  * The function that builds the quad-tree
  */
 void build(const value_type* const x, const value_type* const y, const value_type* const mass, const int N, const int k, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, Node* tree, int depth){
-    cout << "Checkpoint 1" << endl;
+    //!std::cout << "Checkpoint 1" << std::endl;
 
     // Allocate the index array and compute and store the morton indices in it.
-    uint32_t *index = new uint32_t[N];
-    morton(N, x, y, index, depth);
+    int *index = new int[N];
+    double xmin, ymin, ext;
+    morton(N, x, y, xmin, ymin, ext, index);
 
-    cout << "Checkpoint 2" << endl;
+    //!std::cout << "Checkpoint 2" << std::endl;
 
     // Sort the indices and store the corresponding permutation in keys
     int *keys = new int[N];
@@ -28,16 +26,16 @@ void build(const value_type* const x, const value_type* const y, const value_typ
         keys[j] = j;
     }
 
-    sortit(N, index, keys);
+    sort(N, index, keys);
 
-    cout << "Checkpoint 3" << endl;
+    //!std::cout << "Checkpoint 3" << std::endl;
 
     // Sort the remaining arrays with the same permutation
     reorder(N, keys, x, y, mass, xsorted, ysorted, mass_sorted);
 
     // Build the tree
 
-    cout << "Checkpoint 4" << endl;
+    //!std::cout << "Checkpoint 4" << std::endl;
     // Compute the center of mass and the total mass
     value_type xCom = 0, yCom = 0, total_mass = 0;
     for (int i = 0; i < N; ++i) {
@@ -63,7 +61,7 @@ void build(const value_type* const x, const value_type* const y, const value_typ
                     yCom  // y center of mass
     };
 
-    cout << "Checkpoint 5" << endl;
+    //!std::cout << "Checkpoint 5" << std::endl;
 
     // Subdivide as long as there are more than k particles in the cells
     if (N > k && depth > 0) {
@@ -74,11 +72,11 @@ void build(const value_type* const x, const value_type* const y, const value_typ
     else {
         // There are less than or equal to k particles in the node
         // or we reached the maximum depth => the node is a leaf
-        cout << "The root node was not split." << endl;
-        cout << "Particles in root node: " << N << ". Stopping criterion particle number: " << k << endl;
-        cout << "depth = " << depth << endl;
+        std::cout << "The root node was not split." << std::endl;
+        std::cout << "Particles in root node: " << N << ". Stopping criterion particle number: " << k << std::endl;
+        std::cout << "depth = " << depth << std::endl;
     }
-    cout << "Checkpoint 6" << endl;
+    //!std::cout << "Checkpoint 6" << std::endl;
 
     delete[] keys;
     delete[] index;
@@ -87,7 +85,7 @@ void build(const value_type* const x, const value_type* const y, const value_typ
 /*
  * A function that splits the parent node and creates 4 new children nodes in the array of nodes named "tree".
  */
-void split(Node* parent, Node* tree, int depth, uint32_t* index, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, int k, int* newNodeIndex){
+void split(Node* parent, Node* tree, int depth, int* index, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, int k, int* newNodeIndex){
 // Capture and update the newNodeIndex atomically to avoid race condition
 #pragma omp atomic capture
     {
@@ -176,10 +174,10 @@ void split(Node* parent, Node* tree, int depth, uint32_t* index, value_type* xso
  * A function that loops over the particles in the parent node and extracts the part_start and part_end values for its
  * child nodes.
  */
-void assignParticles(Node* parent, Node* children, int depth, uint32_t* index){
+void assignParticles(Node* parent, Node* children, int depth, int* index){
     // Check if the parent node is empty
     if(parent->part_start < 0 && parent->part_end <0){
-        cout << "Something went wrong: the start and end indices of the parents particles are < 0, so we cannot assign any particles to its child nodes." << endl;
+        std::cout << "Something went wrong: the start and end indices of the parents particles are < 0, so we cannot assign any particles to its child nodes." << std::endl;
     }
 
     // Prepare the variables
@@ -197,9 +195,9 @@ void assignParticles(Node* parent, Node* children, int depth, uint32_t* index){
         // Check if the morton index of the particle is smaller than the morton index of the first child node. If so
         // something went wrong.
         if (index[i]<children[c].morton_id){
-            cout << "Something went horribly wrong." << endl;
-            cout << "Trying to appoint particle " << i << " to Child Node " << c << " at level " << children[0].level <<"." << endl;
-            cout << "Morton domain of child node: [" << children[c].morton_id << "," << children[c].morton_id + indexValue_level << "]. Morton index of particle:  " << index[i] <<"." << endl;
+            std::cout << "Something went horribly wrong." << std::endl;
+            std::cout << "Trying to appoint particle " << i << " to Child Node " << c << " at level " << children[0].level <<"." << std::endl;
+            std::cout << "Morton domain of child node: [" << children[c].morton_id << "," << children[c].morton_id + indexValue_level << "]. Morton index of particle:  " << index[i] <<"." << std::endl;
             break;
         }
 
@@ -282,14 +280,14 @@ void centerOfMass(Node* children, value_type* xsorted, value_type* ysorted, valu
  * A function that prints the attributes of an object of type Node
  */
 void printNode(Node node){
-    cout<< "\n\nNode at address: " << &node << endl;
-    cout<< "level: " << node.level << endl;
-    cout<< "morton_id: " << node.morton_id << endl;
-    cout<< "child_id: " << node.child_id << endl;
-    cout<< "part_start: " << node.part_start << endl;
-    cout<< "part_end: " << node.part_end << endl;
-    cout<< "mass: " << node.mass << endl;
-    cout<< "xcom: " << node.xcom << endl;
-    cout<< "ycom: " << node.ycom << endl;
+    std::cout<< "\n\nNode at address: " << &node			<< std::endl;
+    std::cout<< "level: " 				<< node.level 		<< std::endl;
+    std::cout<< "morton_id: " 			<< node.morton_id 	<< std::endl;
+    std::cout<< "child_id: " 			<< node.child_id 	<< std::endl;
+    std::cout<< "part_start: " 			<< node.part_start 	<< std::endl;
+    std::cout<< "part_end: "			<< node.part_end 	<< std::endl;
+    std::cout<< "mass: " 				<< node.mass 		<< std::endl;
+    std::cout<< "xcom: " 				<< node.xcom 		<< std::endl;
+    std::cout<< "ycom: " 				<< node.ycom 		<< std::endl;
 }
 
