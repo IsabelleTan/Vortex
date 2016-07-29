@@ -7,10 +7,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -pthread -mavx -mfma
 
 set(SOURCE_FILES
         main.cpp
+        simulation.cpp
         datapoints.cpp
         datapoints_test.cpp
         expansion.cpp
         solver.cpp
+        morton.cpp
+        morton_test.cpp
+        morton_time.cpp
         quadtree.cpp
         solver_test.cpp
         fields.cpp
@@ -18,9 +22,11 @@ set(SOURCE_FILES
         )
 
 set(HEADER_FILES
+		simulation.h
 		datapoints.h
         expansion.h
         solver.h
+        morton.h
         quadtree.h
         solver_test.h
         fields.h
@@ -29,6 +35,9 @@ set(HEADER_FILES
 
 #add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES}) 				# Shoshi: I'm sorry, I commented this because it's a bit mysterious to me ... I prefer writing each build command separately so I know exactly what it does 
 add_executable(datapoints_test datapoints_test.cpp datapoints.cpp)		# tested: OK 
+add_executable(morton_time morton_time.cpp morton.cpp datapoints.cpp) 
+add_executable(morton_test morton_test.cpp morton.cpp datapoints.cpp) 
+
  
 ##################
 ### Compile flags
