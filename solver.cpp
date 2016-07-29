@@ -120,6 +120,12 @@ void advection(){
 /*
  * This function computes the time-step size for the next iteration based on the current velocities.
  */
-void timeStep(){
+void timeStep(double& dt){
     // TODO complete timeStep
+    
+    //! notes by Shoshana: 
+    //! when we met the TAs at the end of the semester, they suggested we first simply use dt = 10^(-3) 
+    //! as a time-step and once the simulation works, move on to an adaptive one.
+    
+    dt = 0.001; // seconds
 }
