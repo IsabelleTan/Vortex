@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <stdlib.h>
 
-typedef float value_type; // or are we writing data of type double?
+typedef double value_type;
 
 // load data from a binary file into arrays x and y 
 // for layout, look at commentaries inside function body
