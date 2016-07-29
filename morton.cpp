@@ -63,8 +63,8 @@ void morton(const int N, const double* const x, const double* const y, const dou
 	#pragma omp parallel for
     for(int i = 0; i < N; ++i)
     {
-		int xid = floor((x[i] - xmin) / ext * (1 << depth));	// (x[i] - xmin) / ext // normalize the coord. pos. w/ resp. to the square length
-		int yid = floor((y[i] - ymin) / ext * (1 << depth));	// * (1 << level_max)  // 0..01000000000000000 = 2^15
+		int xid = floor((x[i] - xmin) / ext * (1 << depthtree));	// (x[i] - xmin) / ext // normalize the coord. pos. w/ resp. to the square length
+		int yid = floor((y[i] - ymin) / ext * (1 << depthtree));	// * (1 << level_max)  // 0..01000000000000000 = 2^15
 
 		xid = (xid | (xid << 8)) & 0x00FF00FF; // cf https://graphics.stanford.edu/~seander/bithacks.html#InterleaveBMN
 		xid = (xid | (xid << 4)) & 0x0F0F0F0F;
