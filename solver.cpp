@@ -3,14 +3,8 @@
 //
 
 #include "solver.h"
-#include "cmath"
+#include <cmath>
 
-/*
- * This function computes the potential from all source particles at the target locations
- */
-void potential(){
-    // TODO complete potential
-}
 
 /*
  * This function computes the velocity of the particles by taking the curl of the streamfunction.

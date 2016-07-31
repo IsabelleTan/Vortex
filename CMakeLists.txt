@@ -44,7 +44,8 @@ add_executable(quadtree_test quadtree_test.cpp morton.cpp quadtree.cpp) # tested
 add_executable(quadtree_time quadtree_time.cpp morton.cpp quadtree.cpp) # tested: OK
 add_executable(expansion_test expansion_test.cpp expansion.cpp morton.cpp complexAVX.cpp) 		# tested: OK
 add_executable(multipole_test multipole_test.cpp multipole.cpp expansion.cpp morton.cpp quadtree.cpp complexAVX.cpp) # empty test-file. To be tested
-add_executable(fields_test fields_test.cpp fields.cpp)
+add_executable(fields_test fields_test.cpp fields.cpp)					# tested: OK 
+add_executable(solver_test solver_test.cpp solver.cpp)					# tested: OK 
 
 #add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES}) 				# Shoshi: I'm sorry, I commented this because it's a bit mysterious to me ... I prefer writing each build command separately so I can compile one executable at a time if needed, and I have a better overview of the dependancies ... 
  
