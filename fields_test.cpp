@@ -2,11 +2,8 @@
 // Created by Isabelle Tan on 28-07-16.
 //
 
-#include "fields_test.h"
 #include "fields.h"
 #include <iostream>
-
-using namespace std;
 
 // A test function for the grid() function
 bool grid_test(){
@@ -30,18 +27,28 @@ bool grid_test(){
     for (int i = 0; i < N; ++i) {
         if (x[i]!=control_x[i] || y[i]!=control_y[i]){
             result = false;
-            cout << " for i = " << i << " x[i] = " << x[i] << " != " << control_x[i] << " = control_x[i] \n or \n y[i] = " << y[i] << " != " << control_y[i] << " = control_y[i]" << endl;
+            std::cout << " for i = " << i << " x[i] = " << x[i] << " != " << control_x[i] 
+					  << " = control_x[i] \n or \n y[i] = " << y[i] << " != " << control_y[i] 
+					  << " = control_y[i]" << std::endl;
         }
     }
 
 
     // Print the result
     if(result){
-        cout << "Test succeeded!" << endl;
+        std::cout << "Test succeeded!" << std::endl;
     } else {
-        cout << "Test failed" << endl;
+        std::cout << "Test failed" << std::endl;
     }
 
 
     return result;
+}
+
+int main() 
+{
+	bool a = grid_test(); 
+	
+	return 0; 
+	
 }

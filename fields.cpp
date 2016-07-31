@@ -6,8 +6,6 @@
 #include "cmath"
 #include <iostream>
 
-using namespace std;
-
 
 /*
  * This function creates a regular 2D grid of N (x,y) coordinates with domain (xRange,yRange) centered around 0. If it
@@ -19,7 +17,7 @@ bool grid(const int N, value_type * const x, value_type * const y, const value_t
 
     // Test if M is an integer
     if (N != M*M){
-        cout << "The number of gridpoints is not a perfect square, use a different N." << endl;
+        std::cout << "The number of gridpoints is not a perfect square, use a different N." << std::endl;
         return false;
     }
 
