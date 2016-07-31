@@ -8,6 +8,7 @@
 
 
 /*
+ * This function computes the potential from all source particles at the target locations.
  * This function computes the potential (i.e. the stream function psi) at all target locations (on a grid),
  * using the vorticity ("mass") of all source particles, which could be located anywhere in domain. 
  * We're using a recursive approach and starting with the root node
