@@ -9,14 +9,11 @@
  * The function that builds the quad-tree
  */
 void build(const value_type* const x, const value_type* const y, const value_type* const mass, const int N, const int k, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, Node* tree, int depth){
-    //!std::cout << "Checkpoint 1" << std::endl;
 
     // Allocate the index array and compute and store the morton indices in it.
     int *index = new int[N];
     double xmin, ymin, ext;
     morton(N, x, y, xmin, ymin, ext, index);
-
-    //!std::cout << "Checkpoint 2" << std::endl;
 
     // Sort the indices and store the corresponding permutation in keys
     int *keys = new int[N];
@@ -28,14 +25,11 @@ void build(const value_type* const x, const value_type* const y, const value_typ
 
     sort(N, index, keys);
 
-    //!std::cout << "Checkpoint 3" << std::endl;
-
     // Sort the remaining arrays with the same permutation
     reorder(N, keys, x, y, mass, xsorted, ysorted, mass_sorted);
 
     // Build the tree
 
-    //!std::cout << "Checkpoint 4" << std::endl;
     // Compute the center of mass and the total mass
     value_type xCom = 0, yCom = 0, total_mass = 0;
     for (int i = 0; i < N; ++i) {
@@ -61,8 +55,6 @@ void build(const value_type* const x, const value_type* const y, const value_typ
                     yCom  // y center of mass
     };
 
-    //!std::cout << "Checkpoint 5" << std::endl;
-
     // Subdivide as long as there are more than k particles in the cells
     if (N > k && depth > 0) {
         // There are more than k particles in the node and we haven't reached the maximum depth so split it in four
@@ -76,8 +68,7 @@ void build(const value_type* const x, const value_type* const y, const value_typ
         std::cout << "Particles in root node: " << N << ". Stopping criterion particle number: " << k << std::endl;
         std::cout << "depth = " << depth << std::endl;
     }
-    //!std::cout << "Checkpoint 6" << std::endl;
-
+    
     delete[] keys;
     delete[] index;
 }
