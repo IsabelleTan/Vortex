@@ -4,11 +4,11 @@
 #include <bitset>
 #include <cstdio>
 
-typedef float value_type; // or are we writing data of type double?
+typedef float value_type2; // or are we writing data of type double?
 
 // load data from a binary file into arrays x and y 
 // for layout, look at commentaries inside function body
-void load_data_from_file(const char* fname, int& N, value_type** x, value_type** y)
+void load_data_from_file(const char* fname, int& N, value_type2** x, value_type2** y)
 {
 	// INPUT
 	// fname 	name of file from which we want to read vectors points.
@@ -20,9 +20,6 @@ void load_data_from_file(const char* fname, int& N, value_type** x, value_type**
 	// N		# of data points (determined by file, not given to function as input) 
 	// x		memory-aligned array of x-coordinates of data points read from file
 	// y		....................... y-coordinates .............................
-	// DATA LAYOUT IN FILE
-	// N (ENTER)						  (integer in decimal format) 
-	// x[0]x[1]...x[N-1]y[0]y[1]...y[N-1] (where each point is a float written in binary)
 	
 	FILE* f = fopen(fname, "r");			// open file to read from in "read" mode
 	
@@ -32,12 +29,12 @@ void load_data_from_file(const char* fname, int& N, value_type** x, value_type**
 	fscanf(f, "%d\n", &N);					// read the number of data points in decimal format
 	
 	// do the memory-alignment 
-	posix_memalign( (void**) x, 32, sizeof(value_type)*N );
-	posix_memalign( (void**) y, 32, sizeof(value_type)*N );
+	posix_memalign( (void**) x, 32, sizeof(value_type2)*N );
+	posix_memalign( (void**) y, 32, sizeof(value_type2)*N );
 	
 	// fill up the vectors 
-	fread(*x, sizeof(value_type), N, f);
-	fread(*y, sizeof(value_type), N, f);
+	fread(*x, sizeof(value_type2), N, f);
+	fread(*y, sizeof(value_type2), N, f);
 	
 	// close the file stream
 	fclose(f); 
@@ -45,7 +42,7 @@ void load_data_from_file(const char* fname, int& N, value_type** x, value_type**
 
 // load N random floats into arrays x and y 
 // the random values will be between [-5.0, 5.0)
-void load_data_random(int N, value_type** x, value_type** y)
+void load_data_random(int N, value_type2** x, value_type2** y)
 {
 	// INPUT 
 	// N		# of data points
@@ -56,8 +53,8 @@ void load_data_random(int N, value_type** x, value_type** y)
 	// y		......................................... y-coordinates
 	
 	// do the memory-alignment 
-	posix_memalign( (void**) x, 32, sizeof(value_type)*N );
-	posix_memalign( (void**) y, 32, sizeof(value_type)*N );
+	posix_memalign( (void**) x, 32, sizeof(value_type2)*N );
+	posix_memalign( (void**) y, 32, sizeof(value_type2)*N );
 	
 	// fill up the vectors 
 	for(unsigned int i(0); i<N; i++){
@@ -85,7 +82,7 @@ void clean_file(const char* fname){
 // write array x to file fname in binary
 // if there is data already written in the file, new data is appended at the end of it
 // for layout, look at commentaries inside function body
-void write_to_file(const char* fname, int N, const value_type* x){
+void write_to_file(const char* fname, int N, const value_type2* x){
 	// INPUT 
 	// fname	name of file to be written in
 	//          note to user: give file name with its extension
@@ -101,7 +98,7 @@ void write_to_file(const char* fname, int N, const value_type* x){
 	// write N 
 	fprintf(f, "%d\n", N);					// write N in decimal format, then go to a new line ("\n")
 	// write array content
-	fwrite(x, sizeof(value_type), N, f);		// write the array contents in binary format
+	fwrite(x, sizeof(value_type2), N, f);		// write the array contents in binary format
 	
 	fclose(f);
 }

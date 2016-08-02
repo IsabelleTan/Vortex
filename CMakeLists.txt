@@ -22,6 +22,7 @@ set(HEADER_FILES
         solver_test.h
         fields.h
         fields_test.h
+        datapoints.h
         )
 
 add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
