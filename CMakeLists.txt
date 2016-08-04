@@ -13,6 +13,8 @@ set(SOURCE_FILES
         solver_test.cpp
         fields.cpp
         fields_test.cpp
+        ADIdiffusion.cpp
+        ADIdiffusion_test.cpp
         )
 
 set(HEADER_FILES
@@ -23,6 +25,8 @@ set(HEADER_FILES
         fields.h
         fields_test.h
         datapoints.h
+        ADIdiffusion.h
+        ADIdiffusion_test.h
         )
 
 add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
