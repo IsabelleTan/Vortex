@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "fields_test.h"
 #include "datapoints.h"
+#include "ADIdiffusion_test.h"
 #include <unistd.h>
 #define GetCurrentDir getcwd
 
@@ -27,50 +27,9 @@ void printWorkingDirectory(){
 }
 
 int main(){
-    int N = 100;
-    value_type2 * x = new value_type2[N];
-
-    // Make the first frame
-    for (int i = 0; i < N; ++i) {
-        x[i] = (i%10 - 5)*(i%10 - 5);
-    }
-
-    write_to_file("test_0", N, x);
-
-    // Make the 2nd frame
-    for (int i = 0; i < N; ++i) {
-        x[i] += 5;
-    }
-
-    write_to_file("test_1", N, x);
-
-    // Make the 3nd frame
-    for (int i = 0; i < N; ++i) {
-        x[i] += 5;
-    }
-
-    write_to_file("test_2", N, x);
-
-    // Make the 4nd frame
-    for (int i = 0; i < N; ++i) {
-        x[i] += 5;
-    }
-
-    write_to_file("test_3", N, x);
-
-    // Make the 5nd frame
-    for (int i = 0; i < N; ++i) {
-        x[i] += 5;
-    }
-
-    write_to_file("test_4", N, x);
-
-    printWorkingDirectory();
 
 
-
-
-    delete[] x;
+    cout << ThomasAlg_test() << endl;
 
 
 
