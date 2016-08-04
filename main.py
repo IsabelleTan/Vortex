@@ -1,11 +1,12 @@
+import os.path
+
+import matplotlib.animation as anim
 import matplotlib.pyplot as plt
 import numpy as np
-import os.path
-import matplotlib.animation as anim
 
 # Plot array with matplotlib imshow()
 
-''' A function to plot a vector. The data is assumed to be ordered lexicographically, in binary file format with double precision.
+''' A function to plot "array". The array is assumed to be a matrix.
 '''
 def plotArray(array):
     hf = plt.figure()
@@ -15,10 +16,19 @@ def plotArray(array):
 
     return
 
-''' A function that reads the data from an binary file according to the format
-xxx
+''' A function that reads a vector from a binary file according to the format
+
+int (in decimal, number of following floats) \n
+float/double (in binary) float/double (in binary) ... float/double (in binary)
+
+The function returns the read number of particles as an integer and the data as a square array.
+If the number of particles is not a perfect square the function prints an error message and exits.
 '''
 def readFile(filename):
+    # Go to the location of the script, depends on your personal system.
+    curDir = os.getcwd()
+    os.chdir(curDir)
+
     # Open the file
     f = open(filename, "rb")
 
@@ -27,15 +37,22 @@ def readFile(filename):
     nParticles = int(line)
     print("Number of particles: ", nParticles)
 
-    # Read in the rest of the data
-    data = np.fromfile(f, np.float64, nParticles, "")
+    # Read in the rest of the data (binary)
+    data = np.fromfile(f, np.float32, nParticles, "")
 
     # Compute the size of the rows and columns and transform the vector into an array
     dimension = np.sqrt(nParticles)
-    array = np.reshape(data, (dimension, dimension))
 
-    # Return the number of particles and the data array
-    return nParticles, data
+    # Check if the nParticles is a perfect square
+    if (int(dimension) * int(dimension)!= nParticles):
+        print("The read number of particles is not a perfect square so the vector cannot be reshaped into a square matrix.")
+        return nParticles, 0
+    else:
+        # Reshape the data into a square matrix
+        array = np.reshape(data, (dimension, dimension))
+
+        # Return the number of particles and the data array
+        return nParticles, array
 
 ''' A function to create a lamb oseen vortex with core radius CR'''
 def LambOseen(CR):
@@ -56,54 +73,51 @@ def LambOseen(CR):
 
     return data
 
+''' A function that animates 2D data where each timesteps data is contained in a file in the folder
+input:
+t0:         initial frame                                       DEF = 0
+t_end:      final frame                                         DEF = 4
+v_min:      minimum value for color scale                       DEF = 0
+v_max:      maximum value for color scale                       DEF = 4
+folder:     location of files w.r.t. this script's directory    DEF = "Test_output_files/5t/"
+colormap:   type of colormap to use                             DEF = plt.get_cmap("BrBG")
+'''
+def animate(t0 = 0, t_end = 4, v_min = 0, v_max = 40, folder = "Test_output_files/5t/", colormap = plt.get_cmap("BrBG")):
+    # Go to the script's directory
+    curDir = os.getcwd()
+    os.chdir(curDir)
+
+    # Create array with time values (t's are inclusive)
+    times = np.arange(t0+1, t_end + 1, 1)
+
+    # Prepare image and frame array
+    fig = plt.figure()
+    fig.add_subplot(111)
+    frames = []
+
+    # Read initial data
+    file_0 = folder + "test_0"
+    nParticles, data_0 = readFile(file_0)
+    frames.append([plt.imshow(data_0, cmap = colormap, animated=True, vmin = v_min, vmax = v_max)])
+
+    # Append the image list with each frame for the animation
+    for t in times:
+        # Define new filename
+        filename = folder + "test_" + str(t)
+        frames.append([plt.imshow(readFile(filename)[1], cmap = colormap, animated=True, vmin = v_min, vmax = v_max)])
+
+    # Transform the list into an animation
+    ani = anim.ArtistAnimation(fig, frames, interval=500, blit=False, repeat=False)
+    plt.colorbar()
+    plt.show()
+
+    Writer = anim.writers['ffmpeg']
+    writer = Writer(fps=5, metadata=dict(artist='Me'), bitrate=1800)
+
+    ani.save('test.mp4', writer=writer)
+
+    return
 
 ##########################################
-
-# Read in a vector from a txt file
-# Go to the location of the script, depends on your personal system.
-curDir = os.getcwd()
-os.chdir(curDir)
-
-# Prepare animation figure
-fig = plt.figure()
-
-# Set animation variables
-t0 = 0
-t_end = 100
-dt = 1
-times = np.arange(t0, t_end, dt)
-
-# Read initial data
-file_0 = "vortex_0"
-nParticles, data_0 = readFile(file_0)
-
-# Set initial image
-im = plt.imshow(data_0, cmap=plt.get_cmap('viridis'), animated=True)
-
-# Define the update function for the animation
-def updatefig(*args):
-
-
-    # Set array of image to the array specified by the filename
-    im.set_array(filename)
-    return im,
-
-##########
-# Try 2, now with for-loop to append image list with frames
-
-# Prepare some stuff
-CR_0=10
-fig2 = plt.figure()
-ims = []
-
-# Append the image list with each frame for the animation
-for t in times:
-    # Define new filename
-    filename = "vortex_" + str(t)
-    # TODO Make the image use the same colormap
-    ims.append([plt.imshow(readFile(filename), cmap=plt.get_cmap('viridis'), animated=True)])
-
-# Transform the list into an animation
-ani2 = anim.ArtistAnimation(fig2, ims, interval=50, blit=False, repeat=False)
-plt.show()
+animate()
 

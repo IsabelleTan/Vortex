@@ -1,6 +1,6 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib.animation as anim
+import matplotlib.pyplot as plt
+import numpy as np
 
 #fig = plt.figure()
 
@@ -39,7 +39,4 @@ plt.show()
 # Save the animation
 # TODO Need to download FFMPEG!
 '''
-Writer = anim.writers['ffmpeg']
-writer = Writer(fps=5, metadata=dict(artist = 'Me'), bitrate=1800)
-
-ani2.save('test.mp4', writer=writer)'''
+'''
