@@ -14,7 +14,7 @@ void ThomasAlg(const int N, const value_type a, const value_type b, const value_
 
 // A function to reorder the particle vectors from row to column wise or the other way around (improves computation time
 // in 2nd step of ADI diffusion method.)
-void changeOrdering(value_type * const q_in, value_type * const q_out);
+void changeOrdering(const int N, value_type * const q_in, value_type * const q_out);
 
 
 // A function to perform one ADI diffusion time iteration

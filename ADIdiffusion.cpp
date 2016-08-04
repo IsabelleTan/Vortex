@@ -4,6 +4,7 @@
 
 #include "ADIdiffusion.h"
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -41,5 +42,25 @@ void ThomasAlg(const int N, const value_type a, const value_type b, const value_
     delete[] y;
     delete[] r;
     
+    return;
+}
+
+
+// A function to reorder the particle vectors from row to column wise or the other way around (improves computation time
+// in 2nd step of ADI diffusion method.)
+void changeOrdering(const int N, value_type * const q_in, value_type * const q_out){
+    const int n = sqrt(N);
+
+    // Check whether N is a perfect square
+    if (n*n != N){
+        cout << "N is not a perfect square. Cannot reorder." << endl;
+        return;
+    }
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            q_out[n*i + j] = q_in[n*j + i];
+        }
+    }
+
     return;
 }

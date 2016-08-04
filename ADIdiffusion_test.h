@@ -14,7 +14,7 @@ bool ThomasAlg_test();
 
 // A function to reorder the particle vectors from row to column wise or the other way around (improves computation time
 // in 2nd step of ADI diffusion method.)
-bool changeOrdering_test(value_type * const q_in, value_type * const q_out);
+bool changeOrdering_test();
 
 
 // A function to perform one ADI diffusion time iteration

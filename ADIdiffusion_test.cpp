@@ -42,5 +42,42 @@ bool ThomasAlg_test(){
         cout << "Test failed" << endl;
     }
 
+    delete[] x;
+    delete[] control;
+    delete[] r;
+
+    return result;
+}
+
+// A function to test the changeOrdering() function
+bool changeOrdering_test(){
+    bool result = true;
+
+    // Allocate the arrays
+    int N = 9;
+    value_type * q_in = new value_type[N]{1,2,3,1,2,3,1,2,3};
+    value_type * q_out = new value_type[N];
+    value_type * control = new value_type[N]{1,1,1,2,2,2,3,3,3};
+
+    // Perform the reordering
+    changeOrdering(N, q_in, q_out);
+
+    // Test the result
+    for (int j = 0; j < N; ++j) {
+        if(::abs(q_out[j] - control[j]) < EPSILON){
+            cout << "q_out[j] = " << q_out[j] << " == " << control[j] << " = control[j]" << endl;
+        } else {
+            cout << "q_out[j] = " << q_out[j] << " != " << control[j] << " = control[j]" << endl;
+            result = false;
+        }
+    }
+
+    // Print the result
+    if(result){
+        cout << "Test succeeded!" << endl;
+    } else {
+        cout << "Test failed" << endl;
+    }
+
     return result;
 }

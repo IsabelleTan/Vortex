@@ -29,7 +29,7 @@ void printWorkingDirectory(){
 int main(){
 
 
-    cout << ThomasAlg_test() << endl;
+    cout << changeOrdering_test() << endl;
 
 
 
