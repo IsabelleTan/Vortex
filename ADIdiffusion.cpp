@@ -110,8 +110,8 @@ void ADI(int N, value_type * const q_0, value_type * const q_new, const value_ty
 
     // Solve left hand side with Thomas algorithm
     // Make variables containing the subdiagonal, diagonal and superdiagonal values
-    const value_type a = 1+2*r;
-    const value_type b = -r;
+    const value_type a = -r;
+    const value_type b = 1+2*r;
     const value_type c = -r;
     value_type * q_half_r = new value_type[N];
 
