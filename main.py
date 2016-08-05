@@ -38,7 +38,7 @@ def readFile(filename):
     print("Number of particles: ", nParticles)
 
     # Read in the rest of the data (binary)
-    data = np.fromfile(f, np.float32, nParticles, "")
+    data = np.fromfile(f, np.float64, nParticles, "")
 
     # Compute the size of the rows and columns and transform the vector into an array
     dimension = np.sqrt(nParticles)
@@ -82,7 +82,7 @@ v_max:      maximum value for color scale                       DEF = 4
 folder:     location of files w.r.t. this script's directory    DEF = "Test_output_files/5t/"
 colormap:   type of colormap to use                             DEF = plt.get_cmap("BrBG")
 '''
-def animate(t0 = 0, t_end = 4, v_min = 0, v_max = 40, folder = "Test_output_files/5t/", colormap = plt.get_cmap("BrBG")):
+def animate(t0 = 0, t_end = 4, folder = "Test_output_files/test_diffusion/", colormap = plt.get_cmap("viridis")):
     # Go to the script's directory
     curDir = os.getcwd()
     os.chdir(curDir)
@@ -96,28 +96,32 @@ def animate(t0 = 0, t_end = 4, v_min = 0, v_max = 40, folder = "Test_output_file
     frames = []
 
     # Read initial data
-    file_0 = folder + "test_0"
+    file_0 = folder + "0.txt"
     nParticles, data_0 = readFile(file_0)
+    v_min = np.min(data_0)
+    v_max = np.max(data_0)
     frames.append([plt.imshow(data_0, cmap = colormap, animated=True, vmin = v_min, vmax = v_max)])
 
     # Append the image list with each frame for the animation
     for t in times:
         # Define new filename
-        filename = folder + "test_" + str(t)
+        filename = folder + str(t) + ".txt"
         frames.append([plt.imshow(readFile(filename)[1], cmap = colormap, animated=True, vmin = v_min, vmax = v_max)])
 
     # Transform the list into an animation
-    ani = anim.ArtistAnimation(fig, frames, interval=500, blit=False, repeat=False)
+    ani = anim.ArtistAnimation(fig, frames, interval=100, blit=False, repeat=False)
     plt.colorbar()
     plt.show()
 
     Writer = anim.writers['ffmpeg']
-    writer = Writer(fps=5, metadata=dict(artist='Me'), bitrate=1800)
+    writer = Writer(fps=10, metadata=dict(artist='Me'), bitrate=1800)
 
     ani.save('test.mp4', writer=writer)
 
     return
 
 ##########################################
-animate()
+# Animate 100 files
+animate(0,99)
+
 

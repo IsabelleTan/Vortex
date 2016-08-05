@@ -8,7 +8,7 @@
 // Set the type to double
 typedef double value_type;
 
-// A function that solves a linear system in O(n), given the matrix is tridiagonal with a, b and c the diagonal constants
+// A function that solves a linear system in O(n), given the matrix is tridiagonal with a, b and c vectors containing the diagonal constants
 void ThomasAlg(const int N, const value_type a, const value_type b, const value_type c, value_type * const x, value_type * const r);
 
 
@@ -18,7 +18,7 @@ void changeOrdering(const int N, value_type * const q_in, value_type * const q_o
 
 
 // A function to perform one ADI diffusion time iteration
-void ADI(value_type * const q);
+void ADI(int N, value_type * const q_0, value_type * const q_new, const value_type dt, const value_type dx, const value_type v);
 
 
 // A function to set the boundary values for the diffusion

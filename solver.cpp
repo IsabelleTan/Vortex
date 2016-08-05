@@ -16,7 +16,6 @@ void potential(){
  * This function computes the velocity of the particles by taking the curl of the streamfunction.
  * Central differences is used and for the boundary the zero gradient rule is used. The boundary corners are computed as
  * the average of their neighbours.
- * TODO: Is the handling of the boundaries correct here? (i.e. copying the values of the second outer ring to the outer ring)
  */
 void velocity(const int N, const value_type h, value_type * const u, value_type * const v, value_type * const phi){
     // Compute the number of particles in one row or column of the grid
@@ -34,6 +33,7 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
         }
     }
 
+    // TODO maybe change this depending on the answer from the TA's
     // Set the boundary velocities equal to the inner ring velocities
     for (int j = 1; j < M-1; ++j) {
         // Top boundary
@@ -85,6 +85,7 @@ void vorticity(const int N, const value_type h, value_type * const u, value_type
     }
 
     // Set the boundary vorticities equal to the inner ring vorticities (skip the corners here)
+    // TODO maybe change this depending on the answer from the TA's
     for (int j = 1; j < M-1; ++j) {
         // Top boundary
         q[j] = q[j+M];

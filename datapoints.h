@@ -93,7 +93,7 @@ void write_to_file(const char* fname, int N, const value_type2* x){
 	// x[0]x[1]...x[N-1]y[0]y[1]...y[N-1] (where each point is a float written in binary)
 	// Note: if a file named "fname" already exists, this function appends data at the end of the file
 
-	FILE* f = fopen(fname, "ab");			// open file in "append" mode, so as not to erase existing data
+	FILE* f = fopen(fname, "wb");			// open file in "write" mode
 	if (f==NULL){
 		std::cout << "Opening file " << fname << " failed." << std::endl;
 	}

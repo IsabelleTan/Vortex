@@ -17,12 +17,8 @@ bool ThomasAlg_test();
 bool changeOrdering_test();
 
 
-// A function to perform one ADI diffusion time iteration
-bool ADI_test(value_type * const q);
-
-
-// A function to set the boundary values for the diffusion
-bool setBoundaries_test(value_type * const q);
+// A function to perform a diffusion loop and write the intermetidate results to a file
+void ADI_test_output();
 
 
 #endif //VORTEX_ADIDIFFUSION_TEST_H

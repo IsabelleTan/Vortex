@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include "datapoints.h"
 #include "ADIdiffusion_test.h"
 #include <unistd.h>
 #define GetCurrentDir getcwd
@@ -20,18 +19,15 @@ void printWorkingDirectory(){
         return;
     }
 
-    cCurrentPath[sizeof(cCurrentPath) - 1] = '\0'; /* not really required */
+    cCurrentPath[sizeof(cCurrentPath) - 1] = '\0';
 
-    printf ("The current working directory is %s", cCurrentPath);
+    printf ("The current working directory is %s \n", cCurrentPath);
     return;
 }
 
 int main(){
 
-
-    cout << changeOrdering_test() << endl;
-
-
+    ADI_test_output();
 
     return 0;
 }
