@@ -80,6 +80,12 @@ void ADI(int N, value_type * const q_0, value_type * const q_new, const value_ty
     // Compute right hand side
     value_type * RHS = new value_type[N];
 
+    // Create matrix with (1-2r) on diagonal and -r on sub- and superdiagonal
+
+    // Put x in matrix form (row wise for x derivative)
+
+    // multiply to obtain the RHS
+
     // Loop over the grid locations and compute finite differences for Y direction
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
