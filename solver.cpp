@@ -33,7 +33,7 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
         }
     }
 
-    // TODO modify according to TA's answer
+    // TODO I don't know about this
     // Set the boundary velocities equal to the inner ring velocities
     for (int j = 1; j < M-1; ++j) {
         // Top boundary
@@ -67,41 +67,39 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
  */
 void vorticity(const int N, const value_type h, value_type * const u, value_type * const v, value_type * const q){
     // Compute the number of particles in one row or column
-    const int M = sqrt(N);
+    const int n = sqrt(N);
 
     // Assuming lexicographical ordering of the grid particles
-    for (int i = 0; i < N; ++i) {
-        // Check for boundary conditions
-        if(i < M || i%M ==0 || i%M==M-1 || i > (M-1)*M){
-            // Do nothing on the boundaries
-        } else {
-            // Compute the partial derivatives of u and v with central differences in x and y direction
-            value_type u_y = (u[i+M] - u[i-M])/(2*h);
-            value_type v_x = (v[i+1] - v[i-1])/(2*h);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            value_type u_y;
+            value_type v_x;
+            if (i == 0) {
+                // Top boundary
+                u_y = -u[(i + 1) * n + j] / (2 * h);
+            } else if (i == n - 1) {
+                // Bottom boundary
+                u_y = u[(i - 1) * n + j] / (2 * h);
+            } else {
+                // Interior for y derivative
+                u_y = (u[(i - 1) * n + j] - u[(i + 1) * n + j]) / (2 * h);
+            }
 
-            // Compute the difference of the partial derivatives to obtain the curl which is the vorticity
-            q[i] = v_x + u_y;
+            if (j == 0) {
+                // Left boundary
+                v_x = v[i * n + j + 1] / (2 * h);
+            } else if (j == n - 1) {
+                // Right boundary
+                v_x = -v[i * n + j - 1] / (2 * h);
+            } else {
+                // Interior for x derivative
+                v_x = (v[i * n + j + 1] - v[i * n + j - 1]) / (2 * h);
+            }
+
+            // Set the vorticity
+            q[i*n+j] = v_x + u_y;
         }
     }
-
-    // Set the boundary vorticities equal to the inner ring vorticities (skip the corners here)
-    // TODO maybe change this depending on the answer from the TA's
-    for (int j = 1; j < M-1; ++j) {
-        // Top boundary
-        q[j] = q[j+M];
-        // Left boundary
-        q[j*M] = q[j*M + 1];
-        // Right boundary
-        q[(j+1)*M - 1] = q[(j+1)*M -2];
-        // Bottom boundary
-        q[N-j-1] = q[N-j-1-M];
-    }
-
-    // Set the boundary corners to the average of their neighbours
-    q[0] = (q[1] + q[M])/2;
-    q[M-1] = (q[M-2]+q[2*M-1])/2;
-    q[N-M] = (q[N-M+1]+q[N-(2*M)])/2;
-    q[N-1] = (q[N-2]+q[N-M-1])/2;
 }
 
 /*
