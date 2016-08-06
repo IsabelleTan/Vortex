@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "fields.h"
+#include "solver_test.h"
 #include <unistd.h>
 #define GetCurrentDir getcwd
 
@@ -30,5 +31,5 @@ void printWorkingDirectory(){
 
 int main(){
 
-    analyticalSolution();
+    vorticity_test();
 }

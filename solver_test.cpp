@@ -26,7 +26,7 @@ bool velocity_test(){
     // Initialize
     for (int i = 0; i < N; ++i) {
         phi[i] = i;
-        control_u[i] = -4;
+        control_u[i] = -4; //TODO this still needs to be computed to be tested
         control_v[i] = -1;
     }
 
@@ -61,20 +61,13 @@ bool velocity_test(){
 bool vorticity_test(){
     // Set parameters
     bool result = true;
-    int N = 16;
+    int N = 9;
 
-    // Allocate arrays
+    // Allocate and initialize arrays
     value_type q[N];
-    value_type u[N];
-    value_type v[N];
-    value_type control_q[N];
-
-    // Initialize
-    for (int i = 0; i < N; ++i) {
-        u[i] = i;
-        v[i] = i + 1;
-        control_q[i] = 5;
-    }
+    value_type * u = new value_type[N]{2,3,2,3,2,3,2,3,2};
+    value_type * v = new value_type[N]{1,2,3,4,5,6,7,8,9};
+    value_type * control_q = new value_type[N]{-0.5, 0, -2.5, 2.5, 1, -2.5, 5.5, 2, -2.5};
 
     // Perform computation
     vorticity(N, 1, u, v, q);
