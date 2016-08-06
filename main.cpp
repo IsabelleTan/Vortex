@@ -10,6 +10,9 @@
 
 using namespace std;
 
+/*
+ * A function to print the location of the current working directory (useful to find the output files)
+ */
 void printWorkingDirectory(){
     char cCurrentPath[FILENAME_MAX];
 
@@ -23,10 +26,6 @@ void printWorkingDirectory(){
 
     printf ("The current working directory is %s \n", cCurrentPath);
     return;
-}
-
-void testFunction(Ref<MatrixXd> m){
-    cout << "This is a test function" << endl;
 }
 
 int main(){

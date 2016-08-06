@@ -33,7 +33,7 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
         }
     }
 
-    // TODO maybe change this depending on the answer from the TA's
+    // TODO modify according to TA's answer
     // Set the boundary velocities equal to the inner ring velocities
     for (int j = 1; j < M-1; ++j) {
         // Top boundary
@@ -105,17 +105,14 @@ void vorticity(const int N, const value_type h, value_type * const u, value_type
 }
 
 /*
- * This function computes the spread of vorticity resulting from diffusion, using a Crank Nicholson scheme.
- */
-void diffusion(){
-    // TODO complete diffusion
-}
-
-/*
  * This function computes the new particle locations from the velocity by performing one explicit Euler step.
  */
-void advection(){
-    // TODO complete advection
+void advection(const int N, const value_type dt, value_type * const u, value_type * const v, value_type * const x, value_type * const y){
+    // Use forward explicit Euler
+    for (int i = 0; i < N; ++i) {
+        x[i] += u[i] * dt;
+        y[i] += v[i] * dt;
+    }
 }
 
 /*

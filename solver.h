@@ -23,15 +23,11 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
  */
 void vorticity(const int N, const value_type h, value_type * const u, value_type * const v, value_type * const q);
 
-/*
- * This function computes the spread of vorticity resulting from diffusion, using a Crank Nicholson scheme.
- */
-void diffusion();
 
 /*
  * This function computes the new particle locations from the velocity by performing one explicit Euler step.
  */
-void advection();
+void advection(const int N, const value_type dt, value_type * const u, value_type * const v, value_type * const x, value_type * const y);
 
 /*
  * This function computes the time-step size for the next iteration based on the current velocities.
