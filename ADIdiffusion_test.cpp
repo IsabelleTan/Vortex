@@ -9,7 +9,6 @@
 #include "datapoints.h"
 #include "fields.h"
 
-using namespace Eigen;
 using namespace std;
 const value_type EPSILON = 0.000001;
 
@@ -94,7 +93,7 @@ void ADI_test_output(){
         matrixToArray(q_new, q_new_mat);
 
         // Assign a string for filename and write to file
-        string filename = to_string(i) + ".txt";
+        filename = to_string(i) + ".txt";
         write_to_file(filename.c_str(), N, q_new);
 
         // Set q_0 to be q_new_mat for the next timestep

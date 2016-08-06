@@ -3,12 +3,11 @@
 //
 
 #include <iostream>
-#include "ADIdiffusion_test.h"
 #include "fields.h"
 #include <unistd.h>
 #define GetCurrentDir getcwd
 
-using namespace Eigen;
+
 using namespace std;
 
 void printWorkingDirectory(){
@@ -32,5 +31,5 @@ void testFunction(Ref<MatrixXd> m){
 
 int main(){
 
-    ADI_test_output();
+    analyticalSolution();
 }

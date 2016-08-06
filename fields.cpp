@@ -2,10 +2,11 @@
 // Created by Isabelle Tan on 27-07-16.
 //
 
-#include "fields.h"
 #include <iostream>
+#include "fields.h"
+#include "datapoints.h"
 
-
+using namespace std;
 
 /*
  * This function creates a regular 2D grid of N (x,y) coordinates with domain (xRange,yRange) centered around 0. If it
@@ -44,15 +45,13 @@ bool grid(const int N, value_type * const x, value_type * const y, const value_t
 /*
  * This function creates a Lamb-Oseen vortex.
  */
-void lambOseen(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type coreRadius, const value_type circ){
-    // Compute the number of grid points in one row or column
-    const int M = sqrt(N);
-
-    // Assuming lexicographical ordering and the domain centered around (0,0)
+void lambOseen(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type visc, const value_type circ, value_type t){
+    // Assuming the domain is centered around (0,0)
     for (int i = 0; i < N; ++i) {
         // Compute the radius of the particle from the center of the domain
         value_type r = sqrt(x[i]*x[i] + y[i]*y[i]);
-        q[i] = circ/(M_PI * coreRadius * coreRadius) * exp(-(r*r)/(coreRadius*coreRadius));
+        value_type sigma = sqrt(4*visc*(t+0.25));
+        q[i] = circ/(M_PI * sigma * sigma) * exp(-(r*r)/(sigma*sigma));
     }
 }
 
@@ -92,4 +91,47 @@ void matrixToArray(value_type * x, MatrixXd & M){
         }
     }
     return;
+}
+
+/*
+ * This function computes the analytical solution and writes the result to files.
+ */
+void analyticalSolution(){
+    // PARAMETERS
+    // time
+    const value_type t_end = 5;
+    const value_type dt = 0.05;
+    const int iter = t_end/dt;
+
+    // vortex
+    const value_type visc = 1;
+    const value_type circ = 10;
+
+    // spatial
+    const int N = 10000;
+    const int n =sqrt(N);
+    const value_type dx = 0.1;
+    const value_type range=(n-1)*dx;
+
+    // Prepare string for filename
+    string filename;
+
+    // Create a grid
+    value_type * const x = new value_type[N];
+    value_type * const y = new value_type[N];
+    value_type * const q = new value_type[N];
+
+    grid(N, x, y, range, range);
+
+
+    // Loop over the timesteps and compute the vorticity field at each timestep. Write the resulting field to a file.
+    for (int i = 0; i < iter; ++i) {
+        lambOseen(N, x, y, q, visc, circ, i*dt);
+
+        // Assign a string for filename and write to file
+        filename = to_string(i) + ".txt";
+        write_to_file(filename.c_str(), N, q);
+
+    }
+
 }

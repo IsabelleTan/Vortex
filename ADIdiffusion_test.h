@@ -5,8 +5,7 @@
 #ifndef VORTEX_ADIDIFFUSION_TEST_H
 #define VORTEX_ADIDIFFUSION_TEST_H
 
-// Set the type to double
-typedef double value_type;
+
 
 // A function that solves a linear system in O(n), given the matrix is tridiagonal with a, b and c the diagonal constants
 bool ThomasAlg_test();

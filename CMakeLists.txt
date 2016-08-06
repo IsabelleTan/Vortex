@@ -15,7 +15,7 @@ set(SOURCE_FILES
         fields_test.cpp
         ADIdiffusion.cpp
         ADIdiffusion_test.cpp
-        )
+        datapoints.cpp)
 
 set(HEADER_FILES
         expansion.h

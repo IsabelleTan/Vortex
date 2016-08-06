@@ -35,7 +35,6 @@ def readFile(filename):
     # Read and print the first decimal (!) number which represents the number of particles
     line = f.readline()
     nParticles = int(line)
-    print("Number of particles: ", nParticles)
 
     # Read in the rest of the data (binary)
     data = np.fromfile(f, np.float64, nParticles, "")
@@ -82,7 +81,7 @@ v_max:      maximum value for color scale                       DEF = 4
 folder:     location of files w.r.t. this script's directory    DEF = "Test_output_files/5t/"
 colormap:   type of colormap to use                             DEF = plt.get_cmap("BrBG")
 '''
-def animate(t0 = 0, t_end = 4, folder = "Test_output_files/test_diffusion/", colormap = plt.get_cmap("viridis")):
+def animate(t0 = 0, t_end = 4, folder = "Test_output_files/analytical/", colormap = plt.get_cmap("viridis")):
     # Go to the script's directory
     curDir = os.getcwd()
     os.chdir(curDir)
@@ -104,9 +103,13 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/test_diffusion/", col
 
     # Append the image list with each frame for the animation
     for t in times:
+        print(t)
         # Define new filename
         filename = folder + str(t) + ".txt"
-        frames.append([plt.imshow(readFile(filename)[1], cmap = colormap, animated=True, vmin = v_min, vmax = v_max)])
+        data = readFile(filename)[1]
+        frames.append([plt.imshow(data, cmap = colormap, animated=True, vmin = v_min, vmax = v_max)])
+        print("min = ", np.min(data))
+        print("max = ", np.max(data))
 
     # Transform the list into an animation
     ani = anim.ArtistAnimation(fig, frames, interval=100, blit=False, repeat=False)
@@ -117,6 +120,8 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/test_diffusion/", col
     writer = Writer(fps=10, metadata=dict(artist='Me'), bitrate=1800)
 
     ani.save('test.mp4', writer=writer)
+
+    print(v_min, v_max)
 
     return
 
