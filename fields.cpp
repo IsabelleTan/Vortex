@@ -3,10 +3,8 @@
 //
 
 #include "fields.h"
-#include "cmath"
 #include <iostream>
 
-using namespace std;
 
 
 /*
@@ -46,7 +44,7 @@ bool grid(const int N, value_type * const x, value_type * const y, const value_t
 /*
  * This function creates a Lamb-Oseen vortex.
  */
-void lambOseen(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type coreRadius, const value_type circ, const value_type visc){
+void lambOseen(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type coreRadius, const value_type circ){
     // Compute the number of grid points in one row or column
     const int M = sqrt(N);
 
@@ -56,4 +54,42 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
         value_type r = sqrt(x[i]*x[i] + y[i]*y[i]);
         q[i] = circ/(M_PI * coreRadius * coreRadius) * exp(-(r*r)/(coreRadius*coreRadius));
     }
+}
+
+
+/*
+ * This function copies the content of an array x into an Eigen MatrixXd.
+ * Ordering:
+ * Array - lexicographical
+ * Matrix - filled column wise (so transpose of what data locations look like)
+ */
+void arrayToMatrix(value_type * x, MatrixXd & M){
+    // Loop over rows and columns
+    const int r = M.rows();
+    const int c = M.cols();
+    for (int i = 0; i < r; ++i) {
+        for (int j = 0; j < c; ++j) {
+            M(j,i) = x[i*c + j];
+        }
+    }
+    return;
+}
+
+
+/*
+ * This function copies the content of an Eigen MatrixXd into an array.
+ * Ordering:
+ * Array - lexicographical
+ * Matrix - filled column wise (so transpose of what data locations look like)
+ */
+void matrixToArray(value_type * x, MatrixXd & M){
+    // Loop over rows and columns
+    const int r = M.rows();
+    const int c = M.cols();
+    for (int i = 0; i < r; ++i) {
+        for (int j = 0; j < c; ++j) {
+            x[i*c + j] = M(j,i);
+        }
+    }
+    return;
 }

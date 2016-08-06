@@ -8,6 +8,7 @@
 // Set the value_type
 typedef double value_type;
 
+
 // A test function for the grid() function
 bool grid_test();
 

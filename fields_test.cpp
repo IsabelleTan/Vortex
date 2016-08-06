@@ -5,8 +5,8 @@
 #include "fields_test.h"
 #include "fields.h"
 #include <iostream>
-
 using namespace std;
+
 
 // A test function for the grid() function
 bool grid_test(){
