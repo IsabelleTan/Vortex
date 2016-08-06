@@ -104,7 +104,7 @@ void ADI(int N, value_type * const q_0, value_type * const q_new, const value_ty
     }
 
 
-    // Solve left hand side with Thomas algorithm
+    // Solve left hand side with Thomas algorithm (also per row)
     // Make variables containing the subdiagonal, diagonal and superdiagonal values
     const value_type a = -r;
     const value_type b = 1+2*r;
@@ -120,7 +120,7 @@ void ADI(int N, value_type * const q_0, value_type * const q_new, const value_ty
     changeOrdering(N, q_half_r, q_half_c);
 
 
-    // Compute right hand side
+    // Compute right hand side (per column)
     // Loop over the grid locations and compute finite differences in the X direction
     for (int j = 0; j < n; ++j) {
         for (int i = 0; i < n; ++i) {
@@ -138,7 +138,7 @@ void ADI(int N, value_type * const q_0, value_type * const q_new, const value_ty
         }
     }
 
-    // Solve left hand side with Thomas algorithm
+    // Solve left hand side with Thomas algorithm (per column)
     value_type * q_new_c = new value_type[N];
     ThomasAlg(N, a, b, c, q_new_c, RHS);
 
