@@ -69,10 +69,10 @@ void build(const value_type* const x, const value_type* const y, const value_typ
     double xmin, ymin, ext;
     extent(N, x, y, xmin, ymin, ext);
 
-    morton(N, x, y, xmin, ymin, ext, index);
+    morton(N, x, y, xmin, ymin, ext, index, depth);
 
     // Sort the indices and store the corresponding permutation in keys
-    int *keys = new int[N];
+    unsigned int *keys = new unsigned int[N];
 
     // Put the values in keys
     for (int j = 0; j < N; ++j) {

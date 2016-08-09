@@ -48,7 +48,7 @@ void extent(const int N, const double* const x, const double* const y, double& x
 	ymin -= eps * ext; 
 } 
 	
-void morton(const int N, const double* const x, const double* const y, const double xmin, const double ymin, const double ext, unsigned int* index) 		// set 2, question 1, b)
+void morton(const int N, const double* const x, const double* const y, const double xmin, const double ymin, const double ext, unsigned int* index, unsigned int depth) 		// set 2, question 1, b)
 {
 	// N		# of data points
 	// x		array of x-coordinates 										(unsorted)
@@ -73,8 +73,8 @@ void morton(const int N, const double* const x, const double* const y, const dou
 	#pragma omp parallel for
     for(int i = 0; i < N; ++i)
     {
-		int xid = floor((x[i] - xmin) / ext * (1 << depthtree));	// (x[i] - xmin) / ext // normalize the coord. pos. w/ resp. to the square length
-		int yid = floor((y[i] - ymin) / ext * (1 << depthtree));	// * (1 << level_max)  // 0..01000000000000000 = 2^15
+		int xid = floor((x[i] - xmin) / ext * (1 << depth));	// (x[i] - xmin) / ext // normalize the coord. pos. w/ resp. to the square length
+		int yid = floor((y[i] - ymin) / ext * (1 << depth));	// * (1 << level_max)  // 0..01000000000000000 = 2^15
 
 		xid = (xid | (xid << 8)) & 0x00FF00FF; // cf https://graphics.stanford.edu/~seander/bithacks.html#InterleaveBMN
 		xid = (xid | (xid << 4)) & 0x0F0F0F0F;
@@ -95,7 +95,7 @@ void morton(const int N, const double* const x, const double* const y, const dou
     }
 }
 
-void sort(const int N, unsigned int* index, int* keys) 																									// set 2, question 1, c)
+void sort(const int N, unsigned int* index, unsigned int* keys) 																									// set 2, question 1, c)
 {
 	// INPUT
 	// N		# of data points
@@ -132,7 +132,7 @@ void sort(const int N, unsigned int* index, int* keys) 																									
 	free(temp);												// free the memory assigned by posix_memalign
 }
 
-void reorder(const int N, const int* const keys, const double* const x, const double* const y, const double* const q, double* xsorted, double* ysorted, double* qsorted) 				// set 2, question 1, d)
+void reorder(const int N, const unsigned int* const keys, const double* const x, const double* const y, const double* const q, double* xsorted, double* ysorted, double* qsorted) 				// set 2, question 1, d)
 {
 	// INPUT
 	// N		# of data points

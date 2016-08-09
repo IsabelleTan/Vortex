@@ -89,7 +89,7 @@ bool testMorton(){
     double xmin, ymin, ext;
 
     // Compute indices
-    morton(N, x, y, xmin, ymin, ext, index);
+    morton(N, x, y, xmin, ymin, ext, index, depth);
 
     // test the resulting indices against the control indices
     for (int i = 0; i < N; ++i) {

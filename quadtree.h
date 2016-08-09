@@ -13,8 +13,7 @@
  */
 struct Node
 {
-    int level;                  // Nr of subdivisions in the tree for this node
-    unsigned int morton_id;     // Morton index of square of this node.
+    unsigned int level, morton_id;       // Nr of subdivisions in the tree for this node and morton index of square of this node.
     int child_id;               // Array index of the first of the four child nodes.
     int part_start, part_end;   // Array indices of first and last particle inside this node.
     value_type mass, xcom, ycom;// The mass of this node (sum of particle mass) and x,y position of center of mass.

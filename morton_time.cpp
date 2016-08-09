@@ -26,7 +26,7 @@ double time_extent(const int N, const double* const x, const double* const y, do
 	return ext_time/samplesize;
 }
 
-double time_morton(const int N, const double* const x, const double* const y, const double xmin, const double ymin, const double ext, int* index){
+double time_morton(const int N, const double* const x, const double* const y, const double xmin, const double ymin, const double ext, unsigned int* index, const unsigned int depth){
 
 	auto start = std::chrono::high_resolution_clock::now();
 	auto end   = std::chrono::high_resolution_clock::now();
@@ -34,7 +34,7 @@ double time_morton(const int N, const double* const x, const double* const y, co
 	
 	for(size_t i=0; i<samplesize; i++){
 		start = std::chrono::high_resolution_clock::now();
-		morton(N, x, y, xmin, ymin, ext, index); 
+		morton(N, x, y, xmin, ymin, ext, index, depth); 
 		end = std::chrono::high_resolution_clock::now();
 		morton_time += static_cast<std::chrono::duration<double>>(end-start).count();
 	}
@@ -42,7 +42,7 @@ double time_morton(const int N, const double* const x, const double* const y, co
 	return morton_time/samplesize;
 }
 
-double time_sort(const int N, int* index, int* keys){
+double time_sort(const int N, unsigned int* index, unsigned int* keys){
 
 	auto start = std::chrono::high_resolution_clock::now();
 	auto end   = std::chrono::high_resolution_clock::now();
@@ -58,7 +58,7 @@ double time_sort(const int N, int* index, int* keys){
 	return sort_time/samplesize;
 }
 
-double time_reorder(const int N, const int* const keys, const double* const x, const double* const y, const double* const q, double* xsorted, double* ysorted, double* qsorted){
+double time_reorder(const int N, const unsigned int* const keys, const double* const x, const double* const y, const double* const q, double* xsorted, double* ysorted, double* qsorted){
 	
 	auto start = std::chrono::high_resolution_clock::now();
 	auto end   = std::chrono::high_resolution_clock::now();
@@ -76,8 +76,9 @@ double time_reorder(const int N, const int* const keys, const double* const x, c
 
 void time_all(){														// time all functions and display times 
 	// declare the variables and vectors needed
+	const int depth(15);
 	double *x, *y, *q, *xsorted, *ysorted, *qsorted;
-	int *index, *keys; 
+	unsigned int *index, *keys; 
 	double xmin, ymin, ext; 
 	std::chrono::time_point< std::chrono::high_resolution_clock > start , end;
 		
@@ -98,7 +99,7 @@ void time_all(){														// time all functions and display times
 		
 	// execute functions and perform time measurements
 	const double ext_time(time_extent(numberdatapoints, x, y, xmin, ymin, ext));	
-	const double morton_time(time_morton(numberdatapoints, x, y, xmin, ymin, ext, index));	
+	const double morton_time(time_morton(numberdatapoints, x, y, xmin, ymin, ext, index, depth));	
 	const double sort_time(time_sort(numberdatapoints, index, keys));
 	const double reorder_time(time_reorder(numberdatapoints, keys, x, y, q, xsorted, ysorted, qsorted));
 	const double total_time = ext_time + morton_time + sort_time + reorder_time ;
