@@ -243,15 +243,6 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
 
     // Loop over all particles
     for (int i = parent->part_start; i <= parent->part_end; ++i) {
-
-        // Check if c is still smaller than 4
-        if(c >=4){
-            std::cout << "c = " << c << " when trying to assign particle " << i << " with morton id " << index[i] << std::endl;
-            std::cout << "This is wrong because c should be in [0,1,2,3] to loop over the child nodes" << std::endl;
-            std::cout << "Terminating the assignment of particles." << std::endl;
-            break;
-        }
-
         // Check if the morton index of the particle is smaller than the morton index of the first child node. If so
         // something went wrong.
         if (index[i]<children[c].morton_id){
@@ -264,6 +255,14 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
         // While the particle is not in the current child node "child", check if the current node is then empty or not.
         // Then, repeat for next child node.
         while(index[i] > children[c].morton_id - 1 + indexValue_level){
+            // Check if c is still smaller than 4
+            if(c >=4){
+                std::cout << "c = " << c << " when trying to assign particle " << i << " with morton id " << index[i] << std::endl;
+                std::cout << "This is wrong because c should be in [0,1,2,3] to loop over the child nodes" << std::endl;
+                std::cout << "Terminating the assignment of particles." << std::endl;
+                break;
+            }
+
             part_end = i-1;
             // Check whether the current child node is empty
             if(part_end<part_start){
