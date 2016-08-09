@@ -119,7 +119,7 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
     Writer = anim.writers['ffmpeg']
     writer = Writer(fps=10, metadata=dict(artist='Me'), bitrate=1800)
 
-    ani.save('unstable.mp4', writer=writer)
+    ani.save('animation.mp4', writer=writer)
 
     print(v_min, v_max)
 
@@ -127,8 +127,8 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
 
 ##########################################
 # Animate 100 files
-animate(0,99) # animate(0, 99, folder = "FOLDERNAME") # FOLDERNAME is the location of output files wrt main.py
-
+animate(0,99, folder = "FOLDERNAME")
+# animate(0, 99, folder = "FOLDERNAME") # FOLDERNAME is the location of output files wrt main.py
 '''# Solve a tridiagonal system
 a = np.zeros((16,16))
 b = np.zeros(16)
