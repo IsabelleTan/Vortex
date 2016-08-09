@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -pthread -mavx -mfma
 set(SOURCE_FILES
         ADIdiffusion.cpp
         ADIdiffusion_test.cpp
+		complexAVX.cpp
         datapoints.cpp
         datapoints_test.cpp
         expansion.cpp
@@ -26,11 +27,12 @@ set(SOURCE_FILES
         simulation.cpp
         solver.cpp
         solver_test.cpp
-        )
+		main.cpp)
 
 set(HEADER_FILES
         ADIdiffusion.h
         ADIdiffusion_test.h
+		complexAVX.h
 	datapoints.h
         expansion.h
         fields.h
