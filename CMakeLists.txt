@@ -6,42 +6,41 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -pthread -mavx -mfma
 
 
 set(SOURCE_FILES
-        main.cpp
-        simulation.cpp
+        ADIdiffusion.cpp
+        ADIdiffusion_test.cpp
         datapoints.cpp
         datapoints_test.cpp
         expansion.cpp
         expansion_test.cpp
-        solver.cpp
+        fields.cpp
+        fields_test.cpp
+        main.cpp
         morton.cpp
         morton_test.cpp
         morton_time.cpp
+        multipole.cpp
+        multipole_test.cpp
         quadtree.cpp
         quadtree_test.cpp
         quadtree_time.cpp
-        multipole.cpp
-        multipole_test.cpp
+        simulation.cpp
+        solver.cpp
         solver_test.cpp
-        fields.cpp
-        fields_test.cpp
-        ADIdiffusion.cpp
-        ADIdiffusion_test.cpp
-        datapoints.cpp)
+        )
 
 set(HEADER_FILES
-		simulation.h
-		datapoints.h
-        expansion.h
-        multipole.h
-        solver.h
-        morton.h
-        quadtree.h
-        fields.h
-        fields_test.h
-        datapoints.h
         ADIdiffusion.h
         ADIdiffusion_test.h
-)
+	datapoints.h
+        expansion.h
+        fields.h
+        morton.h
+        multipole.h
+        quadtree.h
+	simulation.h
+        solver.h
+        )
+
 
 add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES}) 
 
@@ -67,8 +66,11 @@ add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
 
 # -fopenmp                                  # Use OpenMP
 
+# -pthread									# use multithreading (for extent() in quadtree)
+
 # -ftree-vectorize -fopt-info-vec -O        # Tell the compiler to vectorize code if it thinks it's possible,
                                             # and show output about loops that are vectorized. The -O is necessary.
 
 # -mavx -mfma                               # Use AVX intrinsics and use Fused Multiply Add (FMA) intrinsics for
                                             # vectorized code.
+
