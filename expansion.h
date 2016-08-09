@@ -2,11 +2,10 @@
 // Created by Isabelle Tan on 27-07-16.
 //
 
-#ifndef VORTEX_KERNELS_H
-#define VORTEX_KERNELS_H
+#ifndef VORTEX_EXPANSION_H
+#define VORTEX_EXPANSION_H
 
-// Set the value_type
-typedef double value_type;
+#include "simulation.h"			// for simulation-parameters etc.
 
 /*
  * The particle to expansion kernel. This function computes the alpha_k coefficients and stores their real and imaginary
@@ -26,4 +25,4 @@ value_type e2p(const double xtarget, const double ytarget, const double q, const
 value_type p2p(const value_type* const xsources, const value_type* const ysources, const value_type* const q, const int nsources, const value_type xtarget, const value_type ytarget);
 
 
-#endif //VORTEX_KERNELS_H
+#endif //VORTEX_EXPANSION_H

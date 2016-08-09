@@ -5,13 +5,7 @@
 #ifndef VORTEX_SOLVER_H
 #define VORTEX_SOLVER_H
 
-// Set the value_type
-typedef double value_type;
-
-/*
- * This function computes the potential from all source particles at the target locations
- */
-void potential();
+#include "simulation.h"				// for the typedef value_type and other parameters
 
 /*
  * This function computes the velocity of the particles by taking the curl of the streamfunction.

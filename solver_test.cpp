@@ -3,10 +3,7 @@
 //
 
 #include "solver.h"
-#include "solver_test.h"
 #include <iostream>
-
-using namespace std;
 
 /*
  * A function to test the velocity() function
@@ -36,20 +33,20 @@ bool velocity_test(){
     // Test the result
     for (int j = 0; j < N; ++j) {
         if(u[j] == control_u[j] && v[j] == control_v[j]){
-            cout << "u[j] = " << u[j] << " == " << control_u[j] << " = control_u[j]" << " and" << endl;
-            cout << "v[j] = " << v[j] << " == " << control_v[j] << " = control_v[j]\n" << endl;
+            std::cout << "u[j] = " << u[j] << " == " << control_u[j] << " = control_u[j]" << " and" << std::endl;
+            std::cout << "v[j] = " << v[j] << " == " << control_v[j] << " = control_v[j]\n" << std::endl;
         } else {
-            cout << "u[j] = " << u[j] << " != " << control_u[j] << " = control_u[j]" << " or" << endl;
-            cout << "v[j] = " << v[j] << " != " << control_v[j] << " = control_v[j]\n" << endl;
+            std::cout << "u[j] = " << u[j] << " != " << control_u[j] << " = control_u[j]" << " or" << std::endl;
+            std::cout << "v[j] = " << v[j] << " != " << control_v[j] << " = control_v[j]\n" << std::endl;
             result = false;
         }
     }
 
     // Print the result
     if(result){
-        cout << "Test succeeded!" << endl;
+        std::cout << "Test succeeded!" << std::endl;
     } else {
-        cout << "Test failed" << endl;
+        std::cout << "Test failed" << std::endl;
     }
 
     return result;
@@ -75,19 +72,31 @@ bool vorticity_test(){
     // Test the result
     for (int j = 0; j < N; ++j) {
         if(q[j] == control_q[j]){
-            cout << "q[j] = " << q[j] << " == " << control_q[j] << " = control_q[j]" << endl;
+            std::cout << "q[j] = " << q[j] << " == " << control_q[j] << " = control_q[j]" << std::endl;
         } else {
-            cout << "q[j] = " << q[j] << " != " << control_q[j] << " = control_q[j]" << endl;
+            std::cout << "q[j] = " << q[j] << " != " << control_q[j] << " = control_q[j]" << std::endl;
             result = false;
         }
     }
 
     // Print the result
     if(result){
-        cout << "Test succeeded!" << endl;
+        std::cout << "Test succeeded!" << std::endl;
     } else {
-        cout << "Test failed" << endl;
+        std::cout << "Test failed" << std::endl;
     }
 
     return result;
 }
+
+
+int main()
+{
+	
+	bool a = velocity_test(); 
+	
+	bool b = vorticity_test(); 
+	
+	return 0; 
+	
+} 

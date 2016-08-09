@@ -6,8 +6,6 @@
 #include "fields.h"
 #include "datapoints.h"
 
-using namespace std;
-
 /*
  * This function creates a regular 2D grid of N (x,y) coordinates with domain (xRange,yRange) centered around 0. If it
  * succeeds it returns true, if it fails because N is not a perfect square it returns false.
@@ -18,7 +16,7 @@ bool grid(const int N, value_type * const x, value_type * const y, const value_t
 
     // Test if M is an integer
     if (N != M*M){
-        cout << "The number of gridpoints is not a perfect square, use a different N." << endl;
+        std::cout << "The number of gridpoints is not a perfect square, use a different N." << std::endl;
         return false;
     }
 
@@ -59,7 +57,7 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
 /*
  * This function copies the content of an array x into an Eigen MatrixXd.
  * Ordering:
- * Array - lexicographical
+ * Array - lexicographical (left to right then one row lower etc)
  * Matrix - filled column wise (so transpose of what data locations look like)
  */
 void arrayToMatrix(value_type * x, MatrixXd & M){
