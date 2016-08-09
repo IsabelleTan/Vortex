@@ -1,5 +1,6 @@
 
 #include "morton.h"
+#include <iostream>
 
 // Put some random values in the arrays
 void initialize(const int N, value_type* x, value_type* y, value_type* mass){
@@ -47,7 +48,7 @@ void extent(const int N, const double* const x, const double* const y, double& x
 	ymin -= eps * ext; 
 } 
 	
-void morton(const int N, const double* const x, const double* const y, const double xmin, const double ymin, const double ext, int* index) 		// set 2, question 1, b)
+void morton(const int N, const double* const x, const double* const y, const double xmin, const double ymin, const double ext, unsigned int* index) 		// set 2, question 1, b)
 {
 	// N		# of data points
 	// x		array of x-coordinates 										(unsorted)
@@ -86,10 +87,15 @@ void morton(const int N, const double* const x, const double* const y, const dou
 		yid = (yid | (yid << 1)) & 0x55555555;
 
 		index[i] = xid | (yid << 1);			// assign morton index
+
+/* #pragma omp critical
+		{
+			std::cout << "index[" << i << "] = " << index[i] << " (assigned in morton())" << std::endl;
+		} */
     }
 }
 
-void sort(const int N, int* index, int* keys) 																									// set 2, question 1, c)
+void sort(const int N, unsigned int* index, int* keys) 																									// set 2, question 1, c)
 {
 	// INPUT
 	// N		# of data points
@@ -106,7 +112,7 @@ void sort(const int N, int* index, int* keys) 																									// set 2,
 	/// or is it actually more memory intensive cause you move the x and y elements around as well? 
 	/// I think so ... 
 		
-	std::pair<int, int> *temp = NULL;						// create an array of pairs that will contain (1) index of a particle (2) key corresponding to its position in the x-array and y-array
+	std::pair<unsigned int, int> *temp = NULL;						// create an array of pairs that will contain (1) index of a particle (2) key corresponding to its position in the x-array and y-array
 	posix_memalign((void **)&temp, 32, sizeof(*temp)*N );	// memalign it 
 
 	#pragma omp parallel for	

@@ -5,7 +5,6 @@
 #include <iostream>
 #include "morton.h"
 #include "quadtree.h"
-#include "expansion.h"
 
 // Set the value_type
 typedef double value_type;
@@ -85,7 +84,7 @@ bool testMorton(){
     // Create particle coordinate arrays
     value_type x [N] = {0.1, 0.4, 0.8, 0.9, 0.9, 0, 1};
     value_type y [N] = {0.3, 0.6, 0.4, 0.8, 0.1, 0, 1};
-    int *index = new int[N];
+    unsigned int *index = new unsigned int[N];
     uint32_t control [N] = {8, 3, 13, 5, 15, 10, 5};
     double xmin, ymin, ext;
 
@@ -128,9 +127,9 @@ bool testAssignParticles(){
 
     // Initiate arrays
     // Create index array
-    int index_0[N] = {3, 5, 5, 8, 10, 13, 15};
-    int index_1[N] = {4, 5, 5, 8, 9, 10, 11};
-    int index_2[N] = {3, 13, 13, 13, 14, 15, 15};
+    unsigned int index_0[N] = {3, 5, 5, 8, 10, 13, 15};
+    unsigned int index_1[N] = {4, 5, 5, 8, 9, 10, 11};
+    unsigned int index_2[N] = {3, 13, 13, 13, 14, 15, 15};
 
     // Make arrays containing the known true values
     int part_start_control_0[4] = {0, 1, 3, 5};
@@ -342,7 +341,7 @@ bool testBuild(){
     bool result = true;
 
     int N = 7;
-    int depth = 2;
+    int depth = 15; // Do not change this because the morton indices of the particles are computed with depth = 15
     int k = 8;
 
     value_type x[7] = {0.1, 0.15, 0.4, 0.6, 0.7, 0.71, 0.8};
@@ -394,7 +393,8 @@ bool testr(){
 	
 	// Create particles and particle arrays 
 	int N = 10;
-    int depth = 2;
+    int depth = 15; // Do not change this because the morton indices of the tree nodes are computed with this value
+                    // whereas the morton indices of the particles are always computed with depth=15
     int k = 8;
 
     value_type x[10] = {0.1, 0.15, 0.4, 0.6, 0.7, 0.71, 0.8, 0.74, 0.48, 0.41};

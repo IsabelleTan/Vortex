@@ -25,7 +25,7 @@ void load_data_from_file(const char* fname, int& N, value_type** x, value_type**
 
 	FILE* f = fopen(fname, "r");			// open file to read from in "read" mode
 
-	// determine n 
+	// determine n
 	char dummy[100];
 	fscanf(f, "%s", dummy);					// read up to first whitespace? 
 	fscanf(f, "%d\n", &N);					// read the number of data points in decimal format
