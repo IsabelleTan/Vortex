@@ -96,7 +96,7 @@ void ADI(Ref<MatrixXd> q_0, Ref<MatrixXd> q_new, const value_type dt, const valu
 
 
     // Take the transpose of the new data so it's columnwise again
-    q_new = q_new_T.transpose();
-
+    //q_new = q_new_T.transpose();
+    q_new = q_new_T;
     return;
 }

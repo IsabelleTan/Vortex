@@ -54,18 +54,18 @@ bool ThomasAlg_test(){
 void ADI_test_output(){
     // Set parameters
     const value_type t_0 = 0;
-    const value_type t_end = 100;
-    const value_type dt = 1;
+    const value_type t_end = 10;
+    const value_type dt = 0.1;
     int iter = (int)(t_end - t_0)/dt;
-    const value_type dx = 0.01;
-    const value_type v = 0.5;
+    const value_type dx = 0.1;
+    const value_type v = 1;
     const int N = 10000;
     const int n = sqrt(N);
 
     // Allocate array
     value_type * q_0 = new value_type[N];
 
-    // Fill initial array (loop row wise)
+    // Fill initial array with a square in the center
     /*for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if(::abs(i-n/2)<10 && ::abs(j-n/2) < 10){

@@ -2,11 +2,11 @@
 // Created by Isabelle Tan on 09-08-16.
 //
 
-#include <iostream>
+#include "ADIdiffusion_test.h"
 
 int main(){
 
-    std::cout << "Hello!" << std::endl;
+    ADI_test_output();
 
     return 0;
 }

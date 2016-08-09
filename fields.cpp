@@ -83,8 +83,8 @@ void matrixToArray(value_type * x, MatrixXd & M){
     // Loop over rows and columns
     const int r = M.rows();
     const int c = M.cols();
-    for (int i = 0; i < r; ++i) {
-        for (int j = 0; j < c; ++j) {
+    for (int i = 0; i < c; ++i) {
+        for (int j = 0; j < r; ++j) {
             x[i*c + j] = M(j,i);
         }
     }

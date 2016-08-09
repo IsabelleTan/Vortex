@@ -95,7 +95,7 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
     frames = []
 
     # Read initial data
-    file_0 = folder + "0.txt"
+    file_0 = folder + "/" + "0.txt"
     nParticles, data_0 = readFile(file_0)
     v_min = np.min(data_0)
     v_max = np.max(data_0)
@@ -105,7 +105,7 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
     for t in times:
         print(t)
         # Define new filename
-        filename = folder + str(t) + ".txt"
+        filename = folder + "/" + str(t) + ".txt"
         data = readFile(filename)[1]
         frames.append([plt.imshow(data, cmap = colormap, animated=True, vmin = v_min, vmax = v_max)])
         print("min = ", np.min(data))
@@ -127,7 +127,7 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
 
 ##########################################
 # Animate 100 files
-animate(0,99, folder = "FOLDERNAME")
+animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
 
 '''# Solve a tridiagonal system
 a = np.zeros((16,16))
