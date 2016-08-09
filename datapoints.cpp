@@ -100,7 +100,7 @@ void clean_file(const char* fname){
 // write array x to file fname in binary
 // if there is data already written in the file, new data is appended at the end of it
 // for layout, look at commentaries inside function body
-void write_to_file(const char* fname, int N, const value_type2* x){
+void write_to_file(const char* fname, int N, const value_type* x){
     // INPUT
     // fname	name of file to be written in
     //          note to user: give file name with its extension
@@ -119,7 +119,7 @@ void write_to_file(const char* fname, int N, const value_type2* x){
     // write N
     fprintf(f, "%d\n", N);					// write N in decimal format, then go to a new line ("\n")
     // write array content
-    fwrite(x, sizeof(value_type2), N, f);		// write the array contents in binary format
+    fwrite(x, sizeof(value_type), N, f);		// write the array contents in binary format
 
     std:: cout << "Written to file " << fname << std::endl;
     fclose(f);
