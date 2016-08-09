@@ -27,7 +27,7 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
  * Array - lexicographical
  * Matrix - filled column wise (so transpose of what data locations look like)
  */
-void arrayToMatrix(value_type * x, MatrixXd & M);
+void arrayToMatrix(value_type * x, MatrixXd & M, bool invertOrder);
 
 /*
  * This function copies the content of an Eigen MatrixXd into an array.
@@ -35,7 +35,7 @@ void arrayToMatrix(value_type * x, MatrixXd & M);
  * Array - lexicographical
  * Matrix - filled column wise (so transpose of what data locations look like)
  */
-void matrixToArray(value_type * x, MatrixXd & M);
+void matrixToArray(value_type * x, MatrixXd & M, bool invertOrder);
 
 /*
  * This function computes the analytical solution and write the result to files
