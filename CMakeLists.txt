@@ -10,23 +10,23 @@ set(SOURCE_FILES
         ADIdiffusion_test.cpp
 		complexAVX.cpp
         datapoints.cpp
-        datapoints_test.cpp
+        #datapoints_test.cpp
         expansion.cpp
-        expansion_test.cpp
+        #expansion_test.cpp
         fields.cpp
-        fields_test.cpp
+        #fields_test.cpp
         main.cpp
         morton.cpp
-        morton_test.cpp
-        morton_time.cpp
+        #morton_test.cpp
+        #morton_time.cpp
         multipole.cpp
-        multipole_test.cpp
+        #multipole_test.cpp
         quadtree.cpp
-        quadtree_test.cpp
-        quadtree_time.cpp
-        simulation.cpp
+        #quadtree_test.cpp
+        #quadtree_time.cpp
+        #simulation.cpp
         solver.cpp
-        solver_test.cpp
+        #solver_test.cpp
 		main.cpp)
 
 set(HEADER_FILES

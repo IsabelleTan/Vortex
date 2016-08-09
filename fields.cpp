@@ -112,7 +112,7 @@ void analyticalSolution(){
     const value_type range=(n-1)*dx;
 
     // Prepare string for filename
-    string filename;
+    std::string filename;
 
     // Create a grid
     value_type * const x = new value_type[N];
@@ -127,7 +127,7 @@ void analyticalSolution(){
         lambOseen(N, x, y, q, visc, circ, i*dt);
 
         // Assign a string for filename and write to file
-        filename = to_string(i) + ".txt";
+        filename = std::to_string(i) + ".txt";
         write_to_file(filename.c_str(), N, q);
 
     }
