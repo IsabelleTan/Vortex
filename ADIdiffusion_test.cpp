@@ -89,7 +89,7 @@ void ADI_test_output(){
 
     // Put the array in a matrix
     MatrixXd q_0_mat(n,n);
-    arrayToMatrix(q_0, q_0_mat);
+    arrayToMatrix(q_0, q_0_mat, true);
     MatrixXd q_new_mat(n,n);
     value_type * q_new = new value_type[N];
 
@@ -101,7 +101,7 @@ void ADI_test_output(){
     for (int i = 1; i < iter; ++i) {
         // Compute one diffusion step
         ADI(q_0_mat, q_new_mat, dt, dx, v);
-        matrixToArray(q_new, q_new_mat);
+        matrixToArray(q_new, q_new_mat, true);
 
         // Assign a string for filename and write to file
         filename = to_string(i) + ".txt";

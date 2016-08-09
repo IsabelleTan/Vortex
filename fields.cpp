@@ -60,13 +60,17 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
  * Array - lexicographical (left to right then one row lower etc)
  * Matrix - filled column wise (so transpose of what data locations look like)
  */
-void arrayToMatrix(value_type * x, MatrixXd & M){
+void arrayToMatrix(value_type * x, MatrixXd & M, bool invertOrder){
     // Loop over rows and columns
     const int r = M.rows();
     const int c = M.cols();
     for (int i = 0; i < r; ++i) {
         for (int j = 0; j < c; ++j) {
-            M(j,i) = x[i*c + j];
+            if(invertOrder){
+                M(j,i) = x[i*c + j];
+            }else{
+                M(i,j) = x[i*c + j];
+            }
         }
     }
     return;
@@ -79,13 +83,17 @@ void arrayToMatrix(value_type * x, MatrixXd & M){
  * Array - lexicographical
  * Matrix - filled column wise (so transpose of what data locations look like)
  */
-void matrixToArray(value_type * x, MatrixXd & M){
+void matrixToArray(value_type * x, MatrixXd & M, bool invertOrder){
     // Loop over rows and columns
     const int r = M.rows();
     const int c = M.cols();
     for (int i = 0; i < c; ++i) {
         for (int j = 0; j < r; ++j) {
-            x[i*c + j] = M(j,i);
+            if(invertOrder){
+                x[i*c + j] = M(j,i);
+            } else {
+                x[i * c + j] = M(i, j);
+            }
         }
     }
     return;
