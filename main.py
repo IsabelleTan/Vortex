@@ -81,7 +81,7 @@ v_max:      maximum value for color scale                       DEF = 4
 folder:     location of files w.r.t. this script's directory    DEF = "Test_output_files/5t/"
 colormap:   type of colormap to use                             DEF = plt.get_cmap("BrBG")
 '''
-def animate(t0 = 0, t_end = 4, folder = "Test_output_files/analytical/", colormap = plt.get_cmap("viridis")):
+def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap = plt.get_cmap("viridis")):
     # Go to the script's directory
     curDir = os.getcwd()
     os.chdir(curDir)
@@ -119,7 +119,7 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/analytical/", colorma
     Writer = anim.writers['ffmpeg']
     writer = Writer(fps=10, metadata=dict(artist='Me'), bitrate=1800)
 
-    ani.save('test.mp4', writer=writer)
+    ani.save('unstable.mp4', writer=writer)
 
     print(v_min, v_max)
 
