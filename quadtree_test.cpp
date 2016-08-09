@@ -73,179 +73,7 @@ bool testComputeExtent(){
     return result;
 }
 
-// Test the morton indices against a test set of 7 particles with known indices.
-bool testMorton(){
-    int N = 7;
-    int depth = 2;
-    // Set the resulting boolean to true
-    bool result = true;
 
-    // Initiate arrays
-    // Create particle coordinate arrays
-    value_type x [N] = {0.1, 0.4, 0.8, 0.9, 0.9, 0, 1};
-    value_type y [N] = {0.3, 0.6, 0.4, 0.8, 0.1, 0, 1};
-    unsigned int *index = new unsigned int[N];
-    uint32_t control [N] = {8, 3, 13, 5, 15, 10, 5};
-    double xmin, ymin, ext;
-
-    // Compute indices
-    morton(N, x, y, xmin, ymin, ext, index, depth);
-
-    // test the resulting indices against the control indices
-    for (int i = 0; i < N; ++i) {
-
-        if(index[i] != control[i]){
-            result = false;
-            std::cout << "Test failed for particle " << i << std::endl;
-        }
-    }
-
-    // Print the results
-    std::cout<< "mortonSerial: \t" << " control"<< std::endl;
-    for (int j = 0; j < N; ++j) {
-        std::cout << index[j] << "\t\t\t\t\t" << control[j] << std::endl;
-    }
-
-    // Free the memory
-    delete[] index;
-
-    // Print in case of success.
-    if (result) {
-        std::cout << "Test succeeded." << std::endl;
-    }
-
-    return result;
-}
-
-// Test the assignment of part_start and part_end to child nodes
-bool testAssignParticles(){
-    // Don't change these variables.
-    int N = 7;
-    int depth = 2;
-    // Set the resulting boolean to true
-    bool result = true;
-
-    // Initiate arrays
-    // Create index array
-    unsigned int index_0[N] = {3, 5, 5, 8, 10, 13, 15};
-    unsigned int index_1[N] = {4, 5, 5, 8, 9, 10, 11};
-    unsigned int index_2[N] = {3, 13, 13, 13, 14, 15, 15};
-
-    // Make arrays containing the known true values
-    int part_start_control_0[4] = {0, 1, 3, 5};
-    int part_end_control_0[4] = {0, 2, 4, 6};
-    int part_start_control_1[4] = {-1, 0, 3, -1};
-    int part_end_control_1[4] = {-1, 2, 6, -1};
-    int part_start_control_2[4] = {0, -1, -1, 1};
-    int part_end_control_2[4] = {0, -1, -1, 6};
-
-    // Make a root node
-    Node root {0, // level
-               0, // morton index
-               0, // child_id
-               0, // part_start
-               6, // part_end
-               0, // node mass
-               0, // x center of mass
-               0  // y center of mass
-    };
-
-
-    Node children[4];
-
-    // Compute the indexvalue of this level so we can easily compute the morton-id's of the children
-    int indexValue_level = pow(2,2*(depth - (root.level + 1)));
-
-    // Initialize the children nodes
-    Node child_0 = Node {root.level + 1, // level
-                         root.morton_id, // morton index
-                         -1, // child_id
-                         -1, // part_start
-                         -1, // part_end
-                         1, // node mass
-                         1, // x center of mass
-                         1  // y center of mass
-    };
-
-    Node child_1 = Node {root.level + 1, // level
-                         root.morton_id + indexValue_level, // morton index
-                         -1, // child_id
-                         -1, // part_start
-                         -1, // part_end
-                         1, // node mass
-                         1, // x center of mass
-                         1  // y center of mass
-    };
-
-    Node child_2 = Node {root.level + 1, // level
-                         root.morton_id + 2 * indexValue_level, // morton index
-                         -1, // child_id
-                         -1, // part_start
-                         -1, // part_end
-                         1, // node mass
-                         1, // x center of mass
-                         1  // y center of mass
-    };
-
-    Node child_3 = Node {root.level + 1, // level
-                         root.morton_id + 3 * indexValue_level, // morton index
-                         -1, // child_id
-                         -1, // part_start
-                         -1, // part_end
-                         1, // node mass
-                         1, // x center of mass
-                         1  // y center of mass
-    };
-
-    // Put the children nodes into the array
-    children[0] = child_0;
-    children[1] = child_1;
-    children[2] = child_2;
-    children[3] = child_3;
-
-
-    // Test set 0
-    assignParticles(&root, children, depth, index_0);
-
-    // Check the start and end indices of this node
-    for (int i = 0; i < 4; ++i) {
-        if ((children[i].part_start != part_start_control_0[i]) || (children[i].part_end != part_end_control_0[i])) {
-            result = false;
-            std::cout << "Test failed for set 0 and node " << i << std::endl;
-        }
-    }
-
-    // Test set 1
-    assignParticles(&root, children, depth, index_1);
-
-    // Check the start and end indices of this node
-    for (int i = 0; i < 4; ++i) {
-        if ((children[i].part_start != part_start_control_1[i]) || (children[i].part_end != part_end_control_1[i])) {
-            result = false;
-            std::cout << "Test failed for set 1 and node " << i << std::endl;
-            std::cout << "children[i].part_start = " << children[i].part_start << ". children[i].part_end = " << children[i].part_end << std::endl;
-            std::cout << "node " << i << " morton_id = " << children[i].morton_id << " non-inclusive upper bound = " << children[i].morton_id + indexValue_level << std::endl;
-        }
-    }
-
-    // Test set 2
-    assignParticles(&root, children, depth, index_2);
-
-    // Check the start and end indices of this node
-    for (int i = 0; i < 4; ++i) {
-        if ((children[i].part_start != part_start_control_2[i]) || (children[i].part_end != part_end_control_2[i])) {
-            result = false;
-            std::cout << "Test failed for set 2 and node " << i << std::endl;
-        }
-    }
-
-    // Print in case of success.
-    if (result) {
-        std::cout << "Test succeeded." << std::endl;
-    }
-
-    return result;
-}
 
 // Test the function of center of mass
 bool testCenterOfMass(){
@@ -341,7 +169,6 @@ bool testBuild(){
     bool result = true;
 
     int N = 7;
-    int depth = 15; // Do not change this because the morton indices of the particles are computed with depth = 15
     int k = 8;
 
     value_type x[7] = {0.1, 0.15, 0.4, 0.6, 0.7, 0.71, 0.8};
@@ -353,10 +180,10 @@ bool testBuild(){
     value_type mass_sorted[7];
 
     // Allocate the tree array containing all the nodes
-    int maxNodes = (int) std::min((float)8 * N / k, (float)pow(4, depth));
+    int maxNodes = (int) std::min((float)8 * N / k, (float)pow(4, depthtree));
     Node* tree = new Node[maxNodes];
 
-    build(x, y, mass, N, k, xsorted, ysorted, mass_sorted, tree, depth);
+    build(x, y, mass, N, k, xsorted, ysorted, mass_sorted, tree, depthtree);
 
     // Test the resulting tree
     if (tree[0].child_id != -1) {
@@ -371,7 +198,7 @@ bool testBuild(){
     // Test building the tree for k=2
     std::cout << "Testing the build() function for a tree with N=7, k=2 and depth=2." << std::endl;
     k = 2;
-    build(x, y, mass, N, k, xsorted, ysorted, mass_sorted, tree, depth);
+    build(x, y, mass, N, k, xsorted, ysorted, mass_sorted, tree, depthtree);
 
     // Test the resulting tree
     for (int i = 0; i < 13; ++i) {
@@ -393,8 +220,6 @@ bool testr(){
 	
 	// Create particles and particle arrays 
 	int N = 10;
-    int depth = 15; // Do not change this because the morton indices of the tree nodes are computed with this value
-                    // whereas the morton indices of the particles are always computed with depth=15
     int k = 8;
 
     value_type x[10] = {0.1, 0.15, 0.4, 0.6, 0.7, 0.71, 0.8, 0.74, 0.48, 0.41};
@@ -406,11 +231,11 @@ bool testr(){
     value_type mass_sorted[10];
 
     // Allocate the tree array containing all the nodes
-    int maxNodes = (int) std::min((float)8 * N / k, (float)pow(4, depth));
+    int maxNodes = (int) std::min((float)8 * N / k, (float)pow(4, depthtree));
     Node* tree = new Node[maxNodes];
 
 	// create a tree to be tested 
-    build(x, y, mass, N, k, xsorted, ysorted, mass_sorted, tree, depth);
+    build(x, y, mass, N, k, xsorted, ysorted, mass_sorted, tree, depthtree);
 	
 	// print the attributes of the tree before computing "r"
 	std::cout << "/----- after building tree " << std::endl; 
