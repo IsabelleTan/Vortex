@@ -120,6 +120,8 @@ int main(){
 	
 	bool a = ThomasAlg_test();
 	
+	ADI_test_output();
+	
 	return 0; 
 	
 }
