@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -pthread -mavx -mfma
 
 set(SOURCE_FILES
         ADIdiffusion.cpp
-        ADIdiffusion_test.cpp
+        #ADIdiffusion_test.cpp
 		complexAVX.cpp
         datapoints.cpp
         #datapoints_test.cpp
@@ -17,14 +17,14 @@ set(SOURCE_FILES
         #fields_test.cpp
         #main.cpp
         morton.cpp
-        #morton_test.cpp
+        morton_test.cpp
         #morton_time.cpp
-        multipole.cpp
+        #multipole.cpp
         #multipole_test.cpp
         quadtree.cpp
         #quadtree_test.cpp
         #quadtree_time.cpp
-        simulation.cpp
+        #simulation.cpp
         solver.cpp
         #solver_test.cpp
 		)

@@ -103,28 +103,28 @@ void clean_file(const char* fname){
 // if there is data already written in the file, new data is appended at the end of it
 // for layout, look at commentaries inside function body
 void write_to_file(const char* fname, int N, const value_type* x){
-	// INPUT
-	// fname	name of file to be written in
-	//          note to user: give file name with its extension
-	// N		# of data points
-	// x		non memory-aligned empty array of x-coordinates
-	// DATA LAYOUT IN FILE
-	// N (ENTER)						  (integer in decimal format)
-	// x[0]x[1]...x[N-1]y[0]y[1]...y[N-1] (where each point is a float written in binary)
-	// Note: if a file named "fname" already exists, this function appends data at the end of the file
+    // INPUT
+    // fname	name of file to be written in
+    //          note to user: give file name with its extension
+    // N		# of data points
+    // x		non memory-aligned empty array of x-coordinates
+    // DATA LAYOUT IN FILE
+    // N (ENTER)						  (integer in decimal format)
+    // x[0]x[1]...x[N-1]y[0]y[1]...y[N-1] (where each point is a float written in binary)
+    // Note: if a file named "fname" already exists, this function appends data at the end of the file
 
-	FILE* f = fopen(fname, "wb");			// open file in "write" mode
-	if (f==NULL){
-		std::cout << "Opening file " << fname << " failed." << std::endl;
-	}
+    FILE* f = fopen(fname, "wb");			// open file in "write" mode
+    if (f==NULL){
+        std::cout << "Opening file " << fname << " failed." << std::endl;
+    }
 
-	// write N
-	fprintf(f, "%d\n", N);					// write N in decimal format, then go to a new line ("\n")
-	// write array content
-	fwrite(x, sizeof(value_type), N, f);		// write the array contents in binary format
+    // write N
+    fprintf(f, "%d\n", N);					// write N in decimal format, then go to a new line ("\n")
+    // write array content
+    fwrite(x, sizeof(value_type), N, f);		// write the array contents in binary format
 
-	std:: cout << "Written to file " << fname << std::endl;
-	fclose(f);
+    std:: cout << "Written to file " << fname << std::endl;
+    fclose(f);
 }
 
 void printWorkingDirectory(){

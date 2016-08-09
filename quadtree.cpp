@@ -3,7 +3,61 @@
 //
 
 #include <iostream>
+#include <cmath>
 #include "quadtree.h"
+
+/*
+ * help-function for "compute_r"
+ */
+inline value_type distance_to_COM(const value_type* const xsorted, const value_type* const ysorted, Node const& mynode, const int particle_index)
+{
+	return sqrt( (xsorted[particle_index] - mynode.xcom)*(xsorted[particle_index] - mynode.xcom) + (ysorted[particle_index] - mynode.ycom)*(ysorted[particle_index] - mynode.ycom) );
+} 
+
+/*
+ * help-function for "radius": compute r, the radius of the smallest circle centered at the node's COM that contains all particles of that node 
+ * given a certain Node
+ */
+void compute_r(const value_type* const xsorted, const value_type* const ysorted, Node* mynode)
+{
+	value_type r(distance_to_COM(xsorted, ysorted, *mynode, mynode->part_start)); 
+	
+	for(size_t i(mynode->part_start+1); i<=mynode->part_end; i++){	
+		value_type comp(distance_to_COM(xsorted, ysorted, *mynode, i));
+		if(r < comp){r = comp;}
+	}
+	
+	mynode->r = r; 
+}
+
+/*
+ * help-function for "split"
+ * assign an arr ay of Nodes its r-values
+ * (written like function centerOfMass() )
+ */
+void radius(Node* children, value_type* xsorted, value_type* ysorted)
+{
+	for (int n = 0; n <= 3; ++n) {
+		// Set the bounds of the particle indices contained in node n
+        int part_start = children[n].part_start;
+        int part_end = children[n].part_end;
+
+        // Check if the node is empty
+        if (part_start == -1 || part_end == -1) {
+            // Empty node
+            children[n].r = 0;
+        } else {				
+			// compute radius and assign it to child node 				
+			value_type r(distance_to_COM(xsorted, ysorted, children[n], children[n].part_start)); 
+			for(size_t i(part_start+1); i<=part_end; i++){	
+					value_type comp(distance_to_COM(xsorted, ysorted, children[n], i));
+					if(r < comp){r = comp;}
+				}
+			children[n].r = r; 			
+			}
+	std::cout << "value of r : "  << children[n].r << std::endl ;
+        }
+}
 
 /*
  * The function that builds the quad-tree
@@ -39,8 +93,10 @@ void build(const value_type* const x, const value_type* const y, const value_typ
     }
     xCom /= total_mass;
     yCom /= total_mass;
-
-
+    
+    // leave r initialized to zero.
+    // this attribute will never be needed on the first level 
+    
     // Allocate variable to contain the index of the next free spot in the nodes array
     int newNodeIndex = 1; // since the root node lies at index 0
 
@@ -144,8 +200,9 @@ void split(Node* parent, Node* tree, int depth, int* index, value_type* xsorted,
     // Assign the particles to the children
     assignParticles(parent, children, depth, index);
 
-    // Assign the total and center of mass to the children
+    // Assign the total and center of mass to the children, as well as their radius r 
     centerOfMass(children, xsorted, ysorted, mass_sorted);
+    radius(children, xsorted, ysorted);
 
     // Check number of particles in the children nodes
     for (int i = 0; i < 4; ++i) {
@@ -277,6 +334,7 @@ void printNode(Node node){
     std::cout<< "child_id: " 			<< node.child_id 	<< std::endl;
     std::cout<< "part_start: " 			<< node.part_start 	<< std::endl;
     std::cout<< "part_end: "			<< node.part_end 	<< std::endl;
+    std::cout<< "radius r: "			<< node.r		 	<< std::endl;
     std::cout<< "mass: " 				<< node.mass 		<< std::endl;
     std::cout<< "xcom: " 				<< node.xcom 		<< std::endl;
     std::cout<< "ycom: " 				<< node.ycom 		<< std::endl;

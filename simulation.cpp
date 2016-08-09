@@ -85,13 +85,15 @@ void run_simulation(){
 	}
 
 	delete[] x_source;
-	/* value_type * y_source;
-	value_type * q_source;
-	value_type * x_target;
-	value_type * y_target;
-	value_type * u_target;
-	value_type * v_target;
-	value_type * q_target; */
+	delete[] y_source;
+	delete[] q_source;
+	delete[] x_target;
+	delete[] y_target;
+	delete[] u_target;
+	delete[] v_target;
+	delete[] q_target;
+	delete[] q_diffused;
+	delete[] pot_target;
 
 	return;
 	

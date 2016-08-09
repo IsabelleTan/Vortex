@@ -387,9 +387,56 @@ bool testBuild(){
     return result;
 }
 
+// Test the computation of attribute "r"
+bool testr(){
+	
+	bool result = true; 
+	
+	// Create particles and particle arrays 
+	int N = 10;
+    int depth = 2;
+    int k = 8;
+
+    value_type x[10] = {0.1, 0.15, 0.4, 0.6, 0.7, 0.71, 0.8, 0.74, 0.48, 0.41};
+    value_type y[10] = {0.6, 0.85, 0.65, 0.3, 0.6, 0.1, 0.4, 0.33, 0.42, 0.57};
+    value_type mass[10] = {1, 2, 3, 4, 5, 6, 7, 2.3, 1.4, 5.7};
+
+    value_type xsorted[10];
+    value_type ysorted[10];
+    value_type mass_sorted[10];
+
+    // Allocate the tree array containing all the nodes
+    int maxNodes = (int) std::min((float)8 * N / k, (float)pow(4, depth));
+    Node* tree = new Node[maxNodes];
+
+	// create a tree to be tested 
+    build(x, y, mass, N, k, xsorted, ysorted, mass_sorted, tree, depth);
+	
+	// print the attributes of the tree before computing "r"
+	std::cout << "/----- after building tree " << std::endl; 
+	printNode(tree[0]);
+	printNode(tree[1]);
+	printNode(tree[2]);
+	printNode(tree[3]);
+	printNode(tree[4]);
+	printNode(tree[5]);
+	printNode(tree[6]);
+	printNode(tree[7]);
+	printNode(tree[8]);
+	printNode(tree[9]);
+	
+	// check results 
+	std::cout << std::endl << std::endl
+			  << "Compare above r to r computed in help-script in R" << std::endl 
+			  << "value : r = 0.6348593" << std::endl; 
+
+	return result; 
+	
+}
+
 int main(){
 	
-	std::cout << "/------------------ test initialization :" << std::endl; 
+/*	std::cout << "/------------------ test initialization :" << std::endl; 
 	testInitialization();
 
 	std::cout << "/------------------ test extent :" << std::endl; 
@@ -405,7 +452,9 @@ int main(){
 	testCenterOfMass();
 	
 	std::cout << "/------------------ test build :" << std::endl; 
-	testBuild();
+	testBuild();*/
+	
+	testr();
 	
 	return 0; 
 	
