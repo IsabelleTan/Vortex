@@ -23,16 +23,16 @@ void extent(const int N, const double* const x, const double* const y, double& x
 /*
  * Assign each particle its Morton-index
  */	
-void morton(const int N, const double* const x, const double* const y, const double xmin, const double ymin, const double ext, unsigned int* index); 	// set 2, question 1, b)
+void morton(const int N, const double* const x, const double* const y, const double xmin, const double ymin, const double ext, unsigned int* index, unsigned int depth); 	// set 2, question 1, b)
 
 /*
  * Sort the particles according t their Morton-index
  */
-void sort(const int N, unsigned int* index, int* keys) ;																									// set 2, question 1, c)
+void sort(const int N, unsigned int* index, unsigned int* keys) ;																									// set 2, question 1, c)
 
 /*
  * Reorder them
  */
-void reorder(const int N, const int* const keys, const double* const x, const double* const y, const double* const q, double* xsorted, double* ysorted, double* qsorted);// set 2, question 1, d)
+void reorder(const int N, const unsigned int* const keys, const double* const x, const double* const y, const double* const q, double* xsorted, double* ysorted, double* qsorted);// set 2, question 1, d)
 
 #endif //VORTEX_MORTON_H

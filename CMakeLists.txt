@@ -43,15 +43,15 @@ set(HEADER_FILES
 )
 
 
-add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES}) 
+#add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES}) 
 
 add_executable(datapoints_test datapoints_test.cpp datapoints.cpp)	# tested: OK 
-#add_executable(morton_time morton_time.cpp morton.cpp datapoints.cpp) 	# tested: OK 
+add_executable(morton_time morton_time.cpp morton.cpp datapoints.cpp) 	# tested: OK 
 add_executable(morton_test morton_test.cpp morton.cpp datapoints.cpp) 	# tested: OK
 add_executable(quadtree_test quadtree_test.cpp quadtree.cpp morton.cpp) # tested: OK, except for very weird error mesage all the way at the end of execution ... ???
 add_executable(quadtree_time quadtree_time.cpp morton.cpp quadtree.cpp) # tested: OK
 add_executable(expansion_test expansion_test.cpp expansion.cpp morton.cpp complexAVX.cpp) 		# tested: OK
-#add_executable(multipole_test multipole_test.cpp multipole.cpp expansion.cpp morton.cpp quadtree.cpp complexAVX.cpp) # empty test-file. To be tested
+add_executable(multipole_test multipole_test.cpp multipole.cpp expansion.cpp morton.cpp quadtree.cpp complexAVX.cpp) # empty test-file. To be tested
 add_executable(fields_test fields_test.cpp fields.cpp datapoints.cpp)	# tested: OK 
 add_executable(solver_test solver_test.cpp solver.cpp)			# tested: OK 
 add_executable(ADIdiffusion_test ADIdiffusion_test.cpp ADIdiffusion.cpp fields.cpp datapoints.cpp)	# tested: OK 

@@ -32,6 +32,8 @@ void test_extent()
 
 void test_morton()
 {
+	
+	const unsigned int depth(15);	
 	const int N = 6;
 	double xx[N];
 	double yy[N];
@@ -47,7 +49,7 @@ void test_morton()
 		
 	double x_min, y_min, ext;	
 	extent(N, xx, yy, x_min, y_min, ext);
-	morton(N, xx, yy, x_min, y_min, ext, ind);
+	morton(N, xx, yy, x_min, y_min, ext, ind, depth);
 
 	std::cout << " extent = " << ext << std::endl;
 	std::cout << " Morton indices: " << std::endl;
@@ -64,11 +66,12 @@ void test_morton()
 
 void test_sort()
 {
+	const unsigned int depth(15);
 	const int N = 6;
 	double xx[N];
 	double yy[N];
 	unsigned int ind[N]; // TODO changed this from int to unsigned int
-	int key[N];
+	unsigned int key[N];
 	
 	xx[0] = 0.; 	yy[0] = 0.;
 	xx[1] = 100.; 	yy[1] = 100.;
@@ -79,7 +82,7 @@ void test_sort()
 	
 	double x_min, y_min, ext;	
 	extent(N, xx, yy, x_min, y_min, ext);
-	morton(N, xx, yy, x_min, y_min, ext, ind);
+	morton(N, xx, yy, x_min, y_min, ext, ind, depth);
 
 
 	std::cout << " extent = " << ext << std::endl;
@@ -108,9 +111,10 @@ void test_sort()
 void test_all(int n)
 {
 	// declare the variables and vectors needed
+	const int depth(15);
 	double *x, *y, *q, *xsorted, *ysorted, *qsorted;
 	unsigned int *index;
-	int *keys;
+	unsigned int *keys;
 	double xmin, ymin, ext; 
 	std::chrono::time_point< std::chrono::high_resolution_clock > start , end;
 		
@@ -141,7 +145,7 @@ void test_all(int n)
 	const double ext_time = static_cast<std::chrono::duration<double>>(end-start).count();
 
 	start = std::chrono::high_resolution_clock::now();
-	morton(n, x, y, xmin, ymin, ext, index); 
+	morton(n, x, y, xmin, ymin, ext, index, depth); 
 	end = std::chrono::high_resolution_clock::now();
 	const double morton_time = static_cast<std::chrono::duration<double>>(end-start).count();
 	
