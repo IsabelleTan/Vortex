@@ -101,6 +101,7 @@ void run_simulation(){
 
 int main(){
 	run_simulation();
+	std::cout <<"Finished!" << std::endl;
 	return 0;
 }
 

@@ -7,7 +7,7 @@
  */
 
 // Particles
-#define nParticles 2500
+#define nParticles 64
 #define deltaX 0.01
 #define viscosity 0.1
 
@@ -23,7 +23,7 @@
 
 
 // Quadtree
-#define depthtree 15 		// depth of quadtree // choice of levels: Beatson Greengard suggest approx log_2(N), where N = number of particles
+#define depthtree 16 		// depth of quadtree // choice of levels: Beatson Greengard suggest approx log_2(N), where N = number of particles
 #define kleaf 32			// leaf capacity
 
 // Multipole

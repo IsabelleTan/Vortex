@@ -341,7 +341,7 @@ bool testBuild(){
     bool result = true;
 
     int N = 7;
-    int depth = 15; // Do not change this because the morton indices of the particles are computed with depth = 15
+    int depth = 16; // Do not change this because the morton indices of the particles are computed with depth = 15
     int k = 8;
 
     value_type x[7] = {0.1, 0.15, 0.4, 0.6, 0.7, 0.71, 0.8};
@@ -393,7 +393,7 @@ bool testr(){
 	
 	// Create particles and particle arrays 
 	int N = 10;
-    int depth = 15; // Do not change this because the morton indices of the tree nodes are computed with this value
+    int depth = 16; // Do not change this because the morton indices of the tree nodes are computed with this value
                     // whereas the morton indices of the particles are always computed with depth=15
     int k = 8;
 

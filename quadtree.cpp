@@ -55,7 +55,7 @@ void radius(Node* children, value_type* xsorted, value_type* ysorted)
 				}
 			children[n].r = r; 			
 			}
-	std::cout << "value of r : "  << children[n].r << std::endl ;
+	//std::cout << "value of r : "  << children[n].r << std::endl ;
         }
 }
 
@@ -83,6 +83,8 @@ void build(const value_type* const x, const value_type* const y, const value_typ
 
     // Sort the remaining arrays with the same permutation
     reorder(N, keys, x, y, mass, xsorted, ysorted, mass_sorted);
+
+
 
     // Build the tree
 
@@ -189,6 +191,24 @@ void split(Node* parent, Node* tree, int depth, unsigned int* index, value_type*
                          1  // y center of mass
     };
 
+    if(parent->level == 0){
+        // Print the maximum index
+        unsigned int max = index[0];
+        int min = 0;
+        for (int l = 0; l < parent->part_end - parent->part_start; ++l) {
+            if(index[l]>max){
+                max = index[l];
+            }
+            if(index[l] < min){
+                min = index[l];
+            }
+        }
+        std::cout << "Biggest Morton Index = " << max << std::endl;
+        std::cout << "Smallest Morton Index = " << min << std::endl;
+        std::cout << "Morton limit tree = " <<  child_3.morton_id - 1 + indexValue_level << std::endl;
+        std::cout << "IndexValue at level = " << children_level << " is " << indexValue_level << std::endl;
+    }
+
 
 
     // Set a pointer to the first child node
@@ -207,6 +227,8 @@ void split(Node* parent, Node* tree, int depth, unsigned int* index, value_type*
     // Assign the total and center of mass to the children, as well as their radius r 
     centerOfMass(children, xsorted, ysorted, mass_sorted);
     radius(children, xsorted, ysorted);
+
+    // TODO Add calls to the p2e() function for each child so that rexps and iexps are computed and set
 
     // Check number of particles in the children nodes
     for (int i = 0; i < 4; ++i) {
@@ -227,6 +249,7 @@ void split(Node* parent, Node* tree, int depth, unsigned int* index, value_type*
  * child nodes.
  */
 void assignParticles(Node* parent, Node* children, int depth, unsigned int* index){
+    // TODO the assigment of particles is not bulletproof yet... c sometimes goes beyond 3
     // Check if the parent node is empty
     if(parent->part_start < 0 && parent->part_end <0){
         std::cout << "Something went wrong: the start and end indices of the parents particles are < 0, so we cannot assign any particles to its child nodes." << std::endl;
@@ -240,9 +263,12 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
 
     // Start with testing the particles against child node 0
     int c = 0;
+    bool cWentOverLimit = false;
 
     // Loop over all particles
     for (int i = parent->part_start; i <= parent->part_end; ++i) {
+        std::cout << "Level = " << parent->level << ". Checking particle " << i << " with MortonID " << index[i] << " against child node " << c << " with MortonID " << children[c].morton_id << std::endl;
+
         // Check if the morton index of the particle is smaller than the morton index of the first child node. If so
         // something went wrong.
         if (index[i]<children[c].morton_id){
@@ -260,6 +286,7 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
                 std::cout << "c = " << c << " when trying to assign particle " << i << " with morton id " << index[i] << std::endl;
                 std::cout << "This is wrong because c should be in [0,1,2,3] to loop over the child nodes" << std::endl;
                 std::cout << "Terminating the assignment of particles." << std::endl;
+                cWentOverLimit = true;
                 break;
             }
 
@@ -272,6 +299,7 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
 
                 // Test the particle against the next child node
                 c = c+1;
+                std::cout << "Continuing to next children node, node " << c << std::endl;
             } else {
                 // The node is not empty so the previous particle was the last particle in the current child node so
                 // assign part_start and part_end to the current child node.
@@ -280,13 +308,19 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
 
                 // Check the same particle again for the next child node
                 c=c+1;
+                std::cout << "Continuing to next children node, node " << c << std::endl;
 
                 // Set the start of a new particle group to the current particle
                 part_start = i;
             }
         }
+        // If c>= 4 then also exit this loop because something is wrong.
+        if(cWentOverLimit){
+            break;
+        }
     }
     // Finished looping over the particles in the parent node
+    std::cout << "Finished looping over particles " << parent->part_start << " to " << parent->part_end << " in parent node" << std::endl;
 
     // Assign the last particle group to the current child node
     part_end = parent->part_end;

@@ -40,7 +40,7 @@ void test_morton()
 	xx[0] = 0.; 	yy[0] = 0.;
 	xx[1] = 100.; 	yy[1] = 100.;
 	xx[2] = 0.9;	yy[2] = 0.3;
-	xx[3] = 98.2; 	yy[3] = 99.1;
+	xx[3] = 98.2; 	yy[3] = -99.1;
 	xx[4] = 1.; 	yy[4] = 99.1;
 	xx[5] = 96.7; 	yy[5] = 0.3;	
 	
@@ -186,7 +186,7 @@ int main()
 {
 	// --> testing individual functions
 	//test_extent();
-	//test_morton();
+	test_morton();
 	//test_sort();
 	
 	// --> perform check of all functions
