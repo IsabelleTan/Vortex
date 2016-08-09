@@ -4,12 +4,10 @@
 
 #include <iostream>
 #include <cmath>
-#include "ADIdiffusion_test.h"
 #include "ADIdiffusion.h"
 #include "datapoints.h"
 #include "fields.h"
 
-using namespace std;
 const value_type EPSILON = 0.000001;
 
 // A test function for the ThomasAlg() function that solves a linear system with a tridiagonal matrix
@@ -32,18 +30,18 @@ bool ThomasAlg_test(){
     // Test the result
     for (int j = 0; j < N; ++j) {
         if(::abs(x(j,0) - control(j,0)) < EPSILON){
-            cout << "x(j,0) = " << x(j,0) << " == " << control(j,0) << " = control(j,0)" << endl;
+            std::cout << "x(j,0) = " << x(j,0) << " == " << control(j,0) << " = control(j,0)" << std::endl;
         } else {
-            cout << "x(j,0) = " << x(j,0) << " != " << control(j,0) << " = control(j,0)" << endl;
+            std::cout << "x(j,0) = " << x(j,0) << " != " << control(j,0) << " = control(j,0)" << std::endl;
             result = false;
         }
     }
 
     // Print the result
     if(result){
-        cout << "Test succeeded!" << endl;
+        std::cout << "Test succeeded!" << std::endl;
     } else {
-        cout << "Test failed" << endl;
+        std::cout << "Test failed" << std::endl;
     }
 
 
@@ -94,7 +92,7 @@ void ADI_test_output(){
     value_type * q_new = new value_type[N];
 
     // Assign a string for filename and write to file
-    string filename = to_string(0) + ".txt";
+    std::string filename = std::to_string(0) + ".txt";
     write_to_file(filename.c_str(), N, q_0);
 
     // Time loop
@@ -104,7 +102,7 @@ void ADI_test_output(){
         matrixToArray(q_new, q_new_mat);
 
         // Assign a string for filename and write to file
-        filename = to_string(i) + ".txt";
+        filename = std::to_string(i) + ".txt";
         write_to_file(filename.c_str(), N, q_new);
 
         // Set q_0 to be q_new_mat for the next timestep
@@ -116,4 +114,12 @@ void ADI_test_output(){
     delete[] q_new;
 
     return;
+}
+
+int main(){
+	
+	bool a = ThomasAlg_test();
+	
+	return 0; 
+	
 }
