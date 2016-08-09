@@ -127,7 +127,7 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
 
 ##########################################
 # Animate 100 files
-animate(0,99)
+animate(0,99) # animate(0, 99, folder = "FOLDERNAME") # FOLDERNAME is the location of output files wrt main.py
 
 '''# Solve a tridiagonal system
 a = np.zeros((16,16))
