@@ -27,6 +27,7 @@ set(SOURCE_FILES
         #simulation.cpp
         solver.cpp
         solver_test.cpp
+)
 
 set(HEADER_FILES
         ADIdiffusion.h
