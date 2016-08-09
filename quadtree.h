@@ -23,6 +23,22 @@ struct Node
     
 };
 
+/*
+ * help-function for "compute_r"
+ */
+inline value_type distance_to_COM(const value_type* const xsorted, const value_type* const ysorted, Node const& mynode, const int particle_index);
+
+/*
+ * help-function for "build": compute r, the radius of the smallest circle centered at the node's COM that contains all particles of that node 
+ */
+void compute_r(const value_type* const xsorted, const value_type* const ysorted, Node* mynode);
+
+/*
+ * help-function for "split"
+ * assign an arr ay of Nodes its r-values
+ * (written like function centerOfMass() )
+ */
+void radius(Node* children, value_type* xsorted, value_type* ysorted);
 
 /*
  * Build a tree
