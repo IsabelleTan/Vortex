@@ -1,6 +1,5 @@
 #include <iostream> 
 #include <iomanip>  	
-#include <string>
 #include <bitset>
 #include <chrono>
 
@@ -36,7 +35,7 @@ void test_morton()
 	const int N = 6;
 	double xx[N];
 	double yy[N];
-	int ind[N];
+	unsigned int ind[N];
 	
 	xx[0] = 0.; 	yy[0] = 0.;
 	xx[1] = 100.; 	yy[1] = 100.;
@@ -52,11 +51,15 @@ void test_morton()
 
 	std::cout << " extent = " << ext << std::endl;
 	std::cout << " Morton indices: " << std::endl;
-	for(size_t i(0); i<N; ++i)
-		std::cout << "[" << i << "] (" << std::setw(4) << xx[i] 
-				  << ", " << std::setw(4) << yy[i] 
-		          << std::setw(12) << ") <-----> " << (std::bitset<30>(ind[i])).to_string() 
-		          << std::endl;
+	for(size_t i(0); i<N; ++i) {
+		std::cout << "[" << i << "] (" << std::setw(4) << xx[i]
+		<< ", " << std::setw(4) << yy[i]
+		<< std::setw(12) << ") <-----> " << (std::bitset<30>(ind[i])).to_string()
+		<< std::endl;
+	}
+	for (int j = 0; j < N; ++j) {
+		std::cout << "ind[" << j << "] = " << ind[j] << std::endl;
+	}
 } 
 
 void test_sort()
@@ -64,7 +67,7 @@ void test_sort()
 	const int N = 6;
 	double xx[N];
 	double yy[N];
-	int ind[N];
+	unsigned int ind[N]; // TODO changed this from int to unsigned int
 	int key[N];
 	
 	xx[0] = 0.; 	yy[0] = 0.;
@@ -106,13 +109,14 @@ void test_all(int n)
 {
 	// declare the variables and vectors needed
 	double *x, *y, *q, *xsorted, *ysorted, *qsorted;
-	int *index, *keys; 
+	unsigned int *index;
+	int *keys;
 	double xmin, ymin, ext; 
 	std::chrono::time_point< std::chrono::high_resolution_clock > start , end;
 		
 	// fill x and y up and memory-align them as well 
 	if(n<0){													// if n<0, then: read data from a file 
-		load_data_from_file("test_datasets/test-0.blob", n, &x, &y);
+		load_data_from_file("test_datasets/test-1.blob", n, &x, &y);
 		load_data_random(n, &q);
 	} else {													// if n>=0, then: set random values
 		load_data_random(n, &x, &y);
@@ -181,13 +185,13 @@ void test_all(int n)
 int main() 
 {
 	// --> testing individual functions
-	test_extent();
-	test_morton();
-	test_sort();
+	//test_extent();
+	//test_morton();
+	//test_sort();
 	
 	// --> perform check of all functions
-	test_all(10000000);
-	test_all(-1);
+	//test_all(10000000);
+	//test_all(-1);
 	
 	//! results (serial)
 	/*

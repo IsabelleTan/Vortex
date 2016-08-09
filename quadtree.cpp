@@ -65,8 +65,10 @@ void radius(Node* children, value_type* xsorted, value_type* ysorted)
 void build(const value_type* const x, const value_type* const y, const value_type* const mass, const int N, const int k, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, Node* tree, int depth){
 
     // Allocate the index array and compute and store the morton indices in it.
-    int *index = new int[N];
+    unsigned int *index = new unsigned int[N];
     double xmin, ymin, ext;
+    extent(N, x, y, xmin, ymin, ext);
+
     morton(N, x, y, xmin, ymin, ext, index);
 
     // Sort the indices and store the corresponding permutation in keys
@@ -132,7 +134,7 @@ void build(const value_type* const x, const value_type* const y, const value_typ
 /*
  * A function that splits the parent node and creates 4 new children nodes in the array of nodes named "tree".
  */
-void split(Node* parent, Node* tree, int depth, int* index, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, int k, int* newNodeIndex){
+void split(Node* parent, Node* tree, int depth, unsigned int* index, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, int k, int* newNodeIndex){
 // Capture and update the newNodeIndex atomically to avoid race condition
 #pragma omp atomic capture
     {
@@ -187,6 +189,8 @@ void split(Node* parent, Node* tree, int depth, int* index, value_type* xsorted,
                          1  // y center of mass
     };
 
+
+
     // Set a pointer to the first child node
     Node* children = tree + parent->child_id;
 
@@ -222,7 +226,7 @@ void split(Node* parent, Node* tree, int depth, int* index, value_type* xsorted,
  * A function that loops over the particles in the parent node and extracts the part_start and part_end values for its
  * child nodes.
  */
-void assignParticles(Node* parent, Node* children, int depth, int* index){
+void assignParticles(Node* parent, Node* children, int depth, unsigned int* index){
     // Check if the parent node is empty
     if(parent->part_start < 0 && parent->part_end <0){
         std::cout << "Something went wrong: the start and end indices of the parents particles are < 0, so we cannot assign any particles to its child nodes." << std::endl;
@@ -239,19 +243,26 @@ void assignParticles(Node* parent, Node* children, int depth, int* index){
 
     // Loop over all particles
     for (int i = parent->part_start; i <= parent->part_end; ++i) {
-
         // Check if the morton index of the particle is smaller than the morton index of the first child node. If so
         // something went wrong.
         if (index[i]<children[c].morton_id){
-            std::cout << "Something went horribly wrong." << std::endl;
+            std::cout << "Something went wrong." << std::endl;
             std::cout << "Trying to appoint particle " << i << " to Child Node " << c << " at level " << children[0].level <<"." << std::endl;
-            std::cout << "Morton domain of child node: [" << children[c].morton_id << "," << children[c].morton_id + indexValue_level << "]. Morton index of particle:  " << index[i] <<"." << std::endl;
+            std::cout << "Morton domain of child node: " << c << " [" << children[c].morton_id << "," << children[c].morton_id + indexValue_level << "]. Morton index of particle:  " << index[i] <<"." << std::endl;
             break;
         }
 
         // While the particle is not in the current child node "child", check if the current node is then empty or not.
         // Then, repeat for next child node.
         while(index[i] > children[c].morton_id - 1 + indexValue_level){
+            // Check if c is still smaller than 4
+            if(c >=4){
+                std::cout << "c = " << c << " when trying to assign particle " << i << " with morton id " << index[i] << std::endl;
+                std::cout << "This is wrong because c should be in [0,1,2,3] to loop over the child nodes" << std::endl;
+                std::cout << "Terminating the assignment of particles." << std::endl;
+                break;
+            }
+
             part_end = i-1;
             // Check whether the current child node is empty
             if(part_end<part_start){
