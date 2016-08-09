@@ -7,8 +7,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -pthread -mavx -mfma
 
 set(SOURCE_FILES
         ADIdiffusion.cpp
-        ADIdiffusion_test.cpp
-		complexAVX.cpp
+        #ADIdiffusion_test.cpp
+	complexAVX.cpp
         datapoints.cpp
         #datapoints_test.cpp
         expansion.cpp
@@ -17,33 +17,33 @@ set(SOURCE_FILES
         #fields_test.cpp
         #main.cpp
         morton.cpp
-        #morton_test.cpp
+        morton_test.cpp
         #morton_time.cpp
-        multipole.cpp
+        #multipole.cpp
         #multipole_test.cpp
         quadtree.cpp
         #quadtree_test.cpp
         #quadtree_time.cpp
-        simulation.cpp
+        #simulation.cpp
         solver.cpp
         #solver_test.cpp
-)
+		)
 
 set(HEADER_FILES
         ADIdiffusion.h
-		complexAVX.h
-		datapoints.h
+	complexAVX.h
+	datapoints.h
         expansion.h
         fields.h
         morton.h
         multipole.h
         quadtree.h
-		simulation.h
+	simulation.h
         solver.h
 )
 
 
-#add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES}) 
+add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES}) 
 
 add_executable(datapoints_test datapoints_test.cpp datapoints.cpp)	# tested: OK 
 #add_executable(morton_time morton_time.cpp morton.cpp datapoints.cpp) 	# tested: OK 
@@ -56,8 +56,6 @@ add_executable(fields_test fields_test.cpp fields.cpp datapoints.cpp)	# tested: 
 add_executable(solver_test solver_test.cpp solver.cpp)			# tested: OK 
 add_executable(ADIdiffusion_test ADIdiffusion_test.cpp ADIdiffusion.cpp fields.cpp datapoints.cpp)	# tested: OK 
 
-
- 
 #---------------------#
 #   Compile flags     #
 #---------------------#

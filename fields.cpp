@@ -48,7 +48,7 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
     for (int i = 0; i < N; ++i) {
         // Compute the radius of the particle from the center of the domain
         value_type r = sqrt(x[i]*x[i] + y[i]*y[i]);
-        value_type sigma = sqrt(4*visc*(t+0.25));
+        value_type sigma = sqrt(4*visc*(t+0.25/visc));  // If t = 0 then coreRadius sigma = 1
         q[i] = circ/(M_PI * sigma * sigma) * exp(-(r*r)/(sigma*sigma));
     }
 }

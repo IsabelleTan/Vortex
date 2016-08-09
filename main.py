@@ -11,7 +11,7 @@ import numpy as np
 def plotArray(array):
     hf = plt.figure()
     ha = hf.add_subplot(111)
-    plt.imshow(array)
+    plt.imshow(array, cmap = plt.get_cmap("viridis"))
     plt.show()
 
     return
@@ -127,8 +127,11 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
 
 ##########################################
 # Animate 100 files
-animate(0,99, folder = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared")
-# animate(0, 99, folder = "FOLDERNAME") # FOLDERNAME is the location of output files wrt main.py
+#animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
+
+nParticles, data = readFile("lambOseenInitial")
+array = np.reshape(data,(np.sqrt(nParticles), np.sqrt(nParticles)))
+plotArray(array)
 
 '''# Solve a tridiagonal system
 a = np.zeros((16,16))
