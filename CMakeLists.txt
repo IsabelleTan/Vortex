@@ -15,7 +15,7 @@ set(SOURCE_FILES
         #expansion_test.cpp
         fields.cpp
         #fields_test.cpp
-        main.cpp
+        #main.cpp
         morton.cpp
         #morton_test.cpp
         #morton_time.cpp
@@ -24,22 +24,22 @@ set(SOURCE_FILES
         quadtree.cpp
         #quadtree_test.cpp
         #quadtree_time.cpp
-        #simulation.cpp
+        simulation.cpp
         solver.cpp
         #solver_test.cpp
-		main.cpp)
+		)
 
 set(HEADER_FILES
         ADIdiffusion.h
         ADIdiffusion_test.h
 		complexAVX.h
-	datapoints.h
+		datapoints.h
         expansion.h
         fields.h
         morton.h
         multipole.h
         quadtree.h
-	simulation.h
+		simulation.h
         solver.h
         )
 

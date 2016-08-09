@@ -6,16 +6,38 @@
  * Define the parameters that will be needed throughout the simulation
  */
 
-#define theta_dist 0.5		// used to control which nodes are considered as "far"
-#define exp_order 10		// expansion order of the multipole
+// Particles
+#define nParticles 2500
+#define deltaX 0.01
+#define viscosity 0.1
+
+// Time
+#define t_0 0
+#define deltaT 0.0001
+#define timeIterations 20
+#define writeFreq 4
+
+// Initial Condition
+#define coreRadius 1
+#define circulation 10
+
+
+// Quadtree
 #define depthtree 15 		// depth of quadtree // choice of levels: Beatson Greengard suggest approx log_2(N), where N = number of particles
 #define kleaf 32			// leaf capacity
+
+// Multipole
+#define exp_order 10		// expansion order of the multipole
+#define theta_dist 0.5		// used to control which nodes are considered as "far"
 
 typedef double value_type;
 
 /*
  * Run the simulation 
  */
-void run_simulation(); 
+void run_simulation();
+
+
+
 
 #endif // SIMULATION_H
