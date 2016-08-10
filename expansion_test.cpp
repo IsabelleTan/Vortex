@@ -26,7 +26,7 @@ value_type timep2e(int N, int order){
 	std::chrono::time_point< std::chrono::high_resolution_clock > start , stop;
 	start = std::chrono::high_resolution_clock::now();					// start time 
     
-    p2e(x, y, mass, N, order, xCom, yCom, expansion, expansion + order);
+    p2e_simple(x, y, mass, N, order, xCom, yCom, expansion, expansion + order);
     
     stop = std::chrono::high_resolution_clock::now();        			// record end time
 	const double time = static_cast<std::chrono::duration<double>>(stop-start).count();

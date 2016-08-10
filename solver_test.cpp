@@ -17,14 +17,12 @@ bool velocity_test(){
     value_type phi[N];
     value_type u[N];
     value_type v[N];
-    value_type control_u[N];
-    value_type control_v[N];
+    value_type * control_u = new value_type[N]{0, 0, 0, 0, 0, -4, -4, 0, 0, -4, -4, 0, 0, 0, 0, 0};
+    value_type * control_v = new value_type[N]{0, 0, 0, 0, 0, -1, -1, 0, 0, -1, -1, 0, 0, 0, 0, 0};
 
     // Initialize
     for (int i = 0; i < N; ++i) {
         phi[i] = i;
-        control_u[i] = -4; //TODO this still needs to be computed to be tested
-        control_v[i] = -1;
     }
 
     // Perform computation
@@ -89,13 +87,56 @@ bool vorticity_test(){
     return result;
 }
 
+/*
+ * A function to test the advection() function.
+ */
+bool advection_test(){
+    // Set parameters
+    bool result = true;
+    int N = 9;
+
+    // Allocate and initialize arrays
+    value_type * u = new value_type[N]{2,4,2,4,2,4,2,4,2};
+    value_type * v = new value_type[N]{8,6,8,6,8,6,8,6,8};
+    value_type * x = new value_type[N]{0,0,0,0,0,0,0,0,0};
+    value_type * y = new value_type[N]{0,0,0,0,0,0,0,0,0};
+    value_type * control_x = new value_type[N]{1,2,1,2,1,2,1,2,1};
+    value_type * control_y = new value_type[N]{4,3,4,3,4,3,4,3,4};
+
+    // Perform computation
+    advection(N, 0.5, u, v, x, y);
+
+    // Test the result
+    for (int j = 0; j < N; ++j) {
+        if(x[j] == control_x[j] && y[j] == control_y[j]){
+            std::cout << "x[j] = " << x[j] << " == " << control_x[j] << " = control_x[j]" << " and" << std::endl;
+            std::cout << "y[j] = " << y[j] << " == " << control_y[j] << " = control_y[j]\n" << std::endl;
+        } else {
+            std::cout << "x[j] = " << x[j] << " != " << control_x[j] << " = control_x[j]" << " or" << std::endl;
+            std::cout << "y[j] = " << y[j] << " != " << control_y[j] << " = control_y[j]\n" << std::endl;
+            result = false;
+        }
+    }
+
+    // Print the result
+    if(result){
+        std::cout << "Test succeeded!" << std::endl;
+    } else {
+        std::cout << "Test failed" << std::endl;
+    }
+
+    return result;
+}
+
 
 int main()
 {
 	
-	bool a = velocity_test(); 
+	//bool a = velocity_test();
 	
-	bool b = vorticity_test(); 
+	//bool b = vorticity_test();
+
+    //bool c = advection_test();
 	
 	return 0; 
 	

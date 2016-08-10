@@ -61,11 +61,11 @@ void run_simulation(){
 //			std::cout << "hello 1, here is q_target:  " << q_target << std::endl ; 
 		arrayToMatrix(q_target, q_targetM, true);
 //					std::cout << "and here is q_targetM:  " << q_targetM << std::endl ; 
-			std::cout << "hello 2 " << std::endl ; 
-		ADI(q_targetM, q_diffusedM, deltaT, deltaX, viscosity);	
-			std::cout << "hello 3 " << std::endl ; 
+		std::cout << "hello 2 " << std::endl ;
+		ADI(q_targetM, q_diffusedM, deltaT, deltaX, viscosity);
+		std::cout << "hello 3 " << std::endl ;
 		matrixToArray(q_diffused, q_diffusedM, true);
-			std::cout << "hello 4 " << std::endl ; 
+		std::cout << "hello 4 " << std::endl ;
 
 		// Perform one advection iteration
 		advection(nParticles, deltaT, u_target, v_target, x_target, y_target);
@@ -101,7 +101,6 @@ void run_simulation(){
 	delete[] pot_target;
 
 	return;
-	
 }
 
 // Use special size for nParticles!
