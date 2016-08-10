@@ -45,9 +45,39 @@ bool grid_test(){
     return result;
 }
 
+bool arrayToMatrix_test(){
+    bool result = true;
+    int N = 100;
+    int n = sqrt(N);
+
+    // Prepare arguments
+    MatrixXd matrix(n,n);
+    value_type * array = new value_type[100];
+
+    // Fill array with values
+    for (int i = 0; i < 100; ++i) {
+        array[i] = i;
+    }
+
+    // Convert to matrix
+    arrayToMatrix(array, matrix, false);
+
+    // Print content of matrix
+    for (int j = 0; j < sqrt(N); ++j) {
+        for (int i = 0; i < sqrt(N); ++i) {
+            std::cout << "Array[" << j << "," << i << "] = " << array[j*(int)sqrt(N) + i] << std::endl;
+            std::cout << "Matrix[" << j << "," << i << "] = " << matrix(j, i) << std::endl;
+        }
+    }
+
+    delete[] array;
+    return result;
+}
+
+
 int main() 
 {
-	bool a = grid_test(); 
+	arrayToMatrix_test();
 	
 	return 0; 
 	
