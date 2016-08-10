@@ -3,7 +3,10 @@
 //
 
 #include "solver.h"
+#include "datapoints.h"
 #include <iostream>
+#include <chrono>
+#include <cmath>
 
 /*
  * A function to test the velocity() function
@@ -47,7 +50,42 @@ bool velocity_test(){
         std::cout << "Test failed" << std::endl;
     }
 
+    delete[] control_u;
+    delete[] control_v;
     return result;
+}
+
+/*
+ * A function to time the velocity.
+ */
+value_type velocity_time(int N){
+    value_type time;
+    value_type * phi;
+    value_type * u;
+    value_type * v;
+
+    posix_memalign( (void**) &phi, 32, sizeof(value_type)*N );
+    posix_memalign( (void**) &u, 32, sizeof(value_type)*N );
+    posix_memalign( (void**) &v, 32, sizeof(value_type)*N );
+
+    // Prepare time variables
+    auto start = std::chrono::high_resolution_clock::now();
+    auto end   = std::chrono::high_resolution_clock::now();
+
+    // Initialize phi with random values
+    load_data_random(N, &phi);
+
+    start = std::chrono::high_resolution_clock::now();
+    velocity(N, 1, u, v, phi);
+    end = std::chrono::high_resolution_clock::now();
+    time = static_cast<std::chrono::duration<double>>(end-start).count();
+
+
+    delete[] phi;
+    delete[] u;
+    delete[] v;
+
+    return time;
 }
 
 /*
@@ -84,7 +122,43 @@ bool vorticity_test(){
         std::cout << "Test failed" << std::endl;
     }
 
+    delete[] u;
+    delete[] v;
+    delete[] control_q;
     return result;
+}
+
+/*
+ * A function to time the vorticity.
+ */
+value_type vorticity_time(int N){
+    value_type time;
+    value_type * q = new value_type[N];
+    value_type * u = new value_type[N];
+    value_type * v = new value_type[N];
+
+    posix_memalign( (void**) &q, 32, sizeof(value_type)*N );
+    posix_memalign( (void**) &u, 32, sizeof(value_type)*N );
+    posix_memalign( (void**) &v, 32, sizeof(value_type)*N );
+
+    // Prepare time variables
+    auto start = std::chrono::high_resolution_clock::now();
+    auto end   = std::chrono::high_resolution_clock::now();
+
+    // Initialize phi with random values
+    load_data_random(N, &u, &v);
+
+    start = std::chrono::high_resolution_clock::now();
+    vorticity(N, 1, u, v, q);
+    end = std::chrono::high_resolution_clock::now();
+    time = static_cast<std::chrono::duration<double>>(end-start).count();
+
+
+    delete[] q;
+    delete[] u;
+    delete[] v;
+
+    return time;
 }
 
 /*
@@ -125,9 +199,86 @@ bool advection_test(){
         std::cout << "Test failed" << std::endl;
     }
 
+    delete[] u;
+    delete[] v;
+    delete[] x;
+    delete[] y;
+    delete[] control_x;
+    delete[] control_y;
     return result;
 }
 
+/*
+ * A function to time the advection.
+ */
+value_type advection_time(int N){
+    value_type time;
+    value_type * x = new value_type[N];
+    value_type * y = new value_type[N];
+    value_type * u = new value_type[N];
+    value_type * v = new value_type[N];
+
+
+    posix_memalign( (void**) &x, 32, sizeof(value_type)*N );
+    posix_memalign( (void**) &y, 32, sizeof(value_type)*N );
+    posix_memalign( (void**) &u, 32, sizeof(value_type)*N );
+    posix_memalign( (void**) &v, 32, sizeof(value_type)*N );
+
+    // Prepare time variables
+    auto start = std::chrono::high_resolution_clock::now();
+    auto end   = std::chrono::high_resolution_clock::now();
+
+    // Initialize phi with random values
+    load_data_random(N, &x, &y);
+    load_data_random(N, &u, &v);
+
+    start = std::chrono::high_resolution_clock::now();
+    advection(N, 1, u, v, x, y);
+    end = std::chrono::high_resolution_clock::now();
+    time = static_cast<std::chrono::duration<double>>(end-start).count();
+
+
+    delete[] x;
+    delete[] y;
+    delete[] u;
+    delete[] v;
+
+    return time;
+}
+
+
+/*
+ * A function to time something N times and compute the average and variance
+ */
+void time(int N){
+    value_type *times = new value_type[N];
+
+    // Track the time N times
+    for (int i = 0; i < N; ++i) {
+        times[i] = velocity_time(1000000);
+    }
+
+    // Compute the average
+    value_type mean = 0;
+    for (int j = 0; j < N; ++j) {
+        mean += times[j];
+    }
+    mean/=N;
+
+    // Compute the variance
+    value_type var = 0;
+    for (int k = 0; k < N; ++k) {
+        var += pow(times[k] - mean, 2);
+    }
+    var/=N;
+
+    // Print the results
+    std::cout << "Timed " << N << " times." << std::endl;
+    std::cout << "Mean = " << mean << std::endl;
+    std::cout << "Variance = " << var << " is " << var/mean * 100 << "% of the mean" << std::endl;
+
+    delete[] times;
+}
 
 int main()
 {
@@ -137,6 +288,8 @@ int main()
 	//bool b = vorticity_test();
 
     //bool c = advection_test();
+
+    time(100);
 	
 	return 0; 
 	
