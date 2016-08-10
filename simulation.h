@@ -27,7 +27,7 @@
 #define kleaf 32			// leaf capacity
 
 // Multipole
-#define exp_order 10		// expansion order of the multipole
+#define exp_order 5		// expansion order of the multipole
 #define theta_dist 0.5		// used to control which nodes are considered as "far"
 
 typedef double value_type;

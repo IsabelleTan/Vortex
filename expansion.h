@@ -7,9 +7,16 @@
 
 #include "simulation.h"			// for simulation-parameters etc.
 
+
 /*
  * The particle to expansion kernel. This function computes the alpha_k coefficients and stores their real and imaginary
- * parts in the arrays rexpansion and iexpansion.
+ * parts in the arrays rexpansion and iexpansion. (Without AVX vectorization)
+ */
+void p2e_simple(const value_type* const x, const value_type* const y, const value_type* const q, const int nsources, const int order, const value_type xcom, const value_type ycom, value_type* const rexpansion, value_type* const iexpansion);
+
+/*
+ * The particle to expansion kernel. This function computes the alpha_k coefficients and stores their real and imaginary
+ * parts in the arrays rexpansion and iexpansion. (With AVX vectorization)
  */
 void p2e(const value_type* const x, const value_type* const y, const value_type* const q, const int nsources, const int order, const value_type xcom, const value_type ycom, value_type* const rexpansion, value_type* const iexpansion);
 

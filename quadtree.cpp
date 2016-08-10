@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cmath>
 #include "quadtree.h"
+#include "expansion.h"
 
 /*
  * help-function for "compute_r"
@@ -110,14 +111,17 @@ void build(const value_type* const x, const value_type* const y, const value_typ
     int newNodeIndex = 1; // since the root node lies at index 0
 
     // Create the root node (initially a leaf node)
-    tree[0] = Node {0, // root is at level 0
-                    0, // morton index
-                    -1, // child_id
-                    0, // part_start
-                    N-1, // part_end
+    tree[0] = Node {0,          // root is at level 0
+                    0,          // morton index
+                    -1,         // child_id
+                    0,          // part_start
+                    N-1,        // part_end
                     total_mass, // node mass
-                    xCom, // x center of mass
-                    yCom  // y center of mass
+                    xCom,       // x center of mass
+                    yCom,       // y center of mass
+                    NAN,          // radius of node (not used)
+                    NULL,       // real part of multipole expansion (not used)
+                    NULL        // imaginary part of multipole expansion (not used)
     };
 
     // Subdivide as long as there are more than k particles in the cells
@@ -150,50 +154,72 @@ void split(Node* parent, Node* tree, int depth, unsigned int* index, value_type*
     }
 
     // Compute the level of the children
-    int children_level = parent->level +1;
+    unsigned int children_level = parent->level +1;
 
     // Compute the indexvalue of this level so we can easily compute the morton-id's of the children
     int indexValue_level = pow(2,2*(depth - children_level));
 
+    // Allocate pointers for the expansions arrays
+    value_type * rxps0;
+    value_type * ixps0;
+    value_type * rxps1;
+    value_type * ixps1;
+    value_type * rxps2;
+    value_type * ixps2;
+    value_type * rxps3;
+    value_type * ixps3;
+
     // Initialize the children nodes
     Node child_0 = Node {children_level, // level
                          parent->morton_id, // morton index
-                         -1, // child_id
-                         -1, // part_start
-                         -1, // part_end
-                         1, // node mass
-                         1, // x center of mass
-                         1  // y center of mass
+                         -1,        // child_id
+                         -1,        // part_start
+                         -1,        // part_end
+                         1,         // node mass
+                         1,         // x center of mass
+                         1,         // y center of mass
+                         NAN,       // radius of node
+                         rxps0,     // real part of multipole expansion
+                         ixps0      // imaginary part of multipole expansion
     };
 
     Node child_1 = Node {children_level, // level
                          parent->morton_id + indexValue_level, // morton index
-                         -1, // child_id
-                         -1, // part_start
-                         -1, // part_end
-                         1, // node mass
-                         1, // x center of mass
-                         1  // y center of mass
+                         -1,        // child_id
+                         -1,        // part_start
+                         -1,        // part_end
+                         1,         // node mass
+                         1,         // x center of mass
+                         1,         // y center of mass
+                         NAN,         // radius of node
+                         rxps1,      // real part of multipole expansion
+                         ixps1       // imaginary part of multipole expansion
     };
 
     Node child_2 = Node {children_level, // level
                          parent->morton_id + 2*indexValue_level, // morton index
-                         -1, // child_id
-                         -1, // part_start
-                         -1, // part_end
-                         1, // node mass
-                         1, // x center of mass
-                         1  // y center of mass
+                         -1,        // child_id
+                         -1,        // part_start
+                         -1,        // part_end
+                         1,         // node mass
+                         1,         // x center of mass
+                         1,         // y center of mass
+                         NAN,         // radius of node
+                         rxps2,      // real part of multipole expansion
+                         ixps2       // imaginary part of multipole expansion
     };
 
     Node child_3 = Node {children_level, // level
                          parent->morton_id + 3*indexValue_level, // morton index
-                         -1, // child_id
-                         -1, // part_start
-                         -1, // part_end
-                         1, // node mass
-                         1, // x center of mass
-                         1  // y center of mass
+                         -1,        // child_id
+                         -1,        // part_start
+                         -1,        // part_end
+                         1,         // node mass
+                         1,         // x center of mass
+                         1,         // y center of mass
+                         NAN,         // radius of node
+                         rxps3,      // real part of multipole expansion
+                         ixps3       // imaginary part of multipole expansion
     };
 
     if(parent->level == 0){
@@ -233,7 +259,43 @@ void split(Node* parent, Node* tree, int depth, unsigned int* index, value_type*
     centerOfMass(children, xsorted, ysorted, mass_sorted);
     radius(children, xsorted, ysorted);
 
-    // TODO Add calls to the p2e() function for each child so that rexps and iexps are computed and set
+    // Compute the multipole expansions for the children nodes, only if the level is 2 or deeper and if the node is not empty
+    // TODO Values seem ok, but maybe we should find a way to do a proper test on the computed expansion coefficients, (The p2e kernel test function still passes).
+    if(children_level >= 2){
+        int nParticlesChild = 0;
+        for (int c = 0; c < 4; ++c) {
+            // Check if this child node is empty or contains only 1 particle.
+            if(children[c].part_start ==  children[c].part_end){
+                // Do nothing
+
+            } else {
+                // Compute the number of particles in this child node
+                nParticlesChild = children[c].part_end - children[c].part_start + 1;
+
+                // Align expansion arrays
+                posix_memalign((void **) &children[c].rxps, 32, sizeof(value_type) * exp_order);
+                posix_memalign((void **) &children[c].ixps, 32, sizeof(value_type) * exp_order);
+
+                // Compute and set the expansion in this child node
+                p2e(xsorted + children[c].part_start,        // x values of child's particles
+                    ysorted + children[c].part_start,        // y values of child's particles
+                    mass_sorted + children[c].part_start,    // mass values of child's particles
+                    nParticlesChild,                         // number of particles in child
+                    exp_order,                               // order of expansion
+                    children[c].xcom,                        // x value center of mass
+                    children[c].ycom,                        // y value center of mass
+                    children[c].rxps,                        // real parts of expansion
+                    children[c].ixps);                       // imaginary parts of expansion
+
+                /* Print info about the computed expansion
+                std::cout << "Child node " << c << " has expansion:" << std::endl;
+                for (int i = 0; i < exp_order; ++i) {
+                    std::cout << "rxps [" << i << "] = " << children[c].rxps[i] << std::endl;
+                    std::cout << "ixps [" << i << "] = " << children[c].ixps[i] << "\n" << std::endl;
+                } */
+            }
+        }
+    }
 
     // Check number of particles in the children nodes
     for (int i = 0; i < 4; ++i) {
@@ -273,7 +335,6 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
     // Loop over all particles
     for (int i = parent->part_start; i <= parent->part_end; ++i) {
 //        std::cout << "Level = " << parent->level << ". Checking particle " << i << " with MortonID " << index[i] << " against child node " << c << " with MortonID " << children[c].morton_id << std::endl;
-
         // Check if the morton index of the particle is smaller than the morton index of the first child node. If so
         // something went wrong.
         if (index[i]<children[c].morton_id){
@@ -304,7 +365,6 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
 
                 // Test the particle against the next child node
                 c = c+1;
-//                std::cout << "Continuing to next children node, node " << c << std::endl;
             } else {
                 // The node is not empty so the previous particle was the last particle in the current child node so
                 // assign part_start and part_end to the current child node.
@@ -314,6 +374,7 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
                 // Check the same particle again for the next child node
                 c=c+1;
 //                std::cout << "Continuing to next children node, node " << c << std::endl;
+
 
                 // Set the start of a new particle group to the current particle
                 part_start = i;
@@ -326,7 +387,6 @@ void assignParticles(Node* parent, Node* children, int depth, unsigned int* inde
     }
     // Finished looping over the particles in the parent node
 //    std::cout << "Finished looping over particles " << parent->part_start << " to " << parent->part_end << " in parent node" << std::endl;
-
     // Assign the last particle group to the current child node
     part_end = parent->part_end;
     children[c].part_start = part_start;
@@ -388,5 +448,16 @@ void printNode(Node node){
     std::cout<< "mass: " 				<< node.mass 		<< std::endl;
     std::cout<< "xcom: " 				<< node.xcom 		<< std::endl;
     std::cout<< "ycom: " 				<< node.ycom 		<< std::endl;
+    std::cout<< "radius: " 				<< node.r    		<< std::endl;
+
+    if(node.rxps == NULL || node.ixps == NULL){
+        std::cout << "rexpansion and iexpansion were not assigned for this node." << std::endl;
+    } else {
+        std::cout << "Expansion of order " << exp_order << ":" << std::endl;
+        for (int i = 0; i < exp_order; ++i) {
+            std::cout << "\trexpansion[" << i << "] = " << node.rxps[i] << std::endl;
+            std::cout << "\tiexpansion[" << i << "] = " << node.ixps[i] << "\n" << std::endl;
+        }
+    }
 }
 
