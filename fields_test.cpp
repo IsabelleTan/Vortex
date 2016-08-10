@@ -63,10 +63,10 @@ bool arrayToMatrix_test(){
     arrayToMatrix(array, matrix, false);
 
     // Print content of matrix
-    for (int j = 0; j < sqrt(N); ++j) {
-        for (int i = 0; i < sqrt(N); ++i) {
-            std::cout << "Array[" << j << "," << i << "] = " << array[j*(int)sqrt(N) + i] << std::endl;
-            std::cout << "Matrix[" << j << "," << i << "] = " << matrix(j, i) << std::endl;
+    for (int i = 0; i < sqrt(N); ++i) {
+        for (int j = 0; j < sqrt(N); ++j) {
+            std::cout << "Array[" << i << "," << j << "] = " << array[i*n + j] << std::endl;
+            std::cout << "Matrix[" << i << "," << j << "] = " << matrix(i, j) << std::endl;
         }
     }
 
