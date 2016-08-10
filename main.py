@@ -72,6 +72,7 @@ def LambOseen(CR):
 
     return data
 
+
 ''' A function that animates 2D data where each timesteps data is contained in a file in the folder
 input:
 t0:         initial frame                                       DEF = 0
@@ -127,7 +128,6 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
 
 ##########################################
 # Animate 100 files
-#animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
 animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
 
 nParticles, data = readFile("lambOseenInitial")
@@ -157,9 +157,8 @@ cpp_x = [1.30792, 1.26979, 1.36657, 1.14663, 2.12903, 3.32258, 3.67742, 2.87097,
 
 print("x")
 print(x)
+=======
+animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
+>>>>>>> 285e9a19dcddfce5dcf7bfec2d39b993037fe703
 
-print("Difference")
-print(x-cpp_x)
 
-plt.plot(x-cpp_x)
-plt.show() '''

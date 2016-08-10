@@ -289,7 +289,7 @@ void time(int N){
 
     // Track the time N times
     for (int i = 0; i < N; ++i) {
-        times[i] = timee2p(100000,20);
+        times[i] = timep2e(10000000,8);
     }
 
     // Compute the average
@@ -325,7 +325,7 @@ int main() {
 	b = testp2p();
 	 */
 
-    testp2e();
+    time(100);
 	
 	return 0;
 	
