@@ -18,7 +18,7 @@ void run_simulation(){
 	value_type * u_target;
 	value_type * v_target;
 	value_type * q_target;
-	MatrixXd q_targetM;
+	MatrixXd q_targetM(static_cast<int>(sqrt(nParticles)),static_cast<int>(sqrt(nParticles)));
 	value_type * q_diffused;
 	MatrixXd q_diffusedM;
 	value_type * pot_target;
@@ -58,9 +58,14 @@ void run_simulation(){
 		vorticity(nParticles, deltaX, u_target, v_target, q_target);
 
 		// Perform one diffusion iteration (convert to and from matrices for the ADI solver)
+//			std::cout << "hello 1, here is q_target:  " << q_target << std::endl ; 
 		arrayToMatrix(q_target, q_targetM, true);
-		ADI(q_targetM, q_diffusedM, deltaT, deltaX, viscosity);
+//					std::cout << "and here is q_targetM:  " << q_targetM << std::endl ; 
+			std::cout << "hello 2 " << std::endl ; 
+		ADI(q_targetM, q_diffusedM, deltaT, deltaX, viscosity);	
+			std::cout << "hello 3 " << std::endl ; 
 		matrixToArray(q_diffused, q_diffusedM, true);
+			std::cout << "hello 4 " << std::endl ; 
 
 		// Perform one advection iteration
 		advection(nParticles, deltaT, u_target, v_target, x_target, y_target);
@@ -72,9 +77,9 @@ void run_simulation(){
 			filenameX = std::to_string(i) + "_X.txt";
 			filenameY = std::to_string(i) + "_Y.txt";
 			filenameQ = std::to_string(i) + "_Q.txt";
-			write_to_file(filenameX.c_str(), nParticles, x_target);
-			write_to_file(filenameY.c_str(), nParticles, y_target);
-			write_to_file(filenameQ.c_str(), nParticles, q_diffused);
+			//write_to_file(filenameX.c_str(), nParticles, x_target);
+			//write_to_file(filenameY.c_str(), nParticles, y_target);
+			//write_to_file(filenameQ.c_str(), nParticles, q_diffused);
 		}
 
 
