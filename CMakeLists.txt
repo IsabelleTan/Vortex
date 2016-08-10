@@ -2,15 +2,15 @@ cmake_minimum_required(VERSION 3.5)
 project(Vortex)
 
 set(CXX g++-5)                                                          # Use g++ version 5 (required to use openMP)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -pthread -mavx -mfma -O3")   # Compile with these flags
-
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -pthread -ftree-vectorize -fopt-info-vec -mavx -mfma -O3")   # Compile with these flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fopenmp -pthread -mavx -mfma")
 
 set(SOURCE_FILES
         ADIdiffusion.cpp
         #ADIdiffusion_test.cpp
 		complexAVX.cpp
         datapoints.cpp
-        datapoints_test.cpp
+        #datapoints_test.cpp
         expansion.cpp
         #expansion_test.cpp
         fields.cpp
@@ -26,7 +26,7 @@ set(SOURCE_FILES
         #quadtree_time.cpp
         #simulation.cpp
         solver.cpp
-        #solver_test.cpp
+        solver_test.cpp
 		)
 
 set(HEADER_FILES
