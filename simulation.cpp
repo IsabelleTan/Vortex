@@ -99,6 +99,39 @@ void run_simulation(){
 	
 }
 
+void time_simulation(int nPart, int nSim){
+	// TODO finish this function that times every step of the simulation
+
+	value_type totalTime = 0;
+	value_type gridTime = 0;
+	value_type potentialTime = 0;
+	value_type velocityTime = 0;
+	value_type vorticityTime = 0;
+	value_type diffusionTime = 0;
+	value_type advectionTime = 0;
+
+	// Loop over number of simulations
+	for (int i = 0; i < nSim; ++i) {
+		// Run simulation and time every step
+
+		// Add elapsed times to timing variables
+
+	}
+
+	// Compute averages and percentages
+	totalTime/=nSim;
+	gridTime/=nSim;
+	potentialTime/=nSim;
+	velocityTime/=nSim;
+	vorticityTime/=nSim;
+	diffusionTime/=nSim;
+	advectionTime/=nSim;
+
+
+	std::cout << "Finished simulations. \n" << "Total time: " << totalTime << std::endl;
+
+}
+
 int main(){
 	run_simulation();
 	std::cout <<"Finished!" << std::endl;
