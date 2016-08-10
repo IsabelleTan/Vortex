@@ -128,6 +128,7 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
 ##########################################
 # Animate 100 files
 #animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
+animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
 
 nParticles, data = readFile("lambOseenInitial")
 array = np.reshape(data,(np.sqrt(nParticles), np.sqrt(nParticles)))
