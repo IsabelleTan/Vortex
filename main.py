@@ -72,6 +72,7 @@ def LambOseen(CR):
 
     return data
 
+
 ''' A function that animates 2D data where each timesteps data is contained in a file in the folder
 input:
 t0:         initial frame                                       DEF = 0
@@ -127,38 +128,6 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
 
 ##########################################
 # Animate 100 files
-#animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
+animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
 
-nParticles, data = readFile("lambOseenInitial")
-array = np.reshape(data,(np.sqrt(nParticles), np.sqrt(nParticles)))
-plotArray(array)
 
-'''# Solve a tridiagonal system
-a = np.zeros((16,16))
-b = np.zeros(16)
-a[0,0] = 5
-b[0] = 4
-for i in np.arange(1,16):
-    if(np.mod(i,4) == 0):
-        a[i,i] = 5
-        a[i,i-1] = 0
-        a[i-1,i] = 0
-    else:
-        b[i] = i
-        a[i,i] = 5
-        a[i,i-1] = -2
-        a[i-1,i] = -2
-        b[i] = i
-
-x = np.linalg.solve(a,b)
-
-cpp_x = [1.30792, 1.26979, 1.36657, 1.14663, 2.12903, 3.32258, 3.67742, 2.87097, 3.94721, 5.86804, 6.22287, 4.68915, 5.7654, 8.41349, 8.76833, 6.50733]
-
-print("x")
-print(x)
-
-print("Difference")
-print(x-cpp_x)
-
-plt.plot(x-cpp_x)
-plt.show() '''
