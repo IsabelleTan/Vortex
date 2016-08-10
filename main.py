@@ -3,6 +3,7 @@ import os.path
 import matplotlib.animation as anim
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.interpolate import griddata
 
 # Plot array with matplotlib imshow()
 
@@ -48,10 +49,10 @@ def readFile(filename):
         return nParticles, 0
     else:
         # Reshape the data into a square matrix
-        array = np.reshape(data, (dimension, dimension))
+        #data = np.reshape(data, (dimension, dimension))
 
         # Return the number of particles and the data array
-        return nParticles, array
+        return nParticles, data
 
 ''' A function to create a lamb oseen vortex with core radius CR'''
 def LambOseen(CR):
@@ -73,6 +74,7 @@ def LambOseen(CR):
     return data
 
 
+
 ''' A function that animates 2D data where each timesteps data is contained in a file in the folder
 input:
 t0:         initial frame                                       DEF = 0
@@ -82,7 +84,7 @@ v_max:      maximum value for color scale                       DEF = 4
 folder:     location of files w.r.t. this script's directory    DEF = "Test_output_files/5t/"
 colormap:   type of colormap to use                             DEF = plt.get_cmap("BrBG")
 '''
-def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap = plt.get_cmap("viridis")):
+def animateParticles(t0, t_end, folder, colormap = plt.get_cmap("viridis")):
     # Go to the script's directory
     curDir = os.getcwd()
     os.chdir(curDir)
@@ -96,21 +98,55 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
     frames = []
 
     # Read initial data
-    file_0 = folder + "/" + "0.txt"
-    nParticles, data_0 = readFile(file_0)
-    v_min = np.min(data_0)
-    v_max = np.max(data_0)
-    frames.append([plt.imshow(data_0, cmap = colormap, animated=True, vmin = v_min, vmax = v_max)])
+    file_0_Q = folder + "/" + "0_Q.txt"
+    file_0_X = folder + "/" + "0_X.txt"
+    file_0_Y = folder + "/" + "0_Y.txt"
+
+    nParticlesQ, data_0_Q = readFile(file_0_Q)
+    nParticlesX, data_0_X = readFile(file_0_X)
+    nParticlesY, data_0_Y = readFile(file_0_Y)
+
+    # Check if the number of particles in the files is equal
+    if(nParticlesQ != nParticlesX or nParticlesX != nParticlesY or nParticlesY != nParticlesQ):
+        print("The number of particles in the input files are not equal.")
+
+    # Compute the extent of the initial grid and data values
+    q_min = np.min(data_0_Q)
+    q_max = np.max(data_0_Q)
+    xmin = np.min(data_0_X)
+    ymin = np.min(data_0_Y)
+    xmax = np.max(data_0_X)
+    ymax = np.max(data_0_Y)
+
+    #Create a new grid
+    grid_x, grid_y = np.mgrid[xmin:xmax:100j, ymin:ymax:200j]
+
+    # Interpolate data onto grid
+    coordinates = np.column_stack((data_0_X, data_0_Y))
+    data_0_grid = griddata(coordinates, data_0_Q.squeeze(), (grid_x, grid_y), method='cubic')
+
+    # Add frame to the list of frames
+    frames.append([plt.imshow(data_0_grid.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), animated=True, vmin=q_min, vmax=q_max)])
+
 
     # Append the image list with each frame for the animation
     for t in times:
         print(t)
-        # Define new filename
-        filename = folder + "/" + str(t) + ".txt"
-        data = readFile(filename)[1]
-        frames.append([plt.imshow(data, cmap = colormap, animated=True, vmin = v_min, vmax = v_max)])
-        print("min = ", np.min(data))
-        print("max = ", np.max(data))
+        # Define new filenames
+        filenameQ = folder + "/" + str(t) + "_Q.txt"
+        filenameX = folder + "/" + str(t) + "_X.txt"
+        filenameY = folder + "/" + str(t) + "_Y.txt"
+
+        # Read the files
+        dataQ = readFile(filenameQ)[1]
+        dataX = readFile(filenameX)[1]
+        dataY = readFile(filenameY)[1]
+
+        # Interpolate the data
+        coordinates = np.column_stack((dataX, dataY))
+        data_grid = griddata(coordinates, dataQ.squeeze(), (grid_x, grid_y), method='cubic')
+
+        frames.append([plt.imshow(data_grid.T, cmap = colormap, extent=(xmin,xmax,ymin,ymax), animated=True, vmin = q_min, vmax = q_max)])
 
     # Transform the list into an animation
     ani = anim.ArtistAnimation(fig, frames, interval=100, blit=False, repeat=False)
@@ -122,43 +158,19 @@ def animate(t0 = 0, t_end = 4, folder = "Test_output_files/Unstable/", colormap 
 
     ani.save('animation.mp4', writer=writer)
 
-    print(v_min, v_max)
+    print(q_min, q_max)
 
     return
 
 ##########################################
-# Animate 100 files
-animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
+# SET THESE PARAMETERS FOR YOUR ANIMATION
+# Files are assumed to be named:
+# [ 0_X.txt, 0_Y.txt, 0_Q.txt, 1_X.txt,    ...,    t_end_X.txt, t_end_Y.txt, t_end_Q.txt]
 
-nParticles, data = readFile("lambOseenInitial")
-array = np.reshape(data,(np.sqrt(nParticles), np.sqrt(nParticles)))
-plotArray(array)
+# Animate from t_0 to t_end (inclusive)
+t_0 = 0
+t_end = 9
+foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/output_files"
 
-'''# Solve a tridiagonal system
-a = np.zeros((16,16))
-b = np.zeros(16)
-a[0,0] = 5
-b[0] = 4
-for i in np.arange(1,16):
-    if(np.mod(i,4) == 0):
-        a[i,i] = 5
-        a[i,i-1] = 0
-        a[i-1,i] = 0
-    else:
-        b[i] = i
-        a[i,i] = 5
-        a[i,i-1] = -2
-        a[i-1,i] = -2
-        b[i] = i
-
-x = np.linalg.solve(a,b)
-
-cpp_x = [1.30792, 1.26979, 1.36657, 1.14663, 2.12903, 3.32258, 3.67742, 2.87097, 3.94721, 5.86804, 6.22287, 4.68915, 5.7654, 8.41349, 8.76833, 6.50733]
-
-print("x")
-print(x)
-=======
-animate(0,99, folder = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/rectangle")
->>>>>>> 285e9a19dcddfce5dcf7bfec2d39b993037fe703
-
+animateParticles(t_0, t_end, foldername)
 
