@@ -9,22 +9,13 @@
 void test_extent()
 {
 	const int N = 6;
-	double xx[N];
-	double yy[N];
-	
-	xx[0] = 89; 	yy[0] = 45.4;
-	xx[1] = 83; 	yy[1] = 5.4;
-	xx[2] = 13;		yy[2] = 67.9;
-	xx[3] = 0.23; 	yy[3] = -423.1;
-	xx[4] = 84; 	yy[4] = 43.1;
-	xx[5] = 5.66; 	yy[5] = 23.4;
-	
-	
+	double xx[N] = {89, 83, 13, 0.23, 84, 5.66} ;
+	double yy[N] = {45.4, 5.4, 67.9, 4.66, 43.1, 23.4};
 	double x_min, y_min, ext;
 	
 	extent(N, xx, yy, x_min, y_min, ext);
 	
-	std::cout << "Extent (4t in parallel):" << std::endl
+	std::cout << "Extent:" << std::endl
 			  << "xmin = " << x_min << std::endl
 			  << "ymin = " << y_min << std::endl
 			  << "ext = " << ext << std::endl;
@@ -189,8 +180,8 @@ void test_all(int n)
 int main() 
 {
 	// --> testing individual functions
+	//test_morton();
 	//test_extent();
-	test_morton();
 	//test_sort();
 	
 	// --> perform check of all functions

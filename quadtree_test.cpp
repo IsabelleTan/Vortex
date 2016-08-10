@@ -73,8 +73,6 @@ bool testComputeExtent(){
     return result;
 }
 
-
-
 // Test the function of center of mass
 bool testCenterOfMass(){
     bool result = true;
@@ -240,7 +238,7 @@ bool testr(){
 	int N = 10;
     int k = 8;
 
-    value_type x[10] = {0.1, 0.15, 0.4, 0.6, 0.7, 0.71, 0.8, 0.74, 0.48, 0.41};
+    value_type x[10] = {0.1, 0.15, 0.4, 0.6, 0.7, 0.71, 0.8, 0.74, 0.38, 0.41};
     value_type y[10] = {0.6, 0.85, 0.65, 0.3, 0.6, 0.1, 0.4, 0.33, 0.42, 0.57};
     value_type mass[10] = {1, 2, 3, 4, 5, 6, 7, 2.3, 1.4, 5.7};
 
@@ -262,11 +260,6 @@ bool testr(){
 	printNode(tree[2]);
 	printNode(tree[3]);
 	printNode(tree[4]);
-	printNode(tree[5]);
-	printNode(tree[6]);
-	printNode(tree[7]);
-	printNode(tree[8]);
-	printNode(tree[9]);
 	
 	// check results 
 	std::cout << std::endl << std::endl
