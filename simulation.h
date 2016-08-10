@@ -27,7 +27,6 @@
 #define kleaf 32			// leaf capacity
 
 // Multipole
-<<<<<<< HEAD
 #define exp_order 12		// expansion order of the multipole (determined by convergence analysis)
 #define theta_dist 0.5		// used to control which nodes are considered as "far"
 
