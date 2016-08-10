@@ -51,8 +51,8 @@ bool testp2e(){
     value_type y[4] = {4, 3, 2, 1};
     value_type mass[4] = {5, 6, 7, 8};
 
-    value_type xCom= 2.5;
-    value_type yCom = 2.5;
+    value_type xCom= 0;
+    value_type yCom = 0;
 
     value_type expansion[4] = {0};
 
@@ -315,7 +315,7 @@ void time(int N){
 }
 
 int main() {
-	
+	/*
 	value_type a = timep2e(1000000, exp_order);
 	bool b = testp2e();
 	a = timee2p(1000000, exp_order);
@@ -323,6 +323,9 @@ int main() {
 	convergenceAnalysis(exp_order);
 	a = timep2p(1000000);
 	b = testp2p();
+	 */
+
+    testp2e();
 	
 	return 0;
 	

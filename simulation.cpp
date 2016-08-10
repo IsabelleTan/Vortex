@@ -128,7 +128,14 @@ void time_simulation(int nPart, int nSim){
 	advectionTime/=nSim;
 
 
-	std::cout << "Finished simulations. \n" << "Total time: " << totalTime << std::endl;
+	std::cout << "Finished performing " << nSim << " simulations. \n" << "Total time: " << totalTime << std::endl;
+	std::cout << "Computation time kernels: " << std::endl;
+	std::cout << "Grid: \t\t Time = " << gridTime << "\t\t % of total = " << gridTime/totalTime * 100 << std::endl;
+	std::cout << "Potential: \t\t Time = " << potentialTime << "\t\t % of total = " << potentialTime/totalTime * 100 << std::endl;
+	std::cout << "Velocity: \t\t Time = " << velocityTime << "\t\t % of total = " << velocityTime/totalTime * 100 << std::endl;
+	std::cout << "Vorticity: \t\t Time = " << vorticityTime << "\t\t % of total = " << vorticityTime/totalTime * 100 << std::endl;
+	std::cout << "Diffusion: \t\t Time = " << diffusionTime << "\t\t % of total = " << diffusionTime/totalTime * 100 << std::endl;
+	std::cout << "Advection: \t\t Time = " << advectionTime << "\t\t % of total = " << advectionTime/totalTime * 100 << std::endl;
 
 }
 

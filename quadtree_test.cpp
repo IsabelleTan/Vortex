@@ -171,8 +171,8 @@ bool testBuild(){
     int N = 7;
     int k = 8;
 
-    value_type x[7] = {0.1, 0.15, 0.4, 0.6, 0.7, 0.71, 0.8};
-    value_type y[7] = {0.6, 0.85, 0.65, 0.3, 0.6, 0.1, 0.4};
+    value_type x[7] = {12,45,34,90,34,23,56};
+    value_type y[7] = {16,82,72,2,45,89,52};
     value_type mass[7] = {1, 2, 3, 4, 5, 6, 7};
 
     value_type xsorted[7];
@@ -196,13 +196,30 @@ bool testBuild(){
 
 
     // Test building the tree for k=2
-    std::cout << "Testing the build() function for a tree with N=7, k=2 and depth=2." << std::endl;
-    k = 2;
-    build(x, y, mass, N, k, xsorted, ysorted, mass_sorted, tree, depthtree);
+    N=14;
+    k=2;
+
+    // Create new particles
+    value_type x2[14] = {12,45,34,90,34,23,56,3,76,54,32,56,45,90};
+    value_type y2[14] = {16,82,72,2,45,89,52,54,12,12,12,43,2,89};
+    value_type mass2[14] = {1, 0.2, 3, 12, 5, 6, 3, 13, 9, 2, 11, 12, 3, 14};
+
+    // Allocate arrays for sorted particles
+    value_type xsorted2[14];
+    value_type ysorted2[14];
+    value_type mass_sorted2[14];
+
+    // Compute new maxNodes for treesize
+    int maxNodes2 = (int) std::min((float)8 * N / k, (float)pow(4, depthtree));
+
+    Node* tree2 = new Node[maxNodes2];
+
+    std::cout << "Testing the build() function for a tree with N=14, k=2 and depth=16." << std::endl;
+    build(x2, y2, mass2, N, k, xsorted2, ysorted2, mass_sorted2, tree2, depthtree);
 
     // Test the resulting tree
-    for (int i = 0; i < 13; ++i) {
-        printNode(tree[i]);
+    for (int i = 0; i < maxNodes2; ++i) {
+        printNode(tree2[i]);
     }
 
     if (result) {
@@ -210,6 +227,7 @@ bool testBuild(){
     }
 
     delete[] tree;
+    delete[] tree2;
     return result;
 }
 
@@ -279,7 +297,7 @@ int main(){
 	std::cout << "/------------------ test build :" << std::endl; 
 	testBuild();*/
 	
-	testr();
+	testBuild();
 	
 	return 0; 
 	
