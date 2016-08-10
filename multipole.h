@@ -27,6 +27,5 @@ void potential(double theta,
 void evaluate(const Node* nodes, const int node_id, const double *xdata, const double *ydata, const double *mdata,
 		const double thetasquared, double * const result, const double xt, const double yt);
 
-
 #endif //VORTEX_MULTIPOLE_H
 
