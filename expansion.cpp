@@ -6,6 +6,7 @@
 #include "complexAVX.h"
 #include <iostream>
 #include <complex.h>
+#include <limits>
 
 /*
  * A kernel to compute the particle to expansion computations (simple version, without using AVX intrinsics)
@@ -76,7 +77,7 @@ void p2e(const value_type* const x, const value_type* const y, const value_type*
     // rexpansion	array of real 	   parts of the expansion 
     // iexpansion	........ imaginary ......................
     
-        // Compute the vectorization parameters
+    // Compute the vectorization parameters
     int SIMD_width = sizeof(__m256d) / sizeof(value_type);
     int SIMD_blocks = nsources / SIMD_width;
 
@@ -184,9 +185,10 @@ value_type p2p(const value_type* const xsources, const value_type* const ysource
 	// OUTPUT
 	// return value: 	potential at target location
       
+    const value_type eps = std::numeric_limits<value_type>::epsilon();
     value_type streamfunction = 0;
     for (int i = 0; i < nsources; ++i) {
-        streamfunction += q[i] * log( sqrt( pow(xsources[i] - xtarget,2) + pow(ysources[i] - ytarget,2) ) );
+        streamfunction += q[i] * log( sqrt( (xsources[i] - xtarget)*(xsources[i] - xtarget) + (ysources[i] - ytarget)*(ysources[i] - ytarget) ) + eps );
     }
 
 	return streamfunction;  

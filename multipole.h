@@ -19,6 +19,13 @@ void potential(double theta,
 			  double *xsrc, double *ysrc, double *qsrc, int nsrc,
 			  double *xdst, double *ydst, int ndst, double *potdst);
 
+/*
+ * same as "potential", but implemented with O(n^2) p2p expansions
+ * without any tree building
+ */
+void potential_p2p(double theta, 
+			  double *xsrc, double *ysrc, double *qsrc, int nsrc,
+			  double *xdst, double *ydst, int ndst, double *potdst);
 
 /*
  * Evaluate the potential (i.e. the stream function psi) at a particular target location (xt, yt), 

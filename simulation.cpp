@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <cassert>
 #include "simulation.h"
 #include "fields.h"
 #include "datapoints.h"
@@ -9,6 +10,11 @@
 
 void run_simulation(){
 	// INITIALIZATION
+	
+	// make sure my number of particles is an int squared, to avoid problems in matrices
+	int dim = static_cast<int>(sqrt(nParticles));
+	assert(dim*dim == nParticles);
+	
 	// Allocate and align memory
 	value_type * x_source;
 	value_type * y_source;
@@ -18,7 +24,7 @@ void run_simulation(){
 	value_type * u_target;
 	value_type * v_target;
 	value_type * q_target;
-	MatrixXd q_targetM(static_cast<int>(sqrt(nParticles)),static_cast<int>(sqrt(nParticles)));
+	MatrixXd q_targetM(dim,dim);
 	value_type * q_diffused;
 	MatrixXd q_diffusedM;
 	value_type * pot_target;
@@ -60,7 +66,8 @@ void run_simulation(){
 		// Perform one diffusion iteration (convert to and from matrices for the ADI solver)
 //			std::cout << "hello 1, here is q_target:  " << q_target << std::endl ; 
 		arrayToMatrix(q_target, q_targetM, true);
-//					std::cout << "and here is q_targetM:  " << q_targetM << std::endl ; 
+//					std::cout << "and here is q_targetM:  " << q_targetM << std::endl ;
+// PROBLEM: this contains nans and infs. there is a problem in potential() 
 			std::cout << "hello 2 " << std::endl ; 
 		ADI(q_targetM, q_diffusedM, deltaT, deltaX, viscosity);	
 			std::cout << "hello 3 " << std::endl ; 

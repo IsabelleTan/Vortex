@@ -1,6 +1,10 @@
 
 #include <iostream>							
+#include <cassert>							
+#include <cmath>							
 #include "multipole.h"							
+
+unsigned int count(0);
 
 /*
  * This function computes the potential (i.e. the stream function psi) at all target locations (on a grid),
@@ -25,8 +29,6 @@ void potential(double theta,
 	// OUPUT
 	// potdst	values of the potential at destination
 	
-	std::cout << "in POTENTIAL " << std::endl;
-
 	// create all the variables needed
 	const double thetasquared = theta*theta;
 	double *xsorted, *ysorted, *qsorted; 
@@ -46,9 +48,9 @@ void potential(double theta,
 	build(xsrc, ysrc, qsrc, nsrc, kleaf, xsorted, ysorted, qsorted, nodes, depthtree);
 	
 	// evaluate the potential field at the location of each target point:
-	//! 	#pragma omp parallel for schedule(static,1)
+	#pragma omp parallel for schedule(static,1)
 	for(size_t i=0; i<ndst; i++){
-
+		
 		// for one target point (xdst[i], ydst[i]), do the following
 		*result = 0;
 
@@ -75,35 +77,36 @@ void potential(double theta,
 		// s2+2
 		// s2+3
 		
-		unsigned int s2 = nodes[2].child_id;
-		unsigned int s3 = nodes[3].child_id;
-		unsigned int s4 = nodes[4].child_id;
-				
-		evaluate(nodes,    5, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 00 00 */ 	//std::cout << "done with level 2.0  " << std::endl;
-		evaluate(nodes,    6, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 00 01 */
-		evaluate(nodes,    7, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 00 10 */
-		evaluate(nodes,    8, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 00 11 */
-		
-		evaluate(nodes, s2  , xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 00 */	//std::cout << "hello 6 " << std::endl;
-		evaluate(nodes, s2+1, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 01 */
-		evaluate(nodes, s2+2, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 10 */ //std::cout << "hello 6 " << std::endl;
-		evaluate(nodes, s2+3, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 11 */
-		
-		evaluate(nodes, s3  , xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 00 */	//std::cout << "hello 7 " << std::endl;
-		evaluate(nodes, s3+1, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 01 */
-		evaluate(nodes, s3+2, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 10 */
-		evaluate(nodes, s3+3, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 11 */
-		
-		evaluate(nodes, s4  , xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 00 */	//std::cout << "hello 8 " << std::endl;
-		evaluate(nodes, s4+1, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 01 */
-		evaluate(nodes, s4+2, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 10 */
-		evaluate(nodes, s4+3, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]); /* square # 01 11 */
-			//std::cout << "hello 18 " << std::endl;
-		potdst[i] = *result;  	// assign result 
-			//std::cout << "hello 19 " << std::endl;
+		// get indices of the 2nd-level nodes and assert they are, indeed, 2nd level. 
+		unsigned int s2 = nodes[2].child_id; assert(nodes[s2].level==2);
+		unsigned int s3 = nodes[3].child_id; assert(nodes[s3].level==2);
+		unsigned int s4 = nodes[4].child_id; assert(nodes[s4].level==2);
 
+		evaluate(nodes,    5, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 00 00 */ 	
+		evaluate(nodes,    6, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 00 01 */
+		evaluate(nodes,    7, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 00 10 */
+		evaluate(nodes,    8, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 00 11 */ 
+
+		evaluate(nodes, s2  , xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 00 */
+		evaluate(nodes, s2+1, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 01 */
+		evaluate(nodes, s2+2, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 10 */
+		evaluate(nodes, s2+3, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 11 */ 
+		
+		evaluate(nodes, s3  , xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 00 */
+		evaluate(nodes, s3+1, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 01 */
+		evaluate(nodes, s3+2, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 10 */
+		evaluate(nodes, s3+3, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 11 */ 
+		
+		evaluate(nodes, s4  , xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 00 */
+		evaluate(nodes, s4+1, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 01 */
+		evaluate(nodes, s4+2, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 10 */
+		evaluate(nodes, s4+3, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 11 */ 
+			
+		// assert that the potential we just computed isn't infinite nor NaN
+		assert(std::isfinite(*(potdst+i)));
+		
 	}
-	
+		
 	// free the memory allocated
 	free(xsorted);
 	free(ysorted);
@@ -112,6 +115,37 @@ void potential(double theta,
 	delete result;
 	
 }
+
+/*
+ * same as "potential", but implemented with O(n^2) p2p expansions
+ * without any tree building
+ */
+void potential_p2p(double theta, 
+			  double *xsrc, double *ysrc, double *qsrc, int nsrc,
+			  double *xdst, double *ydst, int ndst, double *potdst)
+{
+	// INPUT
+	// theta	parameter used to define which nodes are considered as far neighbors from a certain 2D-location
+	// xsrc		array containing the x-coordinates of the source-particles (all)
+	// ysrc		.................... y-coordinates .......................
+	// qsrc		.................... "masses" (i.e. vorticities) of the source-particles ("source-values")
+	// nsrc		number of source particles
+	// xdst		array containing the x-coordinates of the target-particles ("destination-particles") (all)
+	// ydst		.................... y-coordinates .......................
+	// ndst		number of target-particles
+	// OUPUT
+	// potdst	values of the potential at destination
+
+	// evaluate the potential field at the location of each target point:
+	#pragma omp parallel for schedule(static,1)
+	for(size_t i=0; i<ndst; i++){
+		// compute the potential by particle-to-particle (p2p) expansion
+		*(potdst+i) = p2p(xsrc, ysrc, qsrc, nsrc, xdst[i], ydst[i]);
+		// assert that the potential we just computed isn't infinite nor NaN
+		assert(std::isfinite(*(potdst+i)));
+	}	
+}
+
 
 
 /*
@@ -134,19 +168,16 @@ void evaluate(const Node* nodes, const int node_id, /*const double* expansions /
 	// OUTPUT
 	// result	potential at target location (xt, yt)
 	
-//	std::cout << "in  EVALUATE " << std::endl;
 	
-	const Node* const node = nodes + node_id;														// create a pointer to the node we're considering
-//	std::cout << "got node  " << std::endl;
-//	printNode(*node);
+	const Node* const node = nodes + node_id;								// create a pointer to the node we're considering
 
-	if(node->r > -0.5){ // if this node isn't empty, go on with the evaluation the whole evaluation and stop the descent
-		
+	if(node->r > -0.5){   // if this node isn't empty, go on with the evaluation
 		if(node->r == 0){ // if the node contains only 1 particle 
-			// compute the p2p expansion
+						  // compute the p2p expansion
 			const int n_s = node->part_start;
 			*result += p2p(xdata + n_s, ydata + n_s, mdata + n_s, 1, xt, yt);
 			return ; 
+			
 		}
 		
 		// if the node contains strictly more than one particle, compute the distance between the target and the center of mass of the node 
@@ -156,29 +187,25 @@ void evaluate(const Node* nodes, const int node_id, /*const double* expansions /
 		// pseudo-code, cf lecture 4, slide 24
 		if( (node->r * node->r) < (distsquared * thetasquared) ){			// if the target and the node are sufficiently far away from each other
 																			// return the expansion to particle expression as a potential
-//			std::cout << "e2p expansion" << std::endl;
-			*result += e2p(xt - node->xcom, yt - node->ycom, node->mass, exp_order, node->rxps, node->ixps);	
-			return;
+			*result += e2p(xt - node->xcom, yt - node->ycom, node->mass, exp_order, node->rxps, node->ixps);
+			return;				
+																			// and terminate the call to "evaluate"
 		} else if(node->child_id == -1){ 									// if they're not sufficiently far away from each other
 																			// and if this node is a leaf, 
 																			// then we cannot descend deeper into the tree
 																			// return the particle-to-particle expansion
-//			std::cout << "p2p expansion" << std::endl;
 			const int n_s = node->part_start;
-			*result += p2p(xdata + n_s, ydata + n_s, mdata + n_s, node->part_end - n_s, xt, yt);
+			const int n_e = node->part_end;
+			*result += p2p(xdata + n_s, ydata + n_s, mdata + n_s, n_e - n_s + 1, xt, yt);
 			return;
+			
 		} else {															// in any other case, 
 																			// i.e., they are not sufficiently far away from each other, and this node isn't a leaf
 																			// continue the descent of the tree
-//			std::cout << "descending into tree" << std::endl;
 			evaluate(nodes, node->child_id  , xdata, ydata, mdata, thetasquared, result, xt, yt) ;
 			evaluate(nodes, node->child_id+1, xdata, ydata, mdata, thetasquared, result, xt, yt) ;
 			evaluate(nodes, node->child_id+2, xdata, ydata, mdata, thetasquared, result, xt, yt) ;
 			evaluate(nodes, node->child_id+3, xdata, ydata, mdata, thetasquared, result, xt, yt) ;
 		}
-		
 	}
-	
-	*result += 0;	
-
 }

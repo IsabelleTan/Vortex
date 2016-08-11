@@ -8,7 +8,6 @@
 #include "multipole.h"
 
 double tol = 1e-8;
-//double tol = 1e-2;
 
 // from solution to exercises
 void check(const double * ref, const double * res, const int N)
@@ -27,10 +26,6 @@ void check(const double * ref, const double * res, const int N)
 		if (fabs(relerr) >= tol && fabs(err) >= tol)
 			printf("%d: %e ref: %e -> %e %e\n", i, res[i], ref[i], err, relerr);
 
-//		assert(fabs(relerr) < tol || fabs(err) < tol);
-//		assert(fabs(err) < tol);
-//		assert(fabs(relerr) < tol);
-
 		l1 += fabs(err);
 		l1_rel += fabs(relerr);
 
@@ -40,6 +35,28 @@ void check(const double * ref, const double * res, const int N)
 
 	printf("l-infinity errors: %.03e (absolute) %.03e (relative)\n", linf, linf_rel);
 	printf("       l-1 errors: %.03e (absolute) %.03e (relative)\n", l1, l1_rel);
+}
+
+// reference solution from exercizes 
+void exercise_sol(double * xref, int OFFSET, int JUMP, double * xdst, double * ydst, int NDST, double * xsrc, double * ysrc, double * sources, int NSRC, double eps)
+{
+	for(int i = OFFSET; i < NDST; i += JUMP)
+	{
+		const double xd = xdst[i];
+		const double yd = ydst[i];
+
+		double s = 0;
+
+		for(int j = 0; j < NSRC; ++j)
+		{
+			const double xr = xd - xsrc[j];
+			const double yr = yd - ysrc[j];
+			const double r2 = xr * xr + yr * yr;
+			const double f  = fabs(r2) > eps;
+			s += 0.5 * f * log(r2 + eps) * sources[j];
+		}
+		xref[i] = s;
+	}
 }
 
 int main() 
@@ -85,51 +102,27 @@ int main()
 
 	printf("Testing %s with %d sources and %d targets (theta %.3e)...\n", "POTENTIAL", NSRC, NDST, theta_dist);
 
-	// compute potential
+	// compute potential with nlogn method
 	potential(theta_dist, xsrc, ysrc, sources, NSRC, xdst, ydst, NDST, xtargets);
 	
-	std::cout << "after POTENTIAL " << std::endl;
-	
-	// reference solution (from exercise solution)
 	const int OFFSET = 0;
 	const int JUMP = 1;
 
-			//#pragma omp parallel for
-	for(int i = OFFSET; i < NDST; i += JUMP)
-	{
-		const double xd = xdst[i];
-		const double yd = ydst[i];
-
-		double s = 0;
-
-		for(int j = 0; j < NSRC; ++j)
-		{
-			const double xr = xd - xsrc[j];
-			const double yr = yd - ysrc[j];
-			const double r2 = xr * xr + yr * yr;
-			const double f  = fabs(r2) > eps;
-			s += 0.5 * f * log(r2 + eps) * sources[j];
-		}
-		xref[i] = s;
-	}
+	// reference solution (choose the one from exercises, or our p2p implementation 	
+	potential_p2p(theta_dist, xsrc, ysrc, sources, NSRC, xdst, ydst, NDST, xref);
+	// exercise_sol(xref, OFFSET, JUMP, xdst, ydst, NDST, xsrc, ysrc, sources, NSRC, eps);
 
 	std::vector<double> a, b, c, d;
-
 	for(int i = OFFSET; i < NDST; i += JUMP)
 	{
-		a.push_back(xref[i]);
-		b.push_back(xtargets[i]);
+		a.push_back(xref[i]);	  // potential computed above 
+		b.push_back(xtargets[i]); // potential computed by our potential() 
 		c.push_back(yref[i]);
 		d.push_back(ytargets[i]);
 	}
 
 	check(&a[0], &b[0], a.size());
-	
-	// the errors obtained in the course solution are
-	// l-infinity errors: 5.504e-09 (absolute) 1.713e-06 (relative)
-    // l-1 errors: 2.597e-07 (absolute) 4.258e-05 (relative)
-
-	
+		
 	// free the memory
 	free(xdst);
 	free(ydst);
@@ -148,3 +141,21 @@ int main()
 	return 0; 
 	
 }
+
+/* RESULTS 
+ * 
+ * Comparing out p2p to exercize solution: 
+ * l-infinity errors: 1.153e-01 (absolute) 1.884e+00 (relative)
+ * l-1 errors: 2.120e+00 (absolute) 1.457e+02 (relative)
+ * 
+ * Comparing our potential to exercize solution 
+ * l-infinity errors: 1.153e-01 (absolute) 1.884e+00 (relative)
+ * l-1 errors: 2.120e+00 (absolute) 1.457e+02 (relative)
+ * 
+ * Comparing our potential to our p2p 
+ * l-infinity errors: 1.230e-08 (absolute) 5.733e-04 (relative)
+ * l-1 errors: 6.798e-07 (absolute) 8.700e-04 (relative)
+ * 
+ */ 
+
+
