@@ -7,7 +7,7 @@
  */
 
 // PI
-#define MPI 3.14159
+#define MPI 3.141593
 
 // Particles
 #define nParticles 40000
