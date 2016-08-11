@@ -4,6 +4,7 @@
 
 #include "solver.h"
 #include <cmath>
+#include <cassert>
 
 
 /*
@@ -27,6 +28,7 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
             u[i] = (phi[i-M] - phi[i+M])/(2*h);
             v[i] = (phi[i-1]-phi[i+1])/(2*h);
         }
+        assert( (std::isfinite(u[i])) && (std::isfinite(v[i])) );
     }
 }
 
@@ -68,7 +70,7 @@ void vorticity(const int N, const value_type dx, value_type * const u, value_typ
             }
 
             // Set the vorticity
-            q[i*n+j] = v_x + u_y;
+            q[i*n+j] = v_x - u_y;
         }
     }
 }
