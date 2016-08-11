@@ -33,7 +33,6 @@ std::cout << " in POTENTIAL " << std::endl;
 	const double thetasquared = theta*theta;
 	double *xsorted, *ysorted, *qsorted; 
 	Node *nodes;
-	double *result(new double(0));
 	int maxnodes = (nsrc + kleaf - 1) / kleaf * 60;
 
 	// do the memory-alignments
@@ -48,12 +47,12 @@ std::cout << " in POTENTIAL " << std::endl;
 //std::cout << "quadtree done" << std::endl; 
 	
 	// evaluate the potential field at the location of each target point:
-//	#pragma omp parallel for schedule(static,1)
+	#pragma omp parallel for schedule(static,1)
 	for(size_t i=0; i<ndst; i++){
-//std::cout << "potential iteration # " << i << ", " ;
-		// for one target point (xdst[i], ydst[i]), do the following
-		*result = 0;
-//std::cout << " go 1 " << std::endl; 
+
+		// for one target point (xdst[i], ydst[i]), do the following, initialize to 0
+		potdst[i] = 0;
+
 		//! the naive approach would be to start at level 0:
 		//! evaluate(nodes, 0, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]);
 		//! but we know there are no leaves and most probably no squares far away enough in the two first levels (level 0=root and level 1) 
@@ -118,7 +117,6 @@ std::cout << "loop done" << std::endl;
 	free(ysorted);
 	free(qsorted);
 	free(nodes);
-	delete result;
 	
 }
 
@@ -182,7 +180,7 @@ void evaluate(const Node* nodes, const int node_id, /*const double* expansions /
 						  // compute the p2p expansion
 			const int n_s = node->part_start;
 			*result += p2p(xdata + n_s, ydata + n_s, mdata + n_s, 1, xt, yt);
-			return ; 
+			return;
 			
 		}
 		

@@ -3,7 +3,6 @@
 //
 
 #include "ADIdiffusion.h"
-#include <iostream>
 
 using namespace std;
 
@@ -54,6 +53,7 @@ void ADI(Ref<MatrixXd> q_0, Ref<MatrixXd> q_new, const value_type dt, const valu
     // Compute right hand side
     MatrixXd RHS(n,n);
     RHS.setZero(n,n);
+
     // Create matrix with (1-2r) on diagonal and r on sub- and superdiagonal
     MatrixXd rightMat(n,n);
     rightMat.setZero(n,n);

@@ -260,7 +260,6 @@ void split(Node* parent, Node* tree, int depth, unsigned int* index, value_type*
     radius(children, xsorted, ysorted);
 
     // Compute the multipole expansions for the children nodes, only if the level is 2 or deeper and if the node is not empty
-    // TODO Values seem ok, but maybe we should find a way to do a proper test on the computed expansion coefficients, (The p2e kernel test function still passes).
     if(children_level >= 2){
         int nParticlesChild = 0;
         for (int c = 0; c < 4; ++c) {
@@ -316,7 +315,6 @@ void split(Node* parent, Node* tree, int depth, unsigned int* index, value_type*
  * child nodes.
  */
 void assignParticles(Node* parent, Node* children, int depth, unsigned int* index){
-    // TODO the assigment of particles is not bulletproof yet... c sometimes goes beyond 3
     // Check if the parent node is empty
     if(parent->part_start < 0 && parent->part_end <0){
         std::cout << "Something went wrong: the start and end indices of the parents particles are < 0, so we cannot assign any particles to its child nodes." << std::endl;

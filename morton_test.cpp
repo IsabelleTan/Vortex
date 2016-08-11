@@ -61,7 +61,7 @@ void test_sort()
 	const int N = 6;
 	double xx[N];
 	double yy[N];
-	unsigned int ind[N]; // TODO changed this from int to unsigned int
+	unsigned int ind[N];
 	unsigned int key[N];
 	
 	xx[0] = 0.; 	yy[0] = 0.;

@@ -4,10 +4,11 @@
 #include <cstring>
 #include <cassert>
 #include <cmath>
-#include <cstdio>
 #include "multipole.h"
+#include "datapoints.h"
 
 double tol = 1e-8;
+//double tol = 1e-2;
 
 // from solution to exercises
 void check(const double * ref, const double * res, const int N)
@@ -26,6 +27,10 @@ void check(const double * ref, const double * res, const int N)
 		if (fabs(relerr) >= tol && fabs(err) >= tol)
 			printf("%d: %e ref: %e -> %e %e\n", i, res[i], ref[i], err, relerr);
 
+//		assert(fabs(relerr) < tol || fabs(err) < tol);
+//		assert(fabs(err) < tol);
+//		assert(fabs(relerr) < tol);
+
 		l1 += fabs(err);
 		l1_rel += fabs(relerr);
 
@@ -37,7 +42,7 @@ void check(const double * ref, const double * res, const int N)
 	printf("       l-1 errors: %.03e (absolute) %.03e (relative)\n", l1, l1_rel);
 }
 
-// reference solution from exercizes 
+// reference solution from exercizes
 void exercise_sol(double * xref, int OFFSET, int JUMP, double * xdst, double * ydst, int NDST, double * xsrc, double * ysrc, double * sources, int NSRC, double eps)
 {
 	for(int i = OFFSET; i < NDST; i += JUMP)
@@ -59,8 +64,10 @@ void exercise_sol(double * xref, int OFFSET, int JUMP, double * xdst, double * y
 	}
 }
 
-int main() 
-{
+/*
+ * A function to test the potential() function.
+ */
+void potential_test(){
 	// open file etc.
 	char filename[256];
 	strcpy(filename, "diegoBinaryN400");		// now filename contains "diegoBinary ...."
@@ -104,25 +111,26 @@ int main()
 
 	// compute potential with nlogn method
 	potential(theta_dist, xsrc, ysrc, sources, NSRC, xdst, ydst, NDST, xtargets);
-	
+
 	const int OFFSET = 0;
 	const int JUMP = 1;
 
-	// reference solution (choose the one from exercises, or our p2p implementation 	
+	// reference solution (choose the one from exercises, or our p2p implementation
 	potential_p2p(theta_dist, xsrc, ysrc, sources, NSRC, xdst, ydst, NDST, xref);
 	// exercise_sol(xref, OFFSET, JUMP, xdst, ydst, NDST, xsrc, ysrc, sources, NSRC, eps);
 
 	std::vector<double> a, b, c, d;
+
 	for(int i = OFFSET; i < NDST; i += JUMP)
 	{
-		a.push_back(xref[i]);	  // potential computed above 
-		b.push_back(xtargets[i]); // potential computed by our potential() 
+		a.push_back(xref[i]);	  // potential computed above
+		b.push_back(xtargets[i]); // potential computed by our potential()
 		c.push_back(yref[i]);
 		d.push_back(ytargets[i]);
 	}
 
 	check(&a[0], &b[0], a.size());
-		
+
 	// free the memory
 	free(xdst);
 	free(ydst);
@@ -137,25 +145,116 @@ int main()
 	free(ysrc);
 	free(sources);
 
+	return;
+}
+
+/*
+ * A function to time the potential function.
+ */
+value_type potential_time(int N, value_type theta){
+	// Prepare time variables
+	auto start = std::chrono::high_resolution_clock::now();
+	auto end   = std::chrono::high_resolution_clock::now();
+	value_type potentialTime;
+
+	// Prepare arrays for potential
+	value_type * xsrc;
+	value_type * ysrc;
+	value_type * qsrc;
+	value_type * xdst;
+	value_type * ydst;
+	value_type * potdst;
+
+	// Align arrays
+	posix_memalign((void **)&xsrc, 32, sizeof(double) * N);
+	posix_memalign((void **)&ysrc, 32, sizeof(double) * N);
+	posix_memalign((void **)&qsrc, 32, sizeof(double) * N);
+	posix_memalign((void **)&xdst, 32, sizeof(double) * N);
+	posix_memalign((void **)&ydst, 32, sizeof(double) * N);
+	posix_memalign((void **)&potdst, 32, sizeof(double) * N);
+
+	// Initialize arrays
+	load_data_random(N, &xsrc, &ysrc);
+	load_data_random(N, &qsrc);
+	load_data_random(N, &xdst, &ydst); // (Note that here xdst and ydst are not on a grid)
+
+	// Run simulation and time
+	start = std::chrono::high_resolution_clock::now();
+	potential(theta, xsrc, ysrc, qsrc, N, xdst, ydst,N, potdst);
+	end = std::chrono::high_resolution_clock::now();
+	potentialTime = static_cast<std::chrono::duration<double>>(end-start).count();
+
+	delete[] xsrc;
+	delete[] ysrc;
+	delete[] qsrc;
+	delete[] xdst;
+	delete[] ydst;
+	delete[] potdst;
+
+	return potentialTime;
+}
+
+/*
+ * A function to time something N times and compute the average and variance
+ */
+void time(int N){
+	value_type *times = new value_type[N];
+
+	// Print parameters
+	std::cout << "Timing " << N << " simulations of potential(), with" << std::endl;
+	std::cout << "nParticles = " << nParticles << "\ntheta_dist = " << theta_dist << "\nexp_order = " << exp_order << "\n" << std::endl;
+
+	// Track the time N times
+	for (int i = 0; i < N; ++i) {
+		std::cout << "Timing " << i << " of " << N << std::endl;
+		times[i] = potential_time(nParticles, theta_dist);
+	}
+
+	// Compute the average
+	value_type mean = 0;
+	for (int j = 0; j < N; ++j) {
+		mean += times[j];
+	}
+	mean/=N;
+
+	// Compute the variance
+	value_type var = 0;
+	for (int k = 0; k < N; ++k) {
+		var += pow(times[k] - mean, 2);
+	}
+	var/=N;
+
+	// Print the results
+	std::cout << "\nTimed " << N << " times." << std::endl;
+	std::cout << "Mean = " << mean << std::endl;
+	std::cout << "Variance = " << var << " is " << var/mean * 100 << "% of the mean" << std::endl;
+
+	delete[] times;
+}
+
+int main()
+{
+	time(50);
+
 	
 	return 0; 
 	
 }
 
-/* RESULTS 
- * 
- * Comparing out p2p to exercize solution: 
+/* RESULTS
+ *
+ * Comparing out p2p to exercize solution:
  * l-infinity errors: 1.153e-01 (absolute) 1.884e+00 (relative)
  * l-1 errors: 2.120e+00 (absolute) 1.457e+02 (relative)
- * 
- * Comparing our potential to exercize solution 
+ *
+ * Comparing our potential to exercize solution
  * l-infinity errors: 1.153e-01 (absolute) 1.884e+00 (relative)
  * l-1 errors: 2.120e+00 (absolute) 1.457e+02 (relative)
- * 
- * Comparing our potential to our p2p 
+ *
+ * Comparing our potential to our p2p
  * l-infinity errors: 1.230e-08 (absolute) 5.733e-04 (relative)
  * l-1 errors: 6.798e-07 (absolute) 8.700e-04 (relative)
- * 
- */ 
+ *
+ */
 
 
