@@ -234,7 +234,7 @@ void time(int N){
 
 int main()
 {
-	time(50);
+	time(100);
 
 	
 	return 0; 
