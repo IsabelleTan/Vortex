@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <cassert>
 #include "simulation.h"
 #include "fields.h"
 #include "datapoints.h"
