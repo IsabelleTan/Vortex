@@ -139,7 +139,7 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
     data_0_grid = interpolate(data_0_X, data_0_Y, data_0_Q)
 
     # Add frame to the list of frames
-    frames.append([plt.imshow(data_0_grid.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), animated=True, vmin=q_min, vmax=q_max)])
+    frames.append([plt.imshow(data_0_grid.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), animated=True, vmin=10*q_min, vmax=10*q_max)])
 
 
     # Append the image list with each frame for the animation
@@ -158,7 +158,7 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
         # Interpolate the data
         data_grid = interpolate(dataX, dataY, dataQ)
 
-        frames.append([plt.imshow(data_grid.T, cmap = colormap, extent=(xmin,xmax,ymin,ymax), animated=True, vmin = q_min, vmax = q_max)])
+        frames.append([plt.imshow(data_grid.T, cmap = colormap, extent=(xmin,xmax,ymin,ymax), animated=True, vmin = 10*q_min, vmax = 10*q_max)])
 
     # Transform the list into an animation
     ani = anim.ArtistAnimation(fig, frames, interval=100, blit=False, repeat=False)
@@ -235,9 +235,9 @@ def velocityPlot(folder, colormap = plt.get_cmap("viridis")):
 
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
-t_end = 20
-writeFreq = 4
-foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/output_files"
+t_end = 15
+writeFreq = 1
+foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
 
 # Make an animation
 #animateParticles(t_0, t_end, writeFreq, foldername)
