@@ -45,33 +45,35 @@ void run_simulation(){
 	std::string filenameX = "0_X.txt";
 	std::string filenameY = "0_Y.txt";
 	std::string filenameQ = "0_Q.txt";
-	// write_to_file(filenameX, nParticles, x_source);
-	// write_to_file(filenameY, nParticles, y_source);
-	// write_to_file(filenameQ, nParticles, q_source);
+	std::string filenameQ = "0_V.txt";
+	write_to_file(filenameX.c_str(), nParticles, x_source);
+	write_to_file(filenameY.c_str(), nParticles, y_source);
+	write_to_file(filenameQ.c_str(), nParticles, q_source);
+	write_to_file(filenameQ.c_str(), nParticles, v_target);
 
 	// TIME ITERATIONS
-	for (int i = 19; i <= timeIterations; ++i) {									///////////////////////
+	for (int i = 1; i <= timeIterations; ++i) {						
 		std::cout << "TIME iteration # " << i << std::endl; 
 		// Create target grid
 		grid(nParticles, x_target, y_target, deltaX*nParticles, deltaX*nParticles);
-std::cout << "grid done" << std::endl; 
+
 		// Compute the potential at the target locations
 		potential(theta_dist,x_source,y_source,q_source,nParticles,x_target,y_target,nParticles, pot_target);
-std::cout << "potential done" << std::endl; 
+
 		// Compute the velocity as the curl of the streamfunction potential
 		velocity(nParticles, deltaX, u_target, v_target, pot_target);
-std::cout << "velocity done" << std::endl; 
+
 		// Compute the vorticity as the curl of the velocity
 		vorticity(nParticles, deltaX, u_target, v_target, q_target);
-std::cout << "vorticity done" << std::endl; 
+
 		// Perform one diffusion iteration (convert to and from matrices for the ADI solver)
 		arrayToMatrix(q_target, q_targetM, true);
 		ADI(q_targetM, q_diffusedM, deltaT, deltaX, viscosity);	
 		matrixToArray(q_diffused, q_diffusedM, true);
-std::cout << "diffusion done" << std::endl; 
+
 		// Perform one advection iteration
 		advection(nParticles, deltaT, u_target, v_target, x_target, y_target);
-std::cout << "advection done" << std::endl; 
+
 
 		// Check if for this iteration the output should be written to a file
 		// If so; write output to file
@@ -79,17 +81,25 @@ std::cout << "advection done" << std::endl;
 			filenameX = std::to_string(i) + "_X.txt";
 			filenameY = std::to_string(i) + "_Y.txt";
 			filenameQ = std::to_string(i) + "_Q.txt";
-			//write_to_file(filenameX.c_str(), nParticles, x_target);
-			//write_to_file(filenameY.c_str(), nParticles, y_target);
-			//write_to_file(filenameQ.c_str(), nParticles, q_diffused);
+			filenameV = std::to_string(i) + "_V.txt";
+			write_to_file(filenameX.c_str(), nParticles, x_target);
+			write_to_file(filenameY.c_str(), nParticles, y_target);
+			write_to_file(filenameQ.c_str(), nParticles, q_diffused);
+			// compute scalar velocity
+			value_type * vel;
+			posix_memalign((void **)&vel, 32, sizeof(value_type) * nParticles);
+			for(size_t i(0); i<nParticles; ++i){
+				vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]+utarget[i]);
+			}
+			write_to_file(filenameV.c_str(), nParticles, vel);
+			free(vel);
 		}
 
-std::cout << "setting values for next iteration..." ; 
 		// Set values for next iteration
 		x_source = x_target;
 		y_source = y_target;
 		q_source = q_diffused;
-std::cout << " ... done " << std::endl;
+
 	}
 
 	free(x_source); 
@@ -102,8 +112,9 @@ std::cout << " ... done " << std::endl;
 	free(q_target); 
 //	free(q_diffused); should not be freed, since it has the same address as q_source which has already been freed
 	free(pot_target);
-std::cout << "free memory done" << std::endl;
+
 	return;
+	
 }
 
 // Use special size for nParticles!
