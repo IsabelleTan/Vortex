@@ -186,7 +186,7 @@ def scatterPlot(folder, t_0, t_end, writeFreq):
     fig.add_subplot(111)
 
     # Loop over timesteps
-    times = np.arange(t_0+writeFreq, t_end + 1, writeFreq)
+    times = np.arange(t_0, t_end + 1, writeFreq)
     for t in times:
         # Create filename string
         filenameX = folder + "/" + str(t) + "_X.txt"
@@ -200,7 +200,7 @@ def scatterPlot(folder, t_0, t_end, writeFreq):
 
     return
 
-def velocityPlot(folder, colormap = plt.get_cmap("viridis")):
+def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")):
     # Go to the script's directory
     curDir = os.getcwd()
     os.chdir(curDir)
@@ -208,30 +208,47 @@ def velocityPlot(folder, colormap = plt.get_cmap("viridis")):
     # Prepare image and frame array
     fig = plt.figure()
     fig.add_subplot(111)
+    fig2 = plt.figure()
+    fig2.add_subplot(111)
 
-    # Read data
-    filenameX = folder + "/1_X.txt"
-    filenameY = folder + "/1_Y.txt"
-    filenameV = folder + "/1_V.txt"
-    nParticles, dataX = readFile(filenameX)
-    nParticles, dataY = readFile(filenameY)
-    nParticles, dataV = readFile(filenameV)
+    times = np.arange(t_0, t_end + 1, 1)
 
-    # Compute the minimum and maximum q, x and y values
-    v_min = np.min(dataV)
-    v_max = np.max(dataV)
-    xmin = np.min(dataX)
-    ymin = np.min(dataY)
-    xmax = np.max(dataX)
-    ymax = np.max(dataY)
+    for t in times:
+        # Read data
+        filenameX = folder + "/" + str(t) + "_X.txt"
+        filenameY = folder + "/" + str(t) + "_Y.txt"
+        filenameQ = folder + "/" + str(t) + "_Q.txt"
+        filenameV = folder + "/" + str(t) + "_V.txt"
+        nParticles, dataX = readFile(filenameX)
+        nParticles, dataY = readFile(filenameY)
+        nParticles, dataQ = readFile(filenameQ)
+        nParticles, dataV = readFile(filenameV)
 
-    # Interpolate the data
-    data_grid = interpolate(dataX, dataY, dataV)
-    print(np.size(data_grid))
+        # Compute the minimum and maximum q, x and y values
+        if(t==0):
+            v_min = np.min(dataV)
+            v_max = np.max(dataV)
 
-    plt.imshow(data_grid.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = v_min, vmax = v_max)
-    plt.colorbar()
-    plt.show()
+        q_min = np.min(dataQ)
+        q_max = np.max(dataQ)
+        xmin = np.min(dataX)
+        ymin = np.min(dataY)
+        xmax = np.max(dataX)
+        ymax = np.max(dataY)
+
+        # Interpolate the data
+        data_gridV = interpolate(dataX, dataY, dataV)
+        data_gridQ = interpolate(dataX, dataY, dataQ)
+
+        plt.imshow(data_gridV.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = v_min, vmax = v_max)
+        plt.title("velocity at step " + str(t))
+        plt.colorbar()
+        plt.show()
+
+        plt.imshow(data_gridQ.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = q_min, vmax = q_max)
+        plt.title("vorticity at step 1")
+        plt.colorbar()
+        plt.show()
 
     return
 
@@ -242,9 +259,10 @@ def velocityPlot(folder, colormap = plt.get_cmap("viridis")):
 
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
-t_end = 15
+t_end = 6
 writeFreq = 1
 foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
+# foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/simulation"
 
 # Make an animation
 #animateParticles(t_0, t_end, writeFreq, foldername)
@@ -253,4 +271,4 @@ foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
 #scatterPlot(foldername)
 
 # Plot the velocity
-velocityPlot(foldername)
+valuesPlot(foldername, t_0, t_end, writeFreq)
