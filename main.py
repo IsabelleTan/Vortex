@@ -192,8 +192,8 @@ def scatterPlot(folder, t_0, t_end, writeFreq):
 
     for t in times:
         # Create filename string
-#        filenameX = folder + "/" + str(t) + "_X.txt"
-#        filenameY = folder + "/" + str(t) + "_Y.txt"
+        filenameX = folder + "/" + str(t) + "_X.txt"
+        filenameY = folder + "/" + str(t) + "_Y.txt"
         nParticles, dataX = readFile(filenameX)
         nParticles, dataY = readFile(filenameY)
         plt.scatter(dataX, dataY, s=5)
@@ -279,7 +279,7 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
 
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
-t_end = 7
+t_end = 20
 writeFreq = 1
 #foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
 foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/simulation"
@@ -288,7 +288,7 @@ foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/
 #animateParticles(t_0, t_end, writeFreq, foldername)
 
 # Make a scatter pot of the x and y data
-#scatterPlot(foldername, 0, 6, 1)
+# scatterPlot(foldername, 0, 6, 1)
 
 # Plot the velocity
 #velocityPlot(foldername)
@@ -296,4 +296,7 @@ foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/
 # Plot the voriticty
 #vorticityPlot(foldername)
 
-valuesPlot(foldername, t_0, t_end, writeFreq)
+# Plot (x,y), velocities, vorticities and potential at every important computation step of the first iteration
+# (for debugging)
+#valuesPlot(foldername, t_0, t_end, writeFreq)
+

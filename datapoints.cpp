@@ -123,7 +123,7 @@ void write_to_file(const char* fname, int N, const value_type* x){
     // write array content
     fwrite(x, sizeof(value_type), N, f);		// write the array contents in binary format
 
-    std:: cout << "Written to file " << fname << std::endl;
+    std:: cout << "Written to file " << fname << ". " ;
     fclose(f);
 }
 
