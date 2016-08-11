@@ -20,11 +20,11 @@ set(SOURCE_FILES
         #morton_test.cpp
         #morton_time.cpp
         multipole.cpp
-        multipole_test.cpp
+        #multipole_test.cpp
         quadtree.cpp
         #quadtree_test.cpp
         #quadtree_time.cpp
-        #simulation.cpp
+        simulation.cpp
         solver.cpp
         #solver_test.cpp
 		)
