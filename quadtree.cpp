@@ -450,7 +450,7 @@ void printNode(Node node){
     std::cout<< "ycom: " 				<< node.ycom 		<< std::endl;
     std::cout<< "radius: " 				<< node.r    		<< std::endl;
 
-    if(node.rxps == NULL || node.ixps == NULL){
+/*    if(node.rxps == NULL || node.ixps == NULL){
         std::cout << "rexpansion and iexpansion were not assigned for this node." << std::endl;
     } else {
         std::cout << "Expansion of order " << exp_order << ":" << std::endl;
@@ -458,6 +458,6 @@ void printNode(Node node){
             std::cout << "\trexpansion[" << i << "] = " << node.rxps[i] << std::endl;
             std::cout << "\tiexpansion[" << i << "] = " << node.ixps[i] << "\n" << std::endl;
         }
-    }
+    }*/
 }
 

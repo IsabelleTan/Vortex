@@ -62,12 +62,12 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
  */
 void arrayToMatrix(value_type * x, MatrixXd & M, bool invertOrder){
     // Loop over rows and columns
-    const int r = M.rows();
-    const int c = M.cols();
+    const int r = M.rows(); //std::cout << "#rows = " << r << std::endl;
+    const int c = M.cols(); //std::cout << "#cols = " << c << std::endl;
     for (int i = 0; i < r; ++i) {
         for (int j = 0; j < c; ++j) {
             if(invertOrder){
-                M(j,i) = x[i*c + j];
+                M(j,i) = x[i*c + j]; std::cout << "qval        " << x[i*c + j] << std::endl; 
             }else{
                 M(i,j) = x[i*c + j];
             }
@@ -141,3 +141,5 @@ void analyticalSolution(){
     }
 
 }
+
+

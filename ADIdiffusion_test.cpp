@@ -48,6 +48,45 @@ bool ThomasAlg_test(){
     return result;
 }
 
+// A test function for the ThomasAlg() function that solves a linear system with a tridiagonal matrix
+// another one, with different data
+bool ThomasAlg_test_2(){
+    // Initialize parameters
+    bool result = true;
+    int N = 10;
+    MatrixXd x(10,1);
+    MatrixXd control(10,1);
+    control << 1.2, 18.5, 3.446, 7.82, 44.3, 4.67, 3.21, 44.5, 2.11, 5.6;
+    MatrixXd r(10,1);
+    r << 3,4.5,5.99, 85.3, 55.7, 4.34, 8.65, 11.2, 3.2, 5;
+    const value_type a = -1;
+    const value_type b = 2;
+    const value_type c = -1;
+
+    // Perform the computation
+    ThomasAlg(N, a, b, c, x, r);
+
+    // Test the result
+    for (int j = 0; j < N; ++j) {
+        if(::abs(x(j,0) - control(j,0)) < EPSILON){
+            std::cout << "x(j,0) = " << x(j,0) << " == " << control(j,0) << " = control(j,0)" << std::endl;
+        } else {
+            std::cout << "x(j,0) = " << x(j,0) << " != " << control(j,0) << " = control(j,0)" << std::endl;
+            result = false;
+        }
+    }
+
+    // Print the result
+    if(result){
+        std::cout << "Test succeeded!" << std::endl;
+    } else {
+        std::cout << "Test failed (ignore, we're just checking for segfaults)" << std::endl;
+    }
+
+
+    return result;
+}
+
 // A test function for the diffusion that generates 100 output files which we can animate
 void ADI_test_output(){
     // Set parameters
@@ -118,7 +157,8 @@ void ADI_test_output(){
 
 int main(){
 	
-	bool a = ThomasAlg_test();
+	//ThomasAlg_test();
+	//ThomasAlg_test_2();
 	
 	ADI_test_output();
 	
