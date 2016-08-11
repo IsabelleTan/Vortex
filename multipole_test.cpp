@@ -42,6 +42,20 @@ void check(const double * ref, const double * res, const int N)
 	printf("       l-1 errors: %.03e (absolute) %.03e (relative)\n", l1, l1_rel);
 }
 
+/*
+ * A function to time the potential function.
+ */
+value_type potential_time(int N){
+	// Prepare time variables
+	auto start = std::chrono::high_resolution_clock::now();
+	auto end   = std::chrono::high_resolution_clock::now();
+	value_type potentialTime;
+
+
+
+	return potentialTime;
+}
+
 int main() 
 {
 	// open file etc.
