@@ -137,7 +137,7 @@ void potential_p2p(double theta,
 	#pragma omp parallel for schedule(static,1)
 	for(size_t i=0; i<ndst; i++){
 		// compute the potential by particle-to-particle (p2p) expansion
-		*(potdst+i) = p2p(xsrc, ysrc, qsrc, nsrc, xdst[i], ydst[i]);
+		potdst[i] = p2p(xsrc, ysrc, qsrc, nsrc, xdst[i], ydst[i]);
 		// assert that the potential we just computed isn't infinite nor NaN
 		assert(std::isfinite(*(potdst+i)));
 	}	

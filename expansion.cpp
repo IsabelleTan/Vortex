@@ -188,7 +188,7 @@ value_type p2p(const value_type* const xsources, const value_type* const ysource
     const value_type eps = std::numeric_limits<value_type>::epsilon();
     value_type streamfunction = 0;
     for (int i = 0; i < nsources; ++i) {
-        streamfunction += q[i] * log( sqrt( (xsources[i] - xtarget)*(xsources[i] - xtarget) + (ysources[i] - ytarget)*(ysources[i] - ytarget) ) + eps );
+        streamfunction += /*0.5 * (1./MPI) **/ q[i] * log( sqrt( (xsources[i] - xtarget)*(xsources[i] - xtarget) + (ysources[i] - ytarget)*(ysources[i] - ytarget) ) + eps);
     }
 
 	return streamfunction;  

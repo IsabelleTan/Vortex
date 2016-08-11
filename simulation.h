@@ -6,16 +6,19 @@
  * Define the parameters that will be needed throughout the simulation
  */
 
+// PI
+#define MPI 3.14159
+
 // Particles
-#define nParticles 10000
-#define deltaX 0.01
+#define nParticles 40000
+#define deltaX 0.1
 #define viscosity 0.1
 
 // Time
 #define t_0 0
 #define deltaT 0.0001
 #define timeIterations 20
-#define writeFreq 4
+#define writeFreq 1
 
 // Initial Condition
 #define coreRadius 1

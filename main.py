@@ -222,26 +222,32 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
         filenameY = folder + "/" + str(t) + "_Y.txt"
         filenameQ = folder + "/" + str(t) + "_Q.txt"
         filenameV = folder + "/" + str(t) + "_V.txt"
+        filenameP = folder + "/" + str(t) + "_P.txt"
         nParticles, dataX = readFile(filenameX)
         nParticles, dataY = readFile(filenameY)
         nParticles, dataQ = readFile(filenameQ)
         nParticles, dataV = readFile(filenameV)
+        nParticles, dataP = readFile(filenameP)
 
         # Compute the minimum and maximum q, x and y values
-        if(t==0):
-            v_min = 0
-            v_max = 3900
-            q_min = np.min(dataQ)
-            q_max = np.max(dataQ)
+        v_min = np.min(dataV)
+        v_max = np.max(dataV)
+        q_min = np.min(dataQ)
+        q_max = np.max(dataQ)
+        p_min = np.min(dataP)
+        p_max = np.max(dataP)
 
         xmin = np.min(dataX)
         ymin = np.min(dataY)
         xmax = np.max(dataX)
         ymax = np.max(dataY)
 
+        print("(x,y) min/max values : ", xmin, xmax, ymin, ymax)
+
         # Interpolate the data
         data_gridV = interpolate(dataX, dataY, dataV)
         data_gridQ = interpolate(dataX, dataY, dataQ)
+        data_gridP = interpolate(dataX, dataY, dataP)
 
         plt.imshow(data_gridV.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = v_min, vmax = v_max)
         plt.title("velocity at step " + str(t))
@@ -257,6 +263,12 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
         
         print("vorticity : ", np.min(dataQ), np.max(dataQ))
 
+        plt.imshow(data_gridP.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = p_min, vmax = p_max)
+        plt.title("potential at step " + str(t))
+        plt.colorbar()
+        plt.show()
+        
+        print("potential : ", np.min(dataP), np.max(dataP))
 
     return
 
