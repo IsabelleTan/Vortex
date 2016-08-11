@@ -285,7 +285,7 @@ writeFreq = 1
 foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/simulation"
 
 # Make an animation
-animateParticles(t_0, t_end, writeFreq, foldername)
+#animateParticles(t_0, t_end, writeFreq, foldername)
 
 # Make a scatter pot of the x and y data
 #scatterPlot(foldername, 0, 6, 1)
@@ -297,3 +297,7 @@ animateParticles(t_0, t_end, writeFreq, foldername)
 #vorticityPlot(foldername)
 
 #valuesPlot(foldername, t_0, t_end, writeFreq)
+
+nParticles, data = readFile("/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/cut_off.txt")
+plt.plot(data)
+plt.show()

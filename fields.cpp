@@ -5,6 +5,7 @@
 #include <iostream>
 #include "fields.h"
 #include "datapoints.h"
+#include "simulation.h"
 
 /*
  * This function creates a regular 2D grid of N (x,y) coordinates with domain (xRange,yRange) centered around 0. If it
@@ -54,10 +55,35 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
 
 
 /*
- * A function to smoothly cut-off some value array after a certain radius
+ * A function to smoothly cut-off some value array after a certain radius, using a cosine function
  */
-void smoothCutOff(value_type * const q_in, value_type * const ){
+void smoothCutOff(const int N, value_type * const q_in, value_type * const x_in, value_type * const y_in, const value_type radius_start, const value_type radius_end){
+    // Loop over particles
+    value_type radius;
+    value_type radius_range = (radius_end - radius_start);
+    value_type var;
+    for (int i = 0; i < N; ++i) {
+        // Compute radius
+        radius = sqrt(x_in[i]*x_in[i] + y_in[i]*y_in[i]);
+        std::cout << "Radius at " << i << " is " << radius << std::endl;
 
+        if(radius > radius_end){
+            q_in[i] = 0;
+            std::cout << "Scaling at " << i << " is 0" << std::endl;
+        } else
+        if(radius > radius_start){
+            // Map [radius_start, radius_end] to [0, 0.5PI]
+            var = (radius - radius_start)/radius_range * MPI;
+
+            // Scale output with a cosine function of var
+            q_in[i] = q_in[i] * (cos(var)+1)/2;
+
+            std::cout << "Scaling at " << i << " is " << cos(var) << std::endl;
+        }
+        // If radius is smaller than radius_start do nothing.
+
+        std::cout << "Scaling at " << i << " is 1" << std::endl;
+    }
     return;
 }
 

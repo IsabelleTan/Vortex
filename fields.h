@@ -22,6 +22,12 @@ bool grid(const int N, value_type * const x, value_type * const y, const value_t
 void lambOseen(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type visc, const value_type circ, value_type t);
 
 /*
+ * A function to smoothly cut-off some value array after a certain radius, using a cosine function
+ */
+void smoothCutOff(const int N, value_type * const q_in, value_type * const x_in, value_type * const y_in, const value_type radius_start, const value_type radius_end);
+
+
+/*
  * This function copies the content of an array x into an Eigen MatrixXd.
  * Ordering:
  * Array - lexicographical

@@ -43,7 +43,7 @@ set(HEADER_FILES
 )
 
 
-#add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
 
 #add_executable(datapoints_test datapoints_test.cpp datapoints.cpp)	
 #add_executable(morton_time morton_time.cpp morton.cpp datapoints.cpp)
@@ -55,7 +55,7 @@ set(HEADER_FILES
 #add_executable(fields_test fields_test.cpp fields.cpp datapoints.cpp)	
 #add_executable(solver_test solver_test.cpp solver.cpp)	
 #add_executable(ADIdiffusion_test ADIdiffusion_test.cpp ADIdiffusion.cpp fields.cpp datapoints.cpp)
-add_executable(sim simulation.cpp ADIdiffusion.cpp complexAVX.cpp datapoints.cpp expansion.cpp fields.cpp morton.cpp multipole.cpp quadtree.cpp solver.cpp)
+#add_executable(sim simulation.cpp ADIdiffusion.cpp complexAVX.cpp datapoints.cpp expansion.cpp fields.cpp morton.cpp multipole.cpp quadtree.cpp solver.cpp)
 
 #---------------------#
 #   Compile flags     #
