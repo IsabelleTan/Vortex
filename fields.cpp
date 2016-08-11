@@ -5,6 +5,7 @@
 #include <iostream>
 #include "fields.h"
 #include "datapoints.h"
+#include "simulation.h"
 
 /*
  * This function creates a regular 2D grid of N (x,y) coordinates with domain (xRange,yRange) centered around 0. If it
@@ -50,6 +51,40 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
         value_type sigma = sqrt(4*visc*(t+0.25/visc));  // If t = 0 then coreRadius sigma = 1
         q[i] = circ/(M_PI * sigma * sigma) * exp(-(r*r)/(sigma*sigma));
     }
+}
+
+
+/*
+ * A function to smoothly cut-off some value array after a certain radius, using a cosine function
+ */
+void smoothCutOff(const int N, value_type * const q_in, value_type * const x_in, value_type * const y_in, const value_type radius_start, const value_type radius_end){
+    // Loop over particles
+    value_type radius;
+    value_type radius_range = (radius_end - radius_start);
+    value_type var;
+    for (int i = 0; i < N; ++i) {
+        // Compute radius
+        radius = sqrt(x_in[i]*x_in[i] + y_in[i]*y_in[i]);
+        std::cout << "Radius at " << i << " is " << radius << std::endl;
+
+        if(radius > radius_end){
+            q_in[i] = 0;
+            std::cout << "Scaling at " << i << " is 0" << std::endl;
+        } else
+        if(radius > radius_start){
+            // Map [radius_start, radius_end] to [0, 0.5PI]
+            var = (radius - radius_start)/radius_range * MPI;
+
+            // Scale output with a cosine function of var
+            q_in[i] = q_in[i] * (cos(var)+1)/2;
+
+            std::cout << "Scaling at " << i << " is " << cos(var) << std::endl;
+        }
+        // If radius is smaller than radius_start do nothing.
+
+        std::cout << "Scaling at " << i << " is 1" << std::endl;
+    }
+    return;
 }
 
 
@@ -104,22 +139,24 @@ void matrixToArray(value_type * x, MatrixXd & M, bool invertOrder){
 void analyticalSolution(){
     // PARAMETERS
     // time
-    const value_type t_end = 5;
-    const value_type dt = 0.05;
+    const value_type t_end = 0.1;
+    const value_type dt = 0.0001;
     const int iter = t_end/dt;
 
     // vortex
-    const value_type visc = 1;
+    const value_type visc = 0.1;
     const value_type circ = 10;
 
     // spatial
-    const int N = 10000;
+    const int N = 40000;
     const int n =sqrt(N);
-    const value_type dx = 0.1;
+    const value_type dx = 0.01;
     const value_type range=(n-1)*dx;
 
     // Prepare string for filename
-    std::string filename;
+    std::string filenameX;
+    std::string filenameY;
+    std::string filenameQ;
 
     // Create a grid
     value_type * const x = new value_type[N];
@@ -134,8 +171,12 @@ void analyticalSolution(){
         lambOseen(N, x, y, q, visc, circ, i*dt);
 
         // Assign a string for filename and write to file
-        filename = std::to_string(i) + ".txt";
-        write_to_file(filename.c_str(), N, q);
+        filenameX = std::to_string(i) + "_X.txt";
+        write_to_file(filenameX.c_str(), N, x);
+        filenameY = std::to_string(i) + "_Y.txt";
+        write_to_file(filenameY.c_str(), N, y);
+        filenameQ = std::to_string(i) + "_Q.txt";
+        write_to_file(filenameQ.c_str(), N, q);
 
     }
 

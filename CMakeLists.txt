@@ -14,13 +14,13 @@ set(SOURCE_FILES
         expansion.cpp
         #expansion_test.cpp
         fields.cpp
-        #fields_test.cpp
+        fields_test.cpp
         #main.cpp
         morton.cpp
         #morton_test.cpp
         #morton_time.cpp
         multipole.cpp
-        multipole_test.cpp
+        #multipole_test.cpp
         quadtree.cpp
         #quadtree_test.cpp
         #quadtree_time.cpp
@@ -43,7 +43,7 @@ set(HEADER_FILES
 )
 
 
-#add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(VORTEX ${SOURCE_FILES} ${HEADER_FILES})
 
 #add_executable(datapoints_test datapoints_test.cpp datapoints.cpp)	
 #add_executable(morton_time morton_time.cpp morton.cpp datapoints.cpp)
@@ -55,7 +55,7 @@ set(HEADER_FILES
 #add_executable(fields_test fields_test.cpp fields.cpp datapoints.cpp)	
 #add_executable(solver_test solver_test.cpp solver.cpp)	
 #add_executable(ADIdiffusion_test ADIdiffusion_test.cpp ADIdiffusion.cpp fields.cpp datapoints.cpp)
-add_executable(sim simulation.cpp ADIdiffusion.cpp complexAVX.cpp datapoints.cpp expansion.cpp fields.cpp morton.cpp multipole.cpp quadtree.cpp solver.cpp)
+#add_executable(sim simulation.cpp ADIdiffusion.cpp complexAVX.cpp datapoints.cpp expansion.cpp fields.cpp morton.cpp multipole.cpp quadtree.cpp solver.cpp)
 
 #---------------------#
 #   Compile flags     #

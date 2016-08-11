@@ -24,6 +24,9 @@
 #define coreRadius 1
 #define circulation 10
 
+// Cut Off
+#define startRatio 0.6
+#define endRatio 0.9
 
 // Quadtree
 #define depthtree 16 		// depth of quadtree // choice of levels: Beatson Greengard suggest approx log_2(N), where N = number of particles

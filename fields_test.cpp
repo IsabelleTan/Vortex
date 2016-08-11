@@ -3,6 +3,7 @@
 //
 
 #include "fields.h"
+#include "datapoints.h"
 #include <iostream>
 
 // A test function for the grid() function
@@ -74,10 +75,32 @@ bool arrayToMatrix_test(){
     return result;
 }
 
+void smoothCutOff_test(){
+    // Initialize a vector of 1's
+    value_type q[100];
+    value_type x[100];
+    value_type y[100];
+
+    for (int i = 0; i < 100; ++i) {
+        q[i] = 1;
+        x[i] = i;
+        y[i] = 0;
+    }
+
+    int radius_start = 60;
+    int radius_end = 90;
+
+    smoothCutOff(100, q, x, y, radius_start, radius_end);
+
+    write_to_file("cut_off.txt", 100, q);
+
+    return;
+}
+
 
 int main() 
 {
-	arrayToMatrix_test();
+	smoothCutOff_test();
 	
 	return 0; 
 	
