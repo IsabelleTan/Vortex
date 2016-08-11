@@ -239,7 +239,6 @@ free(vel);*/
 
 	}
 
-<<
 	free(x_source);
 	free(y_source);
 	free(q_source);
@@ -300,7 +299,7 @@ void time_simulation(int nPart, int nSim){
 
 	// Initialize values with Lamb Oseen vortex
 	grid(nPart, x_source, y_source, deltaX*nPart, deltaX*nPart);
-	lambOseen(nPart,x_source,y_source,q_source,viscosity,circulation,0);
+	lambOseen(nPart,x_source,y_source,q_source,viscosity,circulation,0, xCenter1, yCenter1);
 	// Do not write to file during timing simulations
 	//std::string filenameX = "0_X.txt";
 	//std::string filenameY = "0_Y.txt";
