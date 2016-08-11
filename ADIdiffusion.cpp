@@ -54,7 +54,6 @@ void ADI(Ref<MatrixXd> q_0, Ref<MatrixXd> q_new, const value_type dt, const valu
     MatrixXd RHS(n,n);
     RHS.setZero(n,n);
 
-
     // Create matrix with (1-2r) on diagonal and r on sub- and superdiagonal
     MatrixXd rightMat(n,n);
     rightMat.setZero(n,n);
@@ -65,10 +64,8 @@ void ADI(Ref<MatrixXd> q_0, Ref<MatrixXd> q_new, const value_type dt, const valu
         rightMat(i-1,i) = r;
     }
 
-
     // multiply to obtain the RHS
     RHS = rightMat*q_0.transpose();
-
 
     // Solve left hand side with Thomas algorithm (per row)
     // Make variables containing the subdiagonal, diagonal and superdiagonal values
@@ -83,7 +80,6 @@ void ADI(Ref<MatrixXd> q_0, Ref<MatrixXd> q_new, const value_type dt, const valu
         ThomasAlg(n, a, b, c, q_half.col(i), RHS.col(i));
     }
 
-
     // SECOND STAGE
     // Compute right hand side
     RHS = rightMat*q_half.transpose();
@@ -94,7 +90,6 @@ void ADI(Ref<MatrixXd> q_0, Ref<MatrixXd> q_new, const value_type dt, const valu
     for (int j = 0; j < n; ++j) {
         ThomasAlg(n, a, b, c, q_new_T.col(j), RHS.col(j));
     }
-
 
     // Take the transpose of the new data so it's columnwise again
     //q_new = q_new_T.transpose();

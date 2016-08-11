@@ -28,29 +28,29 @@ void potential(double theta,
 	// ndst		number of target-particles
 	// OUPUT
 	// potdst	values of the potential at destination
-	
+std::cout << " in POTENTIAL " << std::endl; 	
 	// create all the variables needed
 	const double thetasquared = theta*theta;
 	double *xsorted, *ysorted, *qsorted; 
 	Node *nodes;
 	int maxnodes = (nsrc + kleaf - 1) / kleaf * 60;
 
-
 	// do the memory-alignments
 	posix_memalign((void **)&xsorted, 32, sizeof(double) * nsrc);
 	posix_memalign((void **)&ysorted, 32, sizeof(double) * nsrc);
 	posix_memalign((void **)&qsorted, 32, sizeof(double) * nsrc);
 	posix_memalign((void **)&nodes,   32, sizeof(Node) * maxnodes);
-
+//std::cout << "mem align done" << std::endl; 
 	
 	// build the quadtree
 	build(xsrc, ysrc, qsrc, nsrc, kleaf, xsorted, ysorted, qsorted, nodes, depthtree);
+//std::cout << "quadtree done" << std::endl; 
 	
 	// evaluate the potential field at the location of each target point:
 	//omp_set_num_threads(2);
 	#pragma omp parallel for schedule(static,1)
 	for(size_t i=0; i<ndst; i++){
-		
+
 		// for one target point (xdst[i], ydst[i]), do the following, initialize to 0
 		potdst[i] = 0;
 
@@ -78,34 +78,40 @@ void potential(double theta,
 		// s2+3
 		
 		// get indices of the 2nd-level nodes and assert they are, indeed, 2nd level. 
-		unsigned int s2 = nodes[2].child_id; assert(nodes[s2].level==2);
-		unsigned int s3 = nodes[3].child_id; assert(nodes[s3].level==2);
-		unsigned int s4 = nodes[4].child_id; assert(nodes[s4].level==2);
+		unsigned int s2 = nodes[2].child_id; assert( (nodes[2].child_id != -1) && (nodes[s2].level==2) );
+		unsigned int s3 = nodes[3].child_id; assert( (nodes[3].child_id != -1) && (nodes[s3].level==2) );
+		unsigned int s4 = nodes[4].child_id; assert( (nodes[4].child_id != -1) && (nodes[s4].level==2) );
+//std::cout << " go 2 " << std::endl; 
 
 		evaluate(nodes,    5, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 00 00 */ 	
 		evaluate(nodes,    6, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 00 01 */
 		evaluate(nodes,    7, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 00 10 */
 		evaluate(nodes,    8, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 00 11 */ 
+//std::cout << " go 3 " << std::endl; 
 
 		evaluate(nodes, s2  , xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 00 */
 		evaluate(nodes, s2+1, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 01 */
 		evaluate(nodes, s2+2, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 10 */
 		evaluate(nodes, s2+3, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 11 */ 
+//std::cout << " go 4 " << std::endl; 
 		
 		evaluate(nodes, s3  , xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 00 */
 		evaluate(nodes, s3+1, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 01 */
 		evaluate(nodes, s3+2, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 10 */
 		evaluate(nodes, s3+3, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 11 */ 
+//std::cout << " go 5 " << std::endl; 
 		
 		evaluate(nodes, s4  , xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 00 */
 		evaluate(nodes, s4+1, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 01 */
 		evaluate(nodes, s4+2, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 10 */
 		evaluate(nodes, s4+3, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 11 */ 
+//std::cout << " go 6 " << std::endl; 
 			
 		// assert that the potential we just computed isn't infinite nor NaN
 		assert(std::isfinite(*(potdst+i)));
 		
 	}
+std::cout << "loop done" << std::endl; 
 		
 	// free the memory allocated
 	free(xsorted);
