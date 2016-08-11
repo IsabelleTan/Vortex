@@ -54,23 +54,18 @@ void ADI(Ref<MatrixXd> q_0, Ref<MatrixXd> q_new, const value_type dt, const valu
     // Compute right hand side
     MatrixXd RHS(n,n);
     RHS.setZero(n,n);
-std::cout << "ADI 1" << std::endl;
     // Create matrix with (1-2r) on diagonal and r on sub- and superdiagonal
-    MatrixXd rightMat(n,n);std::cout << "ADI a" << std::endl;
-    rightMat.setZero(n,n);std::cout << "ADI b, r = " << r << " and n = " << n << std::endl;
-    rightMat(0,0) = 1-2*r;std::cout << "ADI c" << std::endl;
-    for (int i = 1; i < n; ++i) {//std::cout << "ADI d" << i<< std::endl;
+    MatrixXd rightMat(n,n);
+    rightMat.setZero(n,n);
+    rightMat(0,0) = 1-2*r;
+    for (int i = 1; i < n; ++i) {
         rightMat(i,i) = 1-2*r;
         rightMat(i, i-1) = r;
         rightMat(i-1,i) = r;
     }
-std::cout << "ADI 2" << std::endl;
-
 
     // multiply to obtain the RHS
     RHS = rightMat*q_0.transpose();
-std::cout << "ADI 3" << std::endl;
-
 
     // Solve left hand side with Thomas algorithm (per row)
     // Make variables containing the subdiagonal, diagonal and superdiagonal values
@@ -79,14 +74,11 @@ std::cout << "ADI 3" << std::endl;
     const value_type c = -r;
     MatrixXd q_half(n,n);
     q_half.setZero(n,n);
-std::cout << "ADI 4" << std::endl;
 
     // Loop over columns in q_half
     for (int i = 0; i < n; ++i) {
         ThomasAlg(n, a, b, c, q_half.col(i), RHS.col(i));
     }
-
-std::cout << "ADI 5" << std::endl;
 
     // SECOND STAGE
     // Compute right hand side
@@ -98,8 +90,6 @@ std::cout << "ADI 5" << std::endl;
     for (int j = 0; j < n; ++j) {
         ThomasAlg(n, a, b, c, q_new_T.col(j), RHS.col(j));
     }
-std::cout << "ADI 6" << std::endl;
-
 
     // Take the transpose of the new data so it's columnwise again
     //q_new = q_new_T.transpose();

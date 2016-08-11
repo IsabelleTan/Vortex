@@ -32,7 +32,6 @@ bool grid(const int N, value_type * const x, value_type * const y, const value_t
         for (int j = 0; j < M; ++j) {
             x[i*M + j] = j*dx - xLim;
             y[i*M + j] = -i*dy + yLim;
-
         }
     }
 
@@ -67,7 +66,7 @@ void arrayToMatrix(value_type * x, MatrixXd & M, bool invertOrder){
     for (int i = 0; i < r; ++i) {
         for (int j = 0; j < c; ++j) {
             if(invertOrder){
-                M(j,i) = x[i*c + j]; std::cout << "qval        " << x[i*c + j] << std::endl; 
+                M(j,i) = x[i*c + j]; 
             }else{
                 M(i,j) = x[i*c + j];
             }

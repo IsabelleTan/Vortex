@@ -55,7 +55,7 @@ add_executable(multipole_test multipole_test.cpp multipole.cpp expansion.cpp mor
 #add_executable(fields_test fields_test.cpp fields.cpp datapoints.cpp)	# tested: OK 
 #add_executable(solver_test solver_test.cpp solver.cpp)			# tested: OK 
 #add_executable(ADIdiffusion_test ADIdiffusion_test.cpp ADIdiffusion.cpp fields.cpp datapoints.cpp)	# tested: OK 
-#add_executable(sim simulation.cpp ADIdiffusion.cpp complexAVX.cpp datapoints.cpp expansion.cpp fields.cpp morton.cpp multipole.cpp quadtree.cpp solver.cpp)
+add_executable(sim simulation.cpp ADIdiffusion.cpp complexAVX.cpp datapoints.cpp expansion.cpp fields.cpp morton.cpp multipole.cpp quadtree.cpp solver.cpp)
 
 #---------------------#
 #   Compile flags     #

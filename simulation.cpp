@@ -11,7 +11,7 @@
 void run_simulation(){
 	// INITIALIZATION
 	
-	// make sure my number of particles is an int squared, to avoid problems in matrices
+	// make sure the number of particles is an integer squared, to avoid problems in matrices
 	int dim = static_cast<int>(sqrt(nParticles));
 	assert(dim*dim == nParticles);
 	
@@ -26,11 +26,11 @@ void run_simulation(){
 	value_type * q_target;
 	MatrixXd q_targetM(dim,dim);
 	value_type * q_diffused;
-	MatrixXd q_diffusedM;
+	MatrixXd q_diffusedM(dim,dim);
 	value_type * pot_target;
-	posix_memalign((void **)&x_source, 32, sizeof(double) * nParticles);
-	posix_memalign((void **)&y_source, 32, sizeof(double) * nParticles);
-	posix_memalign((void **)&q_source, 32, sizeof(double) * nParticles);
+	posix_memalign((void **)&x_source, 32, sizeof(value_type) * nParticles);
+	posix_memalign((void **)&y_source, 32, sizeof(value_type) * nParticles);
+	posix_memalign((void **)&q_source, 32, sizeof(value_type) * nParticles);
 	posix_memalign((void **)&x_target, 32, sizeof(value_type) * nParticles);
 	posix_memalign((void **)&y_target, 32, sizeof(value_type) * nParticles);
 	posix_memalign((void **)&u_target, 32, sizeof(value_type) * nParticles);
@@ -50,27 +50,28 @@ void run_simulation(){
 	// write_to_file(filenameQ, nParticles, q_source);
 
 	// TIME ITERATIONS
-	for (int i = 1; i <= timeIterations; ++i) {
+	for (int i = 19; i <= timeIterations; ++i) {									///////////////////////
+		std::cout << "TIME iteration # " << i << std::endl; 
 		// Create target grid
 		grid(nParticles, x_target, y_target, deltaX*nParticles, deltaX*nParticles);
-
+std::cout << "grid done" << std::endl; 
 		// Compute the potential at the target locations
 		potential(theta_dist,x_source,y_source,q_source,nParticles,x_target,y_target,nParticles, pot_target);
-
+std::cout << "potential done" << std::endl; 
 		// Compute the velocity as the curl of the streamfunction potential
 		velocity(nParticles, deltaX, u_target, v_target, pot_target);
-
+std::cout << "velocity done" << std::endl; 
 		// Compute the vorticity as the curl of the velocity
 		vorticity(nParticles, deltaX, u_target, v_target, q_target);
-
+std::cout << "vorticity done" << std::endl; 
 		// Perform one diffusion iteration (convert to and from matrices for the ADI solver)
 		arrayToMatrix(q_target, q_targetM, true);
 		ADI(q_targetM, q_diffusedM, deltaT, deltaX, viscosity);	
 		matrixToArray(q_diffused, q_diffusedM, true);
-
+std::cout << "diffusion done" << std::endl; 
 		// Perform one advection iteration
 		advection(nParticles, deltaT, u_target, v_target, x_target, y_target);
-
+std::cout << "advection done" << std::endl; 
 
 		// Check if for this iteration the output should be written to a file
 		// If so; write output to file
@@ -83,24 +84,25 @@ void run_simulation(){
 			//write_to_file(filenameQ.c_str(), nParticles, q_diffused);
 		}
 
-
+std::cout << "setting values for next iteration..." ; 
 		// Set values for next iteration
 		x_source = x_target;
 		y_source = y_target;
 		q_source = q_diffused;
+std::cout << " ... done " << std::endl;
 	}
 
-	delete[] x_source;
-	delete[] y_source;
-	delete[] q_source;
-	delete[] x_target;
-	delete[] y_target;
-	delete[] u_target;
-	delete[] v_target;
-	delete[] q_target;
-	delete[] q_diffused;
-	delete[] pot_target;
-
+	free(x_source); 
+	free(y_source); 
+	free(q_source); 
+//	free(x_target); should not be freed, since it has the same address as x_source which has already been freed
+//	free(y_target); should not be freed, since it has the same address as y_source which has already been freed
+	free(u_target); 
+	free(v_target); 
+	free(q_target); 
+//	free(q_diffused); should not be freed, since it has the same address as q_source which has already been freed
+	free(pot_target);
+std::cout << "free memory done" << std::endl;
 	return;
 }
 
@@ -267,18 +269,10 @@ void time_simulation(int nPart, int nSim){
 }
 
 int main(){
-	time_simulation(100, 1);
+	
+	run_simulation();
+	//time_simulation(100, 1);
 	std::cout <<"Finished!" << std::endl;
 	return 0;
+	
 }
-
-/*
- * Overview of steps
-
-
-1. Initialize particles with positions and masses.
-
-2.
-
-
- */

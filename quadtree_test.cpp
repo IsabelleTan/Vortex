@@ -272,26 +272,18 @@ bool testr(){
 
 int main(){
 	
-/*	std::cout << "/------------------ test initialization :" << std::endl; 
+	std::cout << "/------------------ test initialization :" << std::endl; 
 	testInitialization();
 
 	std::cout << "/------------------ test extent :" << std::endl; 
 	testComputeExtent();
-	
-	std::cout << "/------------------ test morton :" << std::endl; 
-	testMorton();
-	
-	std::cout << "/------------------ test assign particles :" << std::endl; 
-	testAssignParticles();
-	
+		
 	std::cout << "/------------------ test center of mass :" << std::endl; 
 	testCenterOfMass();
 	
 	std::cout << "/------------------ test build :" << std::endl; 
-	testBuild();*/
-	
 	testBuild();
-	
+		
 	return 0; 
 	
 }
