@@ -279,7 +279,7 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
 
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
-t_end = 99
+t_end = 7
 writeFreq = 1
 #foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
 foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/simulation"
@@ -296,8 +296,4 @@ foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/
 # Plot the voriticty
 #vorticityPlot(foldername)
 
-#valuesPlot(foldername, t_0, t_end, writeFreq)
-
-nParticles, data = readFile("/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/cut_off.txt")
-plt.plot(data)
-plt.show()
+valuesPlot(foldername, t_0, t_end, writeFreq)

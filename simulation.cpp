@@ -149,6 +149,12 @@ void run_simulation(){
 		write_to_file(filenameY.c_str(), nParticles, y_target);
 		write_to_file(filenameQ.c_str(), nParticles, q_target);
 
+		// compute scalar velocity
+		for(size_t i(0); i<nParticles; ++i){
+			vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
+		}
+		write_to_file(filenameV.c_str(), nParticles, vel);
+
 		// Perform a smooth cut off of the vorticity
 		smoothCutOff(nParticles, q_target, x_target, y_target, startRatio*(domainRange/2), endRatio*(domainRange/2));
 
@@ -174,7 +180,7 @@ void run_simulation(){
 		ADI(q_targetM, q_diffusedM, deltaT, deltaX, viscosity);
 		matrixToArray(q_diffused, q_diffusedM, true);
 
-//! ---------------------------------------------------------- after ADI diff = 5		
+//! ---------------------------------------------------------- after ADI diff = 6
 		filenameX = std::to_string(6) + "_X.txt";
 		filenameY = std::to_string(6) + "_Y.txt";
 		filenameQ = std::to_string(6) + "_Q.txt";
@@ -193,7 +199,7 @@ void run_simulation(){
 		// Perform one advection iteration
 		advection(nParticles, deltaT, u_target, v_target, x_target, y_target);
 
-//! ---------------------------------------------------------- after advection = 6		
+//! ---------------------------------------------------------- after advection = 7
 		filenameX = std::to_string(7) + "_X.txt";
 		filenameY = std::to_string(7) + "_Y.txt";
 		filenameQ = std::to_string(7) + "_Q.txt";

@@ -65,11 +65,9 @@ void smoothCutOff(const int N, value_type * const q_in, value_type * const x_in,
     for (int i = 0; i < N; ++i) {
         // Compute radius
         radius = sqrt(x_in[i]*x_in[i] + y_in[i]*y_in[i]);
-        std::cout << "Radius at " << i << " is " << radius << std::endl;
 
         if(radius > radius_end){
             q_in[i] = 0;
-            std::cout << "Scaling at " << i << " is 0" << std::endl;
         } else
         if(radius > radius_start){
             // Map [radius_start, radius_end] to [0, 0.5PI]
@@ -78,11 +76,8 @@ void smoothCutOff(const int N, value_type * const q_in, value_type * const x_in,
             // Scale output with a cosine function of var
             q_in[i] = q_in[i] * (cos(var)+1)/2;
 
-            std::cout << "Scaling at " << i << " is " << cos(var) << std::endl;
         }
         // If radius is smaller than radius_start do nothing.
-
-        std::cout << "Scaling at " << i << " is 1" << std::endl;
     }
     return;
 }
