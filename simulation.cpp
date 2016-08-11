@@ -93,7 +93,6 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 
 		potential(theta_dist,x_source,y_source,rhs,nParticles,x_target,y_target,nParticles, pot_target);
 
-<<<<<<< HEAD
 /*//! ---------------------------------------------------------- after potential = 2		
 filenameX = std::to_string(2) + "_X.txt";
 filenameY = std::to_string(2) + "_Y.txt";
@@ -119,7 +118,6 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 }*/
 
 
-<<<<<<< HEAD
 /*//! ---------------------------------------------------------- after velocity = 3 		
 filenameX = std::to_string(3) + "_X.txt";
 filenameY = std::to_string(3) + "_Y.txt";
@@ -241,7 +239,6 @@ free(vel);*/
 
 	}
 
-<<<<<<< HEAD
 	free(x_source); 
 	free(y_source); 
 	free(q_source); 
