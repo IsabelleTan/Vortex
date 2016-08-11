@@ -73,7 +73,27 @@ def LambOseen(CR):
 
     return data
 
+''' A function to interpolate data onto a grid'''
+def interpolate(dataX, dataY, dataQ):
+    # check if the number of particles in the three files is equal
+    if(len(dataQ) != len(dataX) or len(dataX) != len(dataY) or len(dataY) != len(dataQ)):
+        print("The number of particles in the input files are not equal.")
 
+
+    # Compute the extent of the coordinates
+    xmin = np.min(dataX)
+    ymin = np.min(dataY)
+    xmax = np.max(dataX)
+    ymax = np.max(dataY)
+
+    #Create a new grid
+    grid_x, grid_y = np.mgrid[xmin:xmax:100j, ymin:ymax:200j]
+
+    # Interpolate data onto grid
+    coordinates = np.column_stack((dataX, dataY))
+    dataGrid = griddata(coordinates, dataQ.squeeze(), (grid_x, grid_y), method='cubic')
+
+    return dataGrid
 
 ''' A function that animates 2D data where each timesteps data is contained in a file in the folder
 input:
@@ -90,7 +110,7 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
     os.chdir(curDir)
 
     # Create array with time values (t's are inclusive)
-    times = np.arange(t0+1, t_end + 1, writeFreq)
+    times = np.arange(t_0+writeFreq, t_end + 1, writeFreq)
 
     # Prepare image and frame array
     fig = plt.figure()
@@ -106,11 +126,8 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
     nParticlesX, data_0_X = readFile(file_0_X)
     nParticlesY, data_0_Y = readFile(file_0_Y)
 
-    # Check if the number of particles in the files is equal
-    if(nParticlesQ != nParticlesX or nParticlesX != nParticlesY or nParticlesY != nParticlesQ):
-        print("The number of particles in the input files are not equal.")
 
-    # Compute the extent of the initial grid and data values
+    # Compute the minimum and maximum q, x and y values
     q_min = np.min(data_0_Q)
     q_max = np.max(data_0_Q)
     xmin = np.min(data_0_X)
@@ -118,12 +135,8 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
     xmax = np.max(data_0_X)
     ymax = np.max(data_0_Y)
 
-    #Create a new grid
-    grid_x, grid_y = np.mgrid[xmin:xmax:100j, ymin:ymax:200j]
-
-    # Interpolate data onto grid
-    coordinates = np.column_stack((data_0_X, data_0_Y))
-    data_0_grid = griddata(coordinates, data_0_Q.squeeze(), (grid_x, grid_y), method='cubic')
+    # Interpolate the data
+    data_0_grid = interpolate(data_0_X, data_0_Y, data_0_Q)
 
     # Add frame to the list of frames
     frames.append([plt.imshow(data_0_grid.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), animated=True, vmin=q_min, vmax=q_max)])
@@ -143,8 +156,7 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
         dataY = readFile(filenameY)[1]
 
         # Interpolate the data
-        coordinates = np.column_stack((dataX, dataY))
-        data_grid = griddata(coordinates, dataQ.squeeze(), (grid_x, grid_y), method='cubic')
+        data_grid = interpolate(dataX, dataY, dataQ)
 
         frames.append([plt.imshow(data_grid.T, cmap = colormap, extent=(xmin,xmax,ymin,ymax), animated=True, vmin = q_min, vmax = q_max)])
 
@@ -179,6 +191,39 @@ def scatterPlot(folder):
     nParticles, dataY = readFile(filenameY)
 
     plt.scatter(dataX, dataY, s=5)
+    plt.show()
+
+    return
+
+def velocityPlot(folder, colormap = plt.get_cmap("viridis")):
+    # Go to the script's directory
+    curDir = os.getcwd()
+    os.chdir(curDir)
+
+    # Prepare image and frame array
+    fig = plt.figure()
+    fig.add_subplot(111)
+
+    # Read data
+    filenameX = folder + "/1_X.txt"
+    filenameY = folder + "/1_Y.txt"
+    filenameV = folder + "/1_V.txt"
+    nParticles, dataX = readFile(filenameX)
+    nParticles, dataY = readFile(filenameY)
+    nParticles, dataV = readFile(filenameV)
+
+    # Compute the minimum and maximum q, x and y values
+    v_min = np.min(dataV)
+    v_max = np.max(dataV)
+    xmin = np.min(dataX)
+    ymin = np.min(dataY)
+    xmax = np.max(dataX)
+    ymax = np.max(dataY)
+
+    # Interpolate the data
+    data_grid = interpolate(dataX, dataY, dataV)
+
+    plt.imshow(data_grid.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = v_min, vmax = v_max)
 
     return
 
@@ -190,7 +235,7 @@ def scatterPlot(folder):
 
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
-t_end = 9
+t_end = 20
 writeFreq = 4
 foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/output_files"
 
@@ -198,4 +243,7 @@ foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/
 #animateParticles(t_0, t_end, writeFreq, foldername)
 
 # Make a scatter pot of the x and y data
-scatter(foldername)
+#scatter(foldername)
+
+# Plot the velocity
+velocityPlot(foldername)
