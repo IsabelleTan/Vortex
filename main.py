@@ -84,13 +84,13 @@ v_max:      maximum value for color scale                       DEF = 4
 folder:     location of files w.r.t. this script's directory    DEF = "Test_output_files/5t/"
 colormap:   type of colormap to use                             DEF = plt.get_cmap("BrBG")
 '''
-def animateParticles(t0, t_end, folder, colormap = plt.get_cmap("viridis")):
+def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viridis")):
     # Go to the script's directory
     curDir = os.getcwd()
     os.chdir(curDir)
 
     # Create array with time values (t's are inclusive)
-    times = np.arange(t0+1, t_end + 1, 1)
+    times = np.arange(t0+1, t_end + 1, writeFreq)
 
     # Prepare image and frame array
     fig = plt.figure()
@@ -162,6 +162,27 @@ def animateParticles(t0, t_end, folder, colormap = plt.get_cmap("viridis")):
 
     return
 
+
+def scatterPlot(folder):
+    # Go to the script's directory
+    curDir = os.getcwd()
+    os.chdir(curDir)
+
+    # Prepare image and frame array
+    fig = plt.figure()
+    fig.add_subplot(111)
+
+    # Read data
+    filenameX = folder + "/1_X.txt"
+    filenameY = folder + "/1_Y.txt"
+    nParticles, dataX = readFile(filenameX)
+    nParticles, dataY = readFile(filenameY)
+
+    plt.scatter(dataX, dataY, s=5)
+
+    return
+
+
 ##########################################
 # SET THESE PARAMETERS FOR YOUR ANIMATION
 # Files are assumed to be named:
@@ -170,7 +191,11 @@ def animateParticles(t0, t_end, folder, colormap = plt.get_cmap("viridis")):
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
 t_end = 9
+writeFreq = 4
 foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/output_files"
 
-animateParticles(t_0, t_end, foldername)
+# Make an animation
+#animateParticles(t_0, t_end, writeFreq, foldername)
 
+# Make a scatter pot of the x and y data
+scatter(foldername)
