@@ -43,11 +43,12 @@ bool grid(const int N, value_type * const x, value_type * const y, const value_t
 /*
  * This function creates a Lamb-Oseen vortex.
  */
-void lambOseen(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type visc, const value_type circ, value_type t){
+void lambOseen(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type visc, const value_type circ, value_type t, const value_type xCenter, const value_type yCenter){
     // Assuming the domain is centered around (0,0)
+#pragma omp parallel for
     for (int i = 0; i < N; ++i) {
-        // Compute the radius of the particle from the center of the domain
-        value_type r = sqrt(x[i]*x[i] + y[i]*y[i]);
+        // Compute the radius of the particle from the center of the vortex
+        value_type r = sqrt((x[i]-xCenter)*(x[i]-xCenter) + (y[i]-yCenter)*(y[i]-yCenter));
         value_type sigma = sqrt(4*visc*(t+0.25/visc));  // If t = 0 then coreRadius sigma = 1
         q[i] = circ/(M_PI * sigma * sigma) * exp(-(r*r)/(sigma*sigma));
     }
@@ -62,6 +63,7 @@ void smoothCutOff(const int N, value_type * const q_in, value_type * const x_in,
     value_type radius;
     value_type radius_range = (radius_end - radius_start);
     value_type var;
+#pragma omp parallel for
     for (int i = 0; i < N; ++i) {
         // Compute radius
         radius = sqrt(x_in[i]*x_in[i] + y_in[i]*y_in[i]);
@@ -163,7 +165,7 @@ void analyticalSolution(){
 
     // Loop over the timesteps and compute the vorticity field at each timestep. Write the resulting field to a file.
     for (int i = 0; i < iter; ++i) {
-        lambOseen(N, x, y, q, visc, circ, i*dt);
+        lambOseen(N, x, y, q, visc, circ, i*dt, 0, 0);
 
         // Assign a string for filename and write to file
         filenameX = std::to_string(i) + "_X.txt";

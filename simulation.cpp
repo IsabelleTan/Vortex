@@ -45,7 +45,7 @@ void run_simulation(){
 //! ---------------------------------------------------------- initial conditions = 0
 	// Initialize values with Lamb Oseen vortex
 	grid(nParticles, x_source, y_source, deltaX*(dim-1), deltaX*(dim-1));
-	lambOseen(nParticles,x_source,y_source,q_source,viscosity,circulation,0);
+	lambOseen(nParticles,x_source,y_source,q_source,viscosity,circulation,0, xCenter1, yCenter1);
 	std::string filenameX = "0_X.txt";
 	std::string filenameY = "0_Y.txt";
 	std::string filenameQ = "0_Q.txt";

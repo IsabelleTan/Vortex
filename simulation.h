@@ -23,6 +23,8 @@
 // Initial Condition
 #define coreRadius 1
 #define circulation 10
+#define xCenter1 0
+#define yCenter1 0
 
 // Cut Off
 #define startRatio 0.6
