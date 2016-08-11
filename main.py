@@ -86,8 +86,9 @@ def interpolate(dataX, dataY, dataQ):
     xmax = np.max(dataX)
     ymax = np.max(dataY)
 
+
     #Create a new grid
-    grid_x, grid_y = np.mgrid[xmin:xmax:100j, ymin:ymax:200j]
+    grid_x, grid_y = np.mgrid[xmin:xmax:200j, ymin:ymax:200j]
 
     # Interpolate data onto grid
     coordinates = np.column_stack((dataX, dataY))
@@ -175,7 +176,7 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
     return
 
 
-def scatterPlot(folder):
+def scatterPlot(folder, t_0, t_end, writeFreq):
     # Go to the script's directory
     curDir = os.getcwd()
     os.chdir(curDir)
@@ -184,14 +185,18 @@ def scatterPlot(folder):
     fig = plt.figure()
     fig.add_subplot(111)
 
-    # Read data
-    filenameX = folder + "/1_X.txt"
-    filenameY = folder + "/1_Y.txt"
-    nParticles, dataX = readFile(filenameX)
-    nParticles, dataY = readFile(filenameY)
-
-    plt.scatter(dataX, dataY, s=5)
-    plt.show()
+    # Loop over timesteps
+    times = np.arange(t_0+writeFreq, t_end + 1, writeFreq)
+    for t in times:
+        # Create filename string
+        filenameX = folder + "/" + str(t) + "_X.txt"
+        filenameY = folder + "/" + str(t) + "_Y.txt"
+        nParticles, dataX = readFile(filenameX)
+        nParticles, dataY = readFile(filenameY)
+        plt.scatter(dataX, dataY, s=5)
+        title = "timestep " + str(t)
+        plt.title(title)
+        plt.show()
 
     return
 
@@ -222,11 +227,13 @@ def velocityPlot(folder, colormap = plt.get_cmap("viridis")):
 
     # Interpolate the data
     data_grid = interpolate(dataX, dataY, dataV)
+    print(np.size(data_grid))
 
     plt.imshow(data_grid.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = v_min, vmax = v_max)
+    plt.colorbar()
+    plt.show()
 
     return
-
 
 ##########################################
 # SET THESE PARAMETERS FOR YOUR ANIMATION
@@ -243,7 +250,7 @@ foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
 #animateParticles(t_0, t_end, writeFreq, foldername)
 
 # Make a scatter pot of the x and y data
-#scatter(foldername)
+#scatterPlot(foldername)
 
 # Plot the velocity
 velocityPlot(foldername)
