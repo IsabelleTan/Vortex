@@ -54,6 +54,15 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
 
 
 /*
+ * A function to smoothly cut-off some value array after a certain radius
+ */
+void smoothCutOff(value_type * const q_in, value_type * const ){
+
+    return;
+}
+
+
+/*
  * This function copies the content of an array x into an Eigen MatrixXd.
  * Ordering:
  * Array - lexicographical (left to right then one row lower etc)
@@ -104,22 +113,24 @@ void matrixToArray(value_type * x, MatrixXd & M, bool invertOrder){
 void analyticalSolution(){
     // PARAMETERS
     // time
-    const value_type t_end = 5;
-    const value_type dt = 0.05;
+    const value_type t_end = 0.1;
+    const value_type dt = 0.0001;
     const int iter = t_end/dt;
 
     // vortex
-    const value_type visc = 1;
+    const value_type visc = 0.1;
     const value_type circ = 10;
 
     // spatial
-    const int N = 10000;
+    const int N = 40000;
     const int n =sqrt(N);
-    const value_type dx = 0.1;
+    const value_type dx = 0.01;
     const value_type range=(n-1)*dx;
 
     // Prepare string for filename
-    std::string filename;
+    std::string filenameX;
+    std::string filenameY;
+    std::string filenameQ;
 
     // Create a grid
     value_type * const x = new value_type[N];
@@ -134,8 +145,12 @@ void analyticalSolution(){
         lambOseen(N, x, y, q, visc, circ, i*dt);
 
         // Assign a string for filename and write to file
-        filename = std::to_string(i) + ".txt";
-        write_to_file(filename.c_str(), N, q);
+        filenameX = std::to_string(i) + "_X.txt";
+        write_to_file(filenameX.c_str(), N, x);
+        filenameY = std::to_string(i) + "_Y.txt";
+        write_to_file(filenameY.c_str(), N, y);
+        filenameQ = std::to_string(i) + "_Q.txt";
+        write_to_file(filenameQ.c_str(), N, q);
 
     }
 

@@ -77,7 +77,7 @@ bool arrayToMatrix_test(){
 
 int main() 
 {
-	arrayToMatrix_test();
+	analyticalSolution();
 	
 	return 0; 
 	

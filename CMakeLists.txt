@@ -14,7 +14,7 @@ set(SOURCE_FILES
         expansion.cpp
         #expansion_test.cpp
         fields.cpp
-        #fields_test.cpp
+        fields_test.cpp
         #main.cpp
         morton.cpp
         #morton_test.cpp
@@ -24,7 +24,7 @@ set(SOURCE_FILES
         quadtree.cpp
         #quadtree_test.cpp
         #quadtree_time.cpp
-        simulation.cpp
+        #simulation.cpp
         solver.cpp
         #solver_test.cpp
 		)
