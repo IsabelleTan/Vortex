@@ -18,6 +18,7 @@ void run_simulation(){
 	value_type * x_source;
 	value_type * y_source;
 	value_type * q_source;
+	value_type * rhs;
 	value_type * x_target;
 	value_type * y_target;
 	value_type * u_target;
@@ -30,6 +31,7 @@ void run_simulation(){
 	posix_memalign((void **)&x_source, 32, sizeof(value_type) * nParticles);
 	posix_memalign((void **)&y_source, 32, sizeof(value_type) * nParticles);
 	posix_memalign((void **)&q_source, 32, sizeof(value_type) * nParticles);
+	posix_memalign((void **)&rhs, 32, sizeof(value_type) * nParticles);
 	posix_memalign((void **)&x_target, 32, sizeof(value_type) * nParticles);
 	posix_memalign((void **)&y_target, 32, sizeof(value_type) * nParticles);
 	posix_memalign((void **)&u_target, 32, sizeof(value_type) * nParticles);
@@ -40,15 +42,17 @@ void run_simulation(){
 
 //! ---------------------------------------------------------- initial conditions = 0
 	// Initialize values with Lamb Oseen vortex
-	grid(nParticles, x_source, y_source, deltaX*nParticles, deltaX*nParticles);
+	grid(nParticles, x_source, y_source, deltaX*(dim-1), deltaX*(dim-1));
 	lambOseen(nParticles,x_source,y_source,q_source,viscosity,circulation,0);
 	std::string filenameX = "0_X.txt";
 	std::string filenameY = "0_Y.txt";
 	std::string filenameQ = "0_Q.txt";
 	std::string filenameV = "0_V.txt";
+	std::string filenameP = "0_P.txt";
 	write_to_file(filenameX.c_str(), nParticles, x_source);
 	write_to_file(filenameY.c_str(), nParticles, y_source);
 	write_to_file(filenameQ.c_str(), nParticles, q_source);
+	write_to_file(filenameP.c_str(), nParticles, pot_target);
 	value_type * vel;
 	posix_memalign((void **)&vel, 32, sizeof(value_type) * nParticles);
 	for(size_t i(0); i<nParticles; ++i){
@@ -62,13 +66,15 @@ void run_simulation(){
 		std::cout << "TIME iteration # " << i << std::endl; 
 		
 		// Create target grid
-		grid(nParticles, x_target, y_target, deltaX*nParticles, deltaX*nParticles);
+		grid(nParticles, x_target, y_target, deltaX*(dim-1), deltaX*(dim-1));
 		
 //! ---------------------------------------------------------- after grid = 1 
 filenameX = std::to_string(1) + "_X.txt";
 filenameY = std::to_string(1) + "_Y.txt";
 filenameQ = std::to_string(1) + "_Q.txt";
 filenameV = std::to_string(1) + "_V.txt";
+filenameP = std::to_string(1) + "_P.txt";
+write_to_file(filenameP.c_str(), nParticles, pot_target);
 write_to_file(filenameX.c_str(), nParticles, x_target);
 write_to_file(filenameY.c_str(), nParticles, y_target);
 write_to_file(filenameQ.c_str(), nParticles, q_source);
@@ -79,13 +85,19 @@ for(size_t i(0); i<nParticles; ++i){
 write_to_file(filenameV.c_str(), nParticles, vel);
 
 		// Compute the potential at the target locations
-		potential(theta_dist,x_source,y_source,q_source,nParticles,x_target,y_target,nParticles, pot_target);
+		for(size_t i(0); i<nParticles; ++i){
+			rhs[i] = -0.5 * (1./MPI) * deltaX * deltaX * q_source[i] ;
+		}
+
+		potential(theta_dist,x_source,y_source,rhs,nParticles,x_target,y_target,nParticles, pot_target);
 
 //! ---------------------------------------------------------- after potential = 2		
 filenameX = std::to_string(2) + "_X.txt";
 filenameY = std::to_string(2) + "_Y.txt";
 filenameQ = std::to_string(2) + "_Q.txt";
 filenameV = std::to_string(2) + "_V.txt";
+filenameP = std::to_string(2) + "_P.txt";
+write_to_file(filenameP.c_str(), nParticles, pot_target);
 write_to_file(filenameX.c_str(), nParticles, x_target);
 write_to_file(filenameY.c_str(), nParticles, y_target);
 write_to_file(filenameQ.c_str(), nParticles, q_source);
@@ -109,6 +121,8 @@ filenameX = std::to_string(3) + "_X.txt";
 filenameY = std::to_string(3) + "_Y.txt";
 filenameQ = std::to_string(3) + "_Q.txt";
 filenameV = std::to_string(3) + "_V.txt";
+filenameP = std::to_string(3) + "_P.txt";
+write_to_file(filenameP.c_str(), nParticles, pot_target);
 write_to_file(filenameX.c_str(), nParticles, x_target);
 write_to_file(filenameY.c_str(), nParticles, y_target);
 write_to_file(filenameQ.c_str(), nParticles, q_source);
@@ -126,6 +140,8 @@ filenameX = std::to_string(4) + "_X.txt";
 filenameY = std::to_string(4) + "_Y.txt";
 filenameQ = std::to_string(4) + "_Q.txt";
 filenameV = std::to_string(4) + "_V.txt";
+filenameP = std::to_string(4) + "_P.txt";
+write_to_file(filenameP.c_str(), nParticles, pot_target);
 write_to_file(filenameX.c_str(), nParticles, x_target);
 write_to_file(filenameY.c_str(), nParticles, y_target);
 write_to_file(filenameQ.c_str(), nParticles, q_target);
@@ -145,6 +161,8 @@ filenameX = std::to_string(5) + "_X.txt";
 filenameY = std::to_string(5) + "_Y.txt";
 filenameQ = std::to_string(5) + "_Q.txt";
 filenameV = std::to_string(5) + "_V.txt";
+filenameP = std::to_string(5) + "_P.txt";
+write_to_file(filenameP.c_str(), nParticles, pot_target);
 write_to_file(filenameX.c_str(), nParticles, x_target);
 write_to_file(filenameY.c_str(), nParticles, y_target);
 write_to_file(filenameQ.c_str(), nParticles, q_diffused);
@@ -162,6 +180,8 @@ filenameX = std::to_string(6) + "_X.txt";
 filenameY = std::to_string(6) + "_Y.txt";
 filenameQ = std::to_string(6) + "_Q.txt";
 filenameV = std::to_string(6) + "_V.txt";
+filenameP = std::to_string(6) + "_P.txt";
+write_to_file(filenameP.c_str(), nParticles, pot_target);
 write_to_file(filenameX.c_str(), nParticles, x_target);
 write_to_file(filenameY.c_str(), nParticles, y_target);
 write_to_file(filenameQ.c_str(), nParticles, q_diffused);

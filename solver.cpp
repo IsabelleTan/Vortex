@@ -26,7 +26,7 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
         } else {
             // Compute the partial derivatives with central differences to obtain the u and v velocities
             u[i] = (phi[i-M] - phi[i+M])/(2*h);
-            v[i] = (phi[i-1]-phi[i+1])/(2*h);
+            v[i] = (phi[i-1]-  phi[i+1])/(2*h);
         }
         assert( (std::isfinite(u[i])) && (std::isfinite(v[i])) );
     }

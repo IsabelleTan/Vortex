@@ -242,7 +242,7 @@ int main()
 
 /* RESULTS
  *
- * Comparing out p2p to exercize solution:
+ * Comparing our p2p to exercize solution:
  * l-infinity errors: 1.153e-01 (absolute) 1.884e+00 (relative)
  * l-1 errors: 2.120e+00 (absolute) 1.457e+02 (relative)
  *
