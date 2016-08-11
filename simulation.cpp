@@ -25,7 +25,7 @@ void run_simulation(){
 	value_type * y_target;
 	value_type * u_target;
 	value_type * v_target;
-	value_type * vel;				// used to compute the module of the velocity 
+	value_type * vel;				// used to compute the module of the velocity
 	value_type * q_target;
 	MatrixXd q_targetM(dim,dim);
 	value_type * q_diffused;
@@ -47,7 +47,7 @@ void run_simulation(){
 //! ---------------------------------------------------------- initial conditions = 0
 	// Initialize values with Lamb Oseen vortex
 	grid(nParticles, x_source, y_source, deltaX*(dim-1), deltaX*(dim-1));
-	lambOseen(nParticles,x_source,y_source,q_source,viscosity,circulation,0);
+	lambOseen(nParticles,x_source,y_source,q_source,viscosity,circulation,0, xCenter1, yCenter1);
 	std::string filenameX = "0_X.txt";
 	std::string filenameY = "0_Y.txt";
 	std::string filenameQ = "0_Q.txt";
@@ -63,14 +63,14 @@ void run_simulation(){
 	write_to_file(filenameV.c_str(), nParticles, vel);
 
 	// TIME ITERATIONS
-	for (int i = 1; i <= timeIterations; ++i) {				
-				
-		std::cout << std::endl << "---------- TIME iteration # " << i << std::endl; 
-		
+	for (int i = 1; i <= timeIterations; ++i) {
+
+		std::cout << std::endl << "---------- TIME iteration # " << i << std::endl;
+
 		//! Create target grid
 		grid(nParticles, x_target, y_target, deltaX*(dim-1), deltaX*(dim-1));
-		
-/*//! ---------------------------------------------------------- after grid = 1 
+
+/*//! ---------------------------------------------------------- after grid = 1
 filenameX = std::to_string(1) + "_X.txt";
 filenameY = std::to_string(1) + "_Y.txt";
 filenameQ = std::to_string(1) + "_Q.txt";
@@ -118,7 +118,8 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 }*/
 
 
-/*//! ---------------------------------------------------------- after velocity = 3 		
+//! ---------------------------------------------------------- after velocity = 3
+>>>>>>> 3eb311d13b026b60e5fce33973abcc6083f24b23
 filenameX = std::to_string(3) + "_X.txt";
 filenameY = std::to_string(3) + "_Y.txt";
 filenameQ = std::to_string(3) + "_Q.txt";
@@ -137,7 +138,7 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 		//! Compute the vorticity as the curl of the velocity
 		vorticity(nParticles, deltaX, u_target, v_target, q_target);
 
-/*//! ---------------------------------------------------------- after vorticity = 4		
+/*//! ---------------------------------------------------------- after vorticity = 4
 filenameX = std::to_string(4) + "_X.txt";
 filenameY = std::to_string(4) + "_Y.txt";
 filenameQ = std::to_string(4) + "_Q.txt";
@@ -178,7 +179,7 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 		ADI(q_targetM, q_diffusedM, deltaT, deltaX, viscosity);
 		matrixToArray(q_diffused, q_diffusedM, true);
 
-/*//! ---------------------------------------------------------- after ADI diff = 5		
+/*//! ---------------------------------------------------------- after ADI diff = 5
 		filenameX = std::to_string(6) + "_X.txt";
 		filenameY = std::to_string(6) + "_Y.txt";
 		filenameQ = std::to_string(6) + "_Q.txt";
@@ -197,7 +198,7 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 		//! Perform one advection iteration
 		advection(nParticles, deltaT, u_target, v_target, x_target, y_target);
 
-/*//! ---------------------------------------------------------- after advection = 6		
+/*//! ---------------------------------------------------------- after advection = 6
 filenameX = std::to_string(6) + "_X.txt";
 filenameY = std::to_string(6) + "_Y.txt";
 filenameQ = std::to_string(6) + "_Q.txt";
@@ -230,7 +231,7 @@ free(vel);*/
 			}
 			write_to_file(filenameV.c_str(), nParticles, vel);
 			write_to_file(filenameP.c_str(), nParticles, pot_target);
-		} 
+		}
 
 		// Set values for next iteration
 		x_source = x_target;
@@ -245,10 +246,10 @@ free(vel);*/
 	free(rhs); 
 //!	free(x_target); should not be freed, since it has the same address as x_source which has already been freed
 //!	free(y_target); should not be freed, since it has the same address as y_source which has already been freed
-	free(u_target); 
-	free(v_target); 
+	free(u_target);
+	free(v_target);
 	free(vel);
-	free(q_target); 
+	free(q_target);
 //!	free(q_diffused); should not be freed, since it has the same address as q_source which has already been freed
 
 	free(pot_target);
@@ -299,7 +300,7 @@ void time_simulation(int nPart, int nSim){
 
 	// Initialize values with Lamb Oseen vortex
 	grid(nPart, x_source, y_source, deltaX*nPart, deltaX*nPart);
-	lambOseen(nPart,x_source,y_source,q_source,viscosity,circulation,0);
+	lambOseen(nPart,x_source,y_source,q_source,viscosity,circulation,0, xCenter1, yCenter1);
 	// Do not write to file during timing simulations
 	//std::string filenameX = "0_X.txt";
 	//std::string filenameY = "0_Y.txt";

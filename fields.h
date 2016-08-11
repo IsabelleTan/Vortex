@@ -19,7 +19,7 @@ bool grid(const int N, value_type * const x, value_type * const y, const value_t
 /*
  * This function creates a Lamb-Oseen vortex.
  */
-void lambOseen(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type visc, const value_type circ, value_type t);
+void lambOseen(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type visc, const value_type circ, value_type t, const value_type xCenter, const value_type yCenter);
 
 /*
  * A function to smoothly cut-off some value array after a certain radius, using a cosine function
