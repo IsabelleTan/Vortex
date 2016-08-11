@@ -179,6 +179,7 @@ def scatterPlot(folder):
     nParticles, dataY = readFile(filenameY)
 
     plt.scatter(dataX, dataY, s=5)
+    plt.show()
 
     return
 
@@ -198,4 +199,4 @@ foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
 #animateParticles(t_0, t_end, writeFreq, foldername)
 
 # Make a scatter pot of the x and y data
-scatter(foldername)
+scatterPlot(foldername)
