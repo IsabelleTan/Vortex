@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <cassert>
 #include "simulation.h"
 #include "fields.h"
 #include "datapoints.h"
@@ -45,11 +44,11 @@ void run_simulation(){
 	std::string filenameX = "0_X.txt";
 	std::string filenameY = "0_Y.txt";
 	std::string filenameQ = "0_Q.txt";
-	std::string filenameQ = "0_V.txt";
+	std::string filenameV = "0_V.txt";
 	write_to_file(filenameX.c_str(), nParticles, x_source);
 	write_to_file(filenameY.c_str(), nParticles, y_source);
 	write_to_file(filenameQ.c_str(), nParticles, q_source);
-	write_to_file(filenameQ.c_str(), nParticles, v_target);
+	write_to_file(filenameV.c_str(), nParticles, v_target);
 
 	// TIME ITERATIONS
 	for (int i = 1; i <= timeIterations; ++i) {						
@@ -89,7 +88,7 @@ void run_simulation(){
 			value_type * vel;
 			posix_memalign((void **)&vel, 32, sizeof(value_type) * nParticles);
 			for(size_t i(0); i<nParticles; ++i){
-				vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]+utarget[i]);
+				vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
 			}
 			write_to_file(filenameV.c_str(), nParticles, vel);
 			free(vel);
