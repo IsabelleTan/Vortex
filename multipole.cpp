@@ -33,7 +33,6 @@ void potential(double theta,
 	const double thetasquared = theta*theta;
 	double *xsorted, *ysorted, *qsorted; 
 	Node *nodes;
-	double *result(new double(0));
 	int maxnodes = (nsrc + kleaf - 1) / kleaf * 60;
 
 
@@ -51,8 +50,8 @@ void potential(double theta,
 	#pragma omp parallel for schedule(static,1)
 	for(size_t i=0; i<ndst; i++){
 		
-		// for one target point (xdst[i], ydst[i]), do the following
-		*result = 0;
+		// for one target point (xdst[i], ydst[i]), do the following, initialize to 0
+		potdst[i] = 0;
 
 		//! the naive approach would be to start at level 0:
 		//! evaluate(nodes, 0, xsorted, ysorted, qsorted, thetasquared, result, xdst[i], ydst[i]);
@@ -112,7 +111,6 @@ void potential(double theta,
 	free(ysorted);
 	free(qsorted);
 	free(nodes);
-	delete result;
 	
 }
 
@@ -176,7 +174,7 @@ void evaluate(const Node* nodes, const int node_id, /*const double* expansions /
 						  // compute the p2p expansion
 			const int n_s = node->part_start;
 			*result += p2p(xdata + n_s, ydata + n_s, mdata + n_s, 1, xt, yt);
-			return ; 
+			return;
 			
 		}
 		
