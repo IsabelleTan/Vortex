@@ -72,7 +72,7 @@ void smoothCutOff(const int N, value_type * const q_in, value_type * const x_in,
             q_in[i] = 0;
         } else
         if(radius > radius_start){
-            // Map [radius_start, radius_end] to [0, 0.5PI]
+            // Map [radius_start, radius_end] to [0, PI]
             var = (radius - radius_start)/radius_range * MPI;
 
             // Scale output with a cosine function of var

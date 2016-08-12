@@ -111,7 +111,7 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
     os.chdir(curDir)
 
     # Create array with time values (t's are inclusive)
-    times = np.arange(t_0+writeFreq, t_end + 1, writeFreq)
+    times = np.arange(t_0+writeFreq, t_end+1, writeFreq)
 
     # Prepare image and frame array
     fig = plt.figure()
@@ -171,7 +171,7 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
     Writer = anim.writers['ffmpeg']
     writer = Writer(fps=10, metadata=dict(artist='Me'), bitrate=1800)
 
-    ani.save('animation.mp4', writer=writer)
+    ani.save('diffusion_rectangle.mp4', writer=writer)
 
     print(q_min, q_max)
 
@@ -241,7 +241,7 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
         ymin = np.min(dataY)
         xmax = np.max(dataX)
         ymax = np.max(dataY)
-        
+
         print("    STEP  ", t)
         print("(x,y) min/max values : ", xmin, xmax, ymin, ymax)
 
@@ -283,7 +283,6 @@ t_0 = 0
 t_end = 25
 writeFreq = 1
 foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
-#foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/simulation"
 
 # Make an animation
 animateParticles(t_0, t_end, writeFreq, foldername)
@@ -301,3 +300,10 @@ animateParticles(t_0, t_end, writeFreq, foldername)
 # (for debugging)
 #valuesPlot(foldername, t_0, t_end, writeFreq)
 
+# Plot the cutoff function
+#nParticles, data = readFile("/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/cut_off.txt")
+#plt.plot(data)
+#plt.title("The cutoff scaling factor.")
+#plt.xlabel("The percentage of the distance of the center of the domain to the boundary")
+#plt.ylabel(("The scaling factor"))
+#plt.show()
