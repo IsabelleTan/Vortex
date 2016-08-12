@@ -90,8 +90,6 @@ void build(const value_type* const x, const value_type* const y, const value_typ
     // Sort the remaining arrays with the same permutation
     reorder(N, keys, x, y, mass, xsorted, ysorted, mass_sorted);
 
-
-
     // Build the tree
 
     // Compute the center of mass and the total mass

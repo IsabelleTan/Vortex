@@ -157,13 +157,15 @@ value_type e2p(const double xtarget, const double ytarget, const double q, const
     // OUTPUT
     // return value: 	potential at target location
     
+    const value_type eps = std::numeric_limits<value_type>::epsilon();
+    
     // Make an array to store the different orders of z_target
     std::complex<value_type> orders(1,0);
     std::complex<value_type> z_target(xtarget, ytarget);
-    std::complex<value_type> streamFunction = q * log(z_target);
+    std::complex<value_type> streamFunction = q * log(z_target + eps);
 
     for (int i = 0; i < order; ++i) {
-        orders *= z_target;
+        orders *= (z_target + eps);
         streamFunction += std::complex<value_type>(rxps[i], ixps[i]) / orders;
     }
 
@@ -188,7 +190,7 @@ value_type p2p(const value_type* const xsources, const value_type* const ysource
     const value_type eps = std::numeric_limits<value_type>::epsilon();
     value_type streamfunction = 0;
     for (int i = 0; i < nsources; ++i) {
-        streamfunction += /*0.5 * (1./MPI) **/ q[i] * log( sqrt( (xsources[i] - xtarget)*(xsources[i] - xtarget) + (ysources[i] - ytarget)*(ysources[i] - ytarget) ) + eps);
+        streamfunction += q[i] * log( sqrt( (xsources[i] - xtarget)*(xsources[i] - xtarget) + (ysources[i] - ytarget)*(ysources[i] - ytarget) ) + eps);
     }
 
 	return streamfunction;  
