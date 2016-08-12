@@ -241,7 +241,8 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
         ymin = np.min(dataY)
         xmax = np.max(dataX)
         ymax = np.max(dataY)
-
+        
+        print("    STEP  ", t)
         print("(x,y) min/max values : ", xmin, xmax, ymin, ymax)
 
         # Interpolate the data
@@ -279,10 +280,10 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
 
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
-t_end = 20
+t_end = 3
 writeFreq = 1
-#foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
-foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/simulation"
+foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
+#foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/simulation"
 
 # Make an animation
 animateParticles(t_0, t_end, writeFreq, foldername)

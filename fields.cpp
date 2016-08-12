@@ -63,7 +63,7 @@ void smoothCutOff(const int N, value_type * const q_in, value_type * const x_in,
     value_type radius;
     value_type radius_range = (radius_end - radius_start);
     value_type var;
-#pragma omp parallel for
+#pragma omp parallel for private(radius, var)
     for (int i = 0; i < N; ++i) {
         // Compute radius
         radius = sqrt(x_in[i]*x_in[i] + y_in[i]*y_in[i]);

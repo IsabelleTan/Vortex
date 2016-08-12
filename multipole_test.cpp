@@ -116,8 +116,8 @@ void potential_test(){
 	const int JUMP = 1;
 
 	// reference solution (choose the one from exercises, or our p2p implementation
-	potential_p2p(theta_dist, xsrc, ysrc, sources, NSRC, xdst, ydst, NDST, xref);
-	// exercise_sol(xref, OFFSET, JUMP, xdst, ydst, NDST, xsrc, ysrc, sources, NSRC, eps);
+	// potential_p2p(theta_dist, xsrc, ysrc, sources, NSRC, xdst, ydst, NDST, xref);
+	exercise_sol(xref, OFFSET, JUMP, xdst, ydst, NDST, xsrc, ysrc, sources, NSRC, eps);
 
 	std::vector<double> a, b, c, d;
 
@@ -235,6 +235,7 @@ void time(int N){
 int main()
 {
 	time(100);
+	//potential_test();
 	
 	return 0; 
 	

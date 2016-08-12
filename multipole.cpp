@@ -149,7 +149,7 @@ void potential_p2p(double theta,
  * Evaluate the potential (i.e. the stream function psi) at a particular target location (xt, yt), 
  * given an array of nodes and their expansions 
  */
-void evaluate(const Node* nodes, const int node_id, /*const double* expansions // putting it as attribute of class Node instead, */ const double *xdata, const double *ydata, const double *mdata,
+void evaluate(const Node* nodes, const int node_id, const double *xdata, const double *ydata, const double *mdata,
 		const double thetasquared, double * const result, const double xt, const double yt)
 {
 	// INPUT
@@ -168,20 +168,17 @@ void evaluate(const Node* nodes, const int node_id, /*const double* expansions /
 	
 	const Node* const node = nodes + node_id;								// create a pointer to the node we're considering
 
-	if(node->r > -0.5){   // if this node isn't empty, go on with the evaluation
-		if(node->r == 0){ // if the node contains only 1 particle 
-						  // compute the p2p expansion
-			const int n_s = node->part_start;
+	if(node->r > -0.5){   													// if this node isn't empty, go on with the evaluation
+		if(node->r == 0){ 													// if the node contains only 1 particle 
+			const int n_s = node->part_start;								// compute the p2p expansion
 			*result += p2p(xdata + n_s, ydata + n_s, mdata + n_s, 1, xt, yt);
 			return;
-			
 		}
 		
 		// if the node contains strictly more than one particle, compute the distance between the target and the center of mass of the node 
 		double distsquared = ( (node->xcom - xt)*(node->xcom - xt) + (node->ycom - yt)*(node->ycom -yt) ) ; // square of the distance between the target location and the center of mass of the node 
 
-		// recursive algorithm for the evaluation of the potential 
-		// pseudo-code, cf lecture 4, slide 24
+		// recursive algorithm for the evaluation of the potential 			// pseudo-code, cf lecture 4, slide 24
 		if( (node->r * node->r) < (distsquared * thetasquared) ){			// if the target and the node are sufficiently far away from each other
 																			// return the expansion to particle expression as a potential
 			*result += e2p(xt - node->xcom, yt - node->ycom, node->mass, exp_order, node->rxps, node->ixps);
