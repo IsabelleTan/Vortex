@@ -46,7 +46,7 @@ void potential(double theta,
 	
 	// evaluate the potential field at the location of each target point:
 	omp_set_num_threads(4); // Set to schedule(static,1) to minimize load imbalance.
-	#pragma omp parallel for schedule(guided,10)
+	#pragma omp parallel for schedule(static,1)
 	for(size_t i=0; i<ndst; i++){
 
 		// for one target point (xdst[i], ydst[i]), do the following, initialize to 0

@@ -91,8 +91,8 @@ bool ThomasAlg_test_2(){
 void ADI_test_output(){
     // Set parameters
     const value_type t_0 = 0;
-    const value_type t_end = 0.1;
-    const value_type dt = 0.001;
+    const value_type t_end = 5;
+    const value_type dt = 0.01;
     int iter = (int)((t_end - t_0)/dt);
     const value_type dx = 0.1;
     const value_type v = 0.1;
@@ -107,7 +107,7 @@ void ADI_test_output(){
     // Fill x and y as a grid
     grid(N, x_0, y_0, (n-1)*dx, (n-1)*dx);
 
-    // Fill initial array with a square in the center
+    /*// Fill initial array with a square in the center
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if(::abs(i-n/2)<10 && ::abs(j-n/2) < 10){
@@ -116,9 +116,9 @@ void ADI_test_output(){
                 q_0[i*n+j] = 0;
             }
         }
-    }
+    }*/
 
-    /*// Fill with a rectangle close to one edge
+    // Fill with a rectangle close to one edge
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if(i > 2 && i < 10 && j > 2 && j < n-5){
@@ -127,7 +127,7 @@ void ADI_test_output(){
                 q_0[i*n+j] = 0;
             }
         }
-    } */
+    }
 
     // Put the array in a matrix
     MatrixXd q_0_mat(n,n);
