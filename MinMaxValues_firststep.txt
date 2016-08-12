@@ -1,0 +1,41 @@
+   STEP   0
+(x,y) min/max values :  -9.95 9.95 -9.95 9.95
+velocity :     0.0 0.0
+vorticity :  3.23870385377e-86 3.16722309003
+potential :  0.0 0.0
+    STEP   1
+(x,y) min/max values :  -9.95 9.95 -9.95 9.95
+velocity :     0.0 0.0
+vorticity :  3.23870385377e-86 3.16722309003
+potential :  0.0 0.0
+    STEP   2
+(x,y) min/max values :  -9.95 9.95 -9.95 9.95
+velocity :     0.0 0.0
+vorticity :  3.23870385377e-86 3.16722309003
+potential :  -4.20828882266 0.6188401418
+    STEP   3
+(x,y) min/max values :  -9.95 9.95 -9.95 9.95
+velocity :     0.0 1.12436036565
+vorticity :  3.23870385377e-86 3.16722309003
+potential :  -4.20828882266 0.6188401418
+    STEP   4
+(x,y) min/max values :  -9.95 9.95 -9.95 9.95
+velocity :     0.0 1.12436036565
+vorticity :  -0.807899960072 3.77387940069
+potential :  -4.20828882266 0.6188401418
+    STEP   5
+(x,y) min/max values :  -9.95 9.95 -9.95 9.95
+velocity :     0.0 1.12436036565
+vorticity :  -0.00203089298005 3.77387940069
+potential :  -4.20828882266 0.6188401418
+    STEP   6
+(x,y) min/max values :  -9.95 9.95 -9.95 9.95
+velocity :     0.0 1.12436036565
+vorticity :  -0.00203049882097 3.77370653307
+potential :  -4.20828882266 0.6188401418
+    STEP   7
+(x,y) min/max values :  -9.95 9.95 -9.95 9.95
+velocity :     0.0 1.12436036565
+vorticity :  -0.00203049882097 3.77370653307
+potential :  -4.20828882266 0.6188401418
+
