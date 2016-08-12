@@ -91,19 +91,24 @@ bool ThomasAlg_test_2(){
 void ADI_test_output(){
     // Set parameters
     const value_type t_0 = 0;
-    const value_type t_end = 10;
-    const value_type dt = 0.1;
-    int iter = (int)(t_end - t_0)/dt;
+    const value_type t_end = 0.1;
+    const value_type dt = 0.001;
+    int iter = (int)((t_end - t_0)/dt);
     const value_type dx = 0.1;
-    const value_type v = 1;
+    const value_type v = 0.1;
     const int N = 10000;
     const int n = sqrt(N);
 
     // Allocate array
     value_type * q_0 = new value_type[N];
+    value_type * x_0 = new value_type[N];
+    value_type * y_0 = new value_type[N];
+
+    // Fill x and y as a grid
+    grid(N, x_0, y_0, (n-1)*dx, (n-1)*dx);
 
     // Fill initial array with a square in the center
-    /*for (int i = 0; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if(::abs(i-n/2)<10 && ::abs(j-n/2) < 10){
                 q_0[i*n+j] = 1;
@@ -111,9 +116,9 @@ void ADI_test_output(){
                 q_0[i*n+j] = 0;
             }
         }
-    }*/
+    }
 
-    // Fill with a rectangle close to one edge
+    /*// Fill with a rectangle close to one edge
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if(i > 2 && i < 10 && j > 2 && j < n-5){
@@ -122,7 +127,7 @@ void ADI_test_output(){
                 q_0[i*n+j] = 0;
             }
         }
-    }
+    } */
 
     // Put the array in a matrix
     MatrixXd q_0_mat(n,n);
@@ -131,8 +136,12 @@ void ADI_test_output(){
     value_type * q_new = new value_type[N];
 
     // Assign a string for filename and write to file
-    std::string filename = std::to_string(0) + ".txt";
-    write_to_file(filename.c_str(), N, q_0);
+    std::string filenameQ = std::to_string(0) + "_Q.txt";
+    std::string filenameX = std::to_string(0) + "_X.txt";
+    std::string filenameY = std::to_string(0) + "_Y.txt";
+    write_to_file(filenameQ.c_str(), N, q_0);
+    write_to_file(filenameX.c_str(), N, x_0);
+    write_to_file(filenameY.c_str(), N, y_0);
 
     // Time loop
     for (int i = 1; i < iter; ++i) {
@@ -141,14 +150,20 @@ void ADI_test_output(){
         matrixToArray(q_new, q_new_mat, true);
 
         // Assign a string for filename and write to file
-        filename = std::to_string(i) + ".txt";
-        write_to_file(filename.c_str(), N, q_new);
+        filenameQ = std::to_string(i) + "_Q.txt";
+        write_to_file(filenameQ.c_str(), N, q_new);
+        filenameX = std::to_string(i) + "_X.txt";
+        write_to_file(filenameX.c_str(), N, x_0);
+        filenameY = std::to_string(i) + "_Y.txt";
+        write_to_file(filenameY.c_str(), N, y_0);
 
         // Set q_0 to be q_new_mat for the next timestep
         q_0_mat = q_new_mat;
     }
 
     // Free memory
+    delete[] x_0;
+    delete[] y_0;
     delete[] q_0;
     delete[] q_new;
 

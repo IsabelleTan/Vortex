@@ -10,7 +10,7 @@
 #define MPI 3.141593
 
 // Particles
-#define nParticles 40000
+#define nParticles 10000
 #define deltaX 0.1
 #define viscosity 0.1
 

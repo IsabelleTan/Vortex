@@ -111,7 +111,7 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
     os.chdir(curDir)
 
     # Create array with time values (t's are inclusive)
-    times = np.arange(t_0+writeFreq, t_end + 1, writeFreq)
+    times = np.arange(t_0+writeFreq, t_end, writeFreq)
 
     # Prepare image and frame array
     fig = plt.figure()
@@ -279,7 +279,7 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
 
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
-t_end = 20
+t_end = 100
 writeFreq = 1
 #foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
 foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/simulation"
@@ -300,3 +300,7 @@ animateParticles(t_0, t_end, writeFreq, foldername)
 # (for debugging)
 #valuesPlot(foldername, t_0, t_end, writeFreq)
 
+# Plot the cutoff function
+#nParticles, data = readFile("/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/cut_off.txt")
+#plt.plot(data)
+#plt.show()
