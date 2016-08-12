@@ -210,7 +210,7 @@ write_to_file(filenameQ.c_str(), nParticles, q_diffused);
 for(size_t i(0); i<nParticles; ++i){
 	vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
 }
-write_to_file(filenameV.c_str(), nParticles, vel);*/
+write_to_file(filenameV.c_str(), nParticles, vel); */
 
 		//! Check if for this iteration the output should be written to a file
 		//! If so; write output to file

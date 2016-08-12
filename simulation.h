@@ -16,8 +16,8 @@
 
 // Time
 #define t_0 0
-#define deltaT 0.00001
-#define timeIterations 100
+#define deltaT 0.0001
+#define timeIterations 25
 #define writeFreq 1
 
 // Initial Condition
