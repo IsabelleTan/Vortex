@@ -10,14 +10,14 @@
 #define MPI 3.141593
 
 // Particles
-#define nParticles 10000
-#define deltaX 0.1
+#define nParticles 160000
+#define deltaX 0.05
 #define viscosity 0.1
 
 // Time
 #define t_0 0
-#define deltaT 0.0001
-#define timeIterations 20
+#define deltaT 0.00001
+#define timeIterations 3
 #define writeFreq 1
 
 // Initial Condition

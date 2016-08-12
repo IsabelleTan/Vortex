@@ -45,8 +45,8 @@ void potential(double theta,
 	build(xsrc, ysrc, qsrc, nsrc, kleaf, xsorted, ysorted, qsorted, nodes, depthtree);
 	
 	// evaluate the potential field at the location of each target point:
-	omp_set_num_threads(2); // Set to schedule(static,1) to minimize load imbalance.
-	#pragma omp parallel for schedule(static,1)
+	omp_set_num_threads(4); // Set to schedule(static,1) to minimize load imbalance.
+	#pragma omp parallel for schedule(guided,10)
 	for(size_t i=0; i<ndst; i++){
 
 		// for one target point (xdst[i], ydst[i]), do the following, initialize to 0
