@@ -93,7 +93,7 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 
 		potential(theta_dist,x_source,y_source,rhs,nParticles,x_target,y_target,nParticles, pot_target);
 
-/*//! ---------------------------------------------------------- after potential = 2
+/*//! ---------------------------------------------------------- after potential = 2		
 filenameX = std::to_string(2) + "_X.txt";
 filenameY = std::to_string(2) + "_Y.txt";
 filenameQ = std::to_string(2) + "_Q.txt";
@@ -118,7 +118,8 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 }*/
 
 
-/*//! ---------------------------------------------------------- after velocity = 3
+//! ---------------------------------------------------------- after velocity = 3
+>>>>>>> 3eb311d13b026b60e5fce33973abcc6083f24b23
 filenameX = std::to_string(3) + "_X.txt";
 filenameY = std::to_string(3) + "_Y.txt";
 filenameQ = std::to_string(3) + "_Q.txt";
@@ -239,10 +240,10 @@ free(vel);*/
 
 	}
 
-	free(x_source);
-	free(y_source);
-	free(q_source);
-	free(rhs);
+	free(x_source); 
+	free(y_source); 
+	free(q_source); 
+	free(rhs); 
 //!	free(x_target); should not be freed, since it has the same address as x_source which has already been freed
 //!	free(y_target); should not be freed, since it has the same address as y_source which has already been freed
 	free(u_target);
