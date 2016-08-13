@@ -10,21 +10,23 @@
 #define MPI 3.141593
 
 // Particles
-#define nParticles 160000
-#define deltaX 0.05
+#define nParticles 40000
+#define deltaX 0.1
 #define viscosity 0.1
 
 // Time
 #define t_0 0
 #define deltaT 0.00001
-#define timeIterations 3
+#define timeIterations 20
 #define writeFreq 1
 
 // Initial Condition
 #define coreRadius 1
 #define circulation 10
-#define xCenter1 0
+#define xCenter1 -2.5
 #define yCenter1 0
+#define xCenter2 2.5
+#define yCenter2 0
 
 // Cut Off
 #define startRatio 0.6

@@ -54,6 +54,29 @@ void lambOseen(const int N, value_type * const x, value_type * const y, value_ty
     }
 }
 
+/*
+ * A function to create a grid with two Lamb Oseen vortices. Both have coreRadius sigma=1 and are centered at (x1,y1) and (x2,y2).
+ */
+void lambOseenDouble(const int N, value_type * const x, value_type * const y, value_type * const q, const value_type visc, const value_type circ1, const value_type circ2, value_type t, const value_type x1, const value_type y1, const value_type x2, const value_type y2){
+    // Make the first vortex
+    lambOseen(N, x, y, q, visc, circ1, t, x1, y1);
+
+    // Allocate a grid for the second vortex
+    value_type * q2 = new value_type[N];
+
+    // Make the second vortex
+    lambOseen(N, x, y, q2, visc, circ2, t, x2, y2);
+
+    // Add the vortexes together
+#pragma omp parallel for
+    for (int i = 0; i < N; ++i) {
+        q[i] += q2[i];
+    }
+
+    delete[] q2;
+    return;
+}
+
 
 /*
  * A function to smoothly cut-off some value array after a certain radius, using a cosine function

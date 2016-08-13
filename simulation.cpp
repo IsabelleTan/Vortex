@@ -9,6 +9,8 @@
 
 void run_simulation(){
 	// INITIALIZATION
+	bool writeIntermediate = false;
+	bool writeFinal = true;
 
 	// make sure the number of particles is an integer squared, to avoid problems in matrices
 	int dim = static_cast<int>(sqrt(nParticles));
@@ -45,9 +47,12 @@ void run_simulation(){
 	posix_memalign((void **)&pot_target, 32, sizeof(value_type) * nParticles);
 
 //! ---------------------------------------------------------- initial conditions = 0
-	// Initialize values with Lamb Oseen vortex
+	// Initialize values with Lamb Oseen vortex or with 2 opposite Lamb Oseen vortices
 	grid(nParticles, x_source, y_source, deltaX*(dim-1), deltaX*(dim-1));
-	lambOseen(nParticles,x_source,y_source,q_source,viscosity,circulation,0, xCenter1, yCenter1);
+	//lambOseen(nParticles,x_source,y_source,q_source,viscosity,circulation,0, xCenter1, yCenter1);
+	lambOseenDouble(nParticles, x_source, y_source, q_source, viscosity, circulation, -circulation, 0, xCenter1, yCenter1, xCenter2, yCenter2);
+
+
 	std::string filenameX = "0_X.txt";
 	std::string filenameY = "0_Y.txt";
 	std::string filenameQ = "0_Q.txt";
@@ -71,43 +76,48 @@ void run_simulation(){
 		grid(nParticles, x_target, y_target, deltaX*(dim-1), deltaX*(dim-1));
 
 //! ---------------------------------------------------------- after grid = 1, 8
-/*filenameX = std::to_string(1+(i-1)*7) + "_X.txt";
-filenameY = std::to_string(1+(i-1)*7) + "_Y.txt";
-filenameQ = std::to_string(1+(i-1)*7) + "_Q.txt";
-filenameV = std::to_string(1+(i-1)*7) + "_V.txt";
-filenameP = std::to_string(1+(i-1)*7) + "_P.txt";
-write_to_file(filenameP.c_str(), nParticles, pot_target);
-write_to_file(filenameX.c_str(), nParticles, x_target);
-write_to_file(filenameY.c_str(), nParticles, y_target);
-write_to_file(filenameQ.c_str(), nParticles, q_source);
+		if(writeIntermediate) {
+			filenameX = std::to_string(1 + (i - 1) * 7) + "_X.txt";
+			filenameY = std::to_string(1 + (i - 1) * 7) + "_Y.txt";
+			filenameQ = std::to_string(1 + (i - 1) * 7) + "_Q.txt";
+			filenameV = std::to_string(1 + (i - 1) * 7) + "_V.txt";
+			filenameP = std::to_string(1 + (i - 1) * 7) + "_P.txt";
+			write_to_file(filenameP.c_str(), nParticles, pot_target);
+			write_to_file(filenameX.c_str(), nParticles, x_target);
+			write_to_file(filenameY.c_str(), nParticles, y_target);
+			write_to_file(filenameQ.c_str(), nParticles, q_source);
 // compute scalar velocity
-for(size_t i(0); i<nParticles; ++i){
-	vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
-}
-write_to_file(filenameV.c_str(), nParticles, vel);*/
+			for (size_t j(0); j < nParticles; ++j) {
+				vel[j] = sqrt(v_target[j] * v_target[j] + u_target[j] * u_target[j]);
+			}
+			write_to_file(filenameV.c_str(), nParticles, vel);
+		}
+
 
 		//! Compute the potential at the target locations
-		for(size_t i(0); i<nParticles; ++i){
-			rhs[i] = (-0.5/MPI) * deltaX * deltaX * q_source[i] ;
+		for(size_t k(0); k<nParticles; ++k){
+			rhs[k] = (-0.5/MPI) * deltaX * deltaX * q_source[k] ;
 		}
 
 		potential(theta_dist,x_source,y_source,rhs,nParticles,x_target,y_target,nParticles,pot_target);
 
-//! ---------------------------------------------------------- after potential = 2, 9		
-/*filenameX = std::to_string(2+(i-1)*7) + "_X.txt";
-filenameY = std::to_string(2+(i-1)*7) + "_Y.txt";
-filenameQ = std::to_string(2+(i-1)*7) + "_Q.txt";
-filenameV = std::to_string(2+(i-1)*7) + "_V.txt";
-filenameP = std::to_string(2+(i-1)*7) + "_P.txt";
-write_to_file(filenameP.c_str(), nParticles, pot_target);
-write_to_file(filenameX.c_str(), nParticles, x_target);
-write_to_file(filenameY.c_str(), nParticles, y_target);
-write_to_file(filenameQ.c_str(), nParticles, q_source);
+//! ---------------------------------------------------------- after potential = 2, 9
+		if(writeIntermediate) {
+			filenameX = std::to_string(2 + (i - 1) * 7) + "_X.txt";
+			filenameY = std::to_string(2 + (i - 1) * 7) + "_Y.txt";
+			filenameQ = std::to_string(2 + (i - 1) * 7) + "_Q.txt";
+			filenameV = std::to_string(2 + (i - 1) * 7) + "_V.txt";
+			filenameP = std::to_string(2 + (i - 1) * 7) + "_P.txt";
+			write_to_file(filenameP.c_str(), nParticles, pot_target);
+			write_to_file(filenameX.c_str(), nParticles, x_target);
+			write_to_file(filenameY.c_str(), nParticles, y_target);
+			write_to_file(filenameQ.c_str(), nParticles, q_source);
 // compute scalar velocity
-for(size_t i(0); i<nParticles; ++i){
-	vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
-}
-write_to_file(filenameV.c_str(), nParticles, vel);*/
+			for (size_t i(0); i < nParticles; ++i) {
+				vel[i] = sqrt(v_target[i] * v_target[i] + u_target[i] * u_target[i]);
+			}
+			write_to_file(filenameV.c_str(), nParticles, vel);
+		}
 
 		//! Compute the velocity as the curl of the streamfunction potential
 		velocity(nParticles, deltaX, u_target, v_target, pot_target);											////////////// ****
@@ -119,58 +129,64 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 
 
 //! ---------------------------------------------------------- after velocity = 3, 10
-/*filenameX = std::to_string(3+(i-1)*7) + "_X.txt";
-filenameY = std::to_string(3+(i-1)*7) + "_Y.txt";
-filenameQ = std::to_string(3+(i-1)*7) + "_Q.txt";
-filenameV = std::to_string(3+(i-1)*7) + "_V.txt";
-filenameP = std::to_string(3+(i-1)*7) + "_P.txt";
-write_to_file(filenameP.c_str(), nParticles, pot_target);
-write_to_file(filenameX.c_str(), nParticles, x_target);
-write_to_file(filenameY.c_str(), nParticles, y_target);
-write_to_file(filenameQ.c_str(), nParticles, q_source);
+		if(writeIntermediate) {
+			filenameX = std::to_string(3 + (i - 1) * 7) + "_X.txt";
+			filenameY = std::to_string(3 + (i - 1) * 7) + "_Y.txt";
+			filenameQ = std::to_string(3 + (i - 1) * 7) + "_Q.txt";
+			filenameV = std::to_string(3 + (i - 1) * 7) + "_V.txt";
+			filenameP = std::to_string(3 + (i - 1) * 7) + "_P.txt";
+			write_to_file(filenameP.c_str(), nParticles, pot_target);
+			write_to_file(filenameX.c_str(), nParticles, x_target);
+			write_to_file(filenameY.c_str(), nParticles, y_target);
+			write_to_file(filenameQ.c_str(), nParticles, q_source);
 // compute scalar velocity
-for(size_t i(0); i<nParticles; ++i){
-	vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
-}
-write_to_file(filenameV.c_str(), nParticles, vel);*/
+			for (size_t i(0); i < nParticles; ++i) {
+				vel[i] = sqrt(v_target[i] * v_target[i] + u_target[i] * u_target[i]);
+			}
+			write_to_file(filenameV.c_str(), nParticles, vel);
+		}
 
 		//! Compute the vorticity as the curl of the velocity
 		vorticity(nParticles, deltaX, u_target, v_target, q_target);
 
 //! ---------------------------------------------------------- after vorticity = 4, 11
-/*filenameX = std::to_string(4+(i-1)*7) + "_X.txt";
-filenameY = std::to_string(4+(i-1)*7) + "_Y.txt";
-filenameQ = std::to_string(4+(i-1)*7) + "_Q.txt";
-filenameV = std::to_string(4+(i-1)*7) + "_V.txt";
-filenameP = std::to_string(4+(i-1)*7) + "_P.txt";
-write_to_file(filenameP.c_str(), nParticles, pot_target);
-write_to_file(filenameX.c_str(), nParticles, x_target);
-write_to_file(filenameY.c_str(), nParticles, y_target);
-write_to_file(filenameQ.c_str(), nParticles, q_target);
+		if(writeIntermediate) {
+			filenameX = std::to_string(4 + (i - 1) * 7) + "_X.txt";
+			filenameY = std::to_string(4 + (i - 1) * 7) + "_Y.txt";
+			filenameQ = std::to_string(4 + (i - 1) * 7) + "_Q.txt";
+			filenameV = std::to_string(4 + (i - 1) * 7) + "_V.txt";
+			filenameP = std::to_string(4 + (i - 1) * 7) + "_P.txt";
+			write_to_file(filenameP.c_str(), nParticles, pot_target);
+			write_to_file(filenameX.c_str(), nParticles, x_target);
+			write_to_file(filenameY.c_str(), nParticles, y_target);
+			write_to_file(filenameQ.c_str(), nParticles, q_target);
 // compute scalar velocity
-for(size_t i(0); i<nParticles; ++i){
-	vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
-}
-write_to_file(filenameV.c_str(), nParticles, vel);*/
+			for (size_t i(0); i < nParticles; ++i) {
+				vel[i] = sqrt(v_target[i] * v_target[i] + u_target[i] * u_target[i]);
+			}
+			write_to_file(filenameV.c_str(), nParticles, vel);
+		}
 
 		// Perform a smooth cut off of the vorticity
 		smoothCutOff(nParticles, q_target, x_target, y_target, startRatio*(domainRange/2), endRatio*(domainRange/2));
 
 //! ---------------------------------------------------------- after cut off = 5, 12
-/*filenameX = std::to_string(5+(i-1)*7) + "_X.txt";
-filenameY = std::to_string(5+(i-1)*7) + "_Y.txt";
-filenameQ = std::to_string(5+(i-1)*7) + "_Q.txt";
-filenameV = std::to_string(5+(i-1)*7) + "_V.txt";
-filenameP = std::to_string(5+(i-1)*7) + "_P.txt";
-write_to_file(filenameP.c_str(), nParticles, pot_target);
-write_to_file(filenameX.c_str(), nParticles, x_target);
-write_to_file(filenameY.c_str(), nParticles, y_target);
-write_to_file(filenameQ.c_str(), nParticles, q_target);
+		if(writeIntermediate) {
+			filenameX = std::to_string(5 + (i - 1) * 7) + "_X.txt";
+			filenameY = std::to_string(5 + (i - 1) * 7) + "_Y.txt";
+			filenameQ = std::to_string(5 + (i - 1) * 7) + "_Q.txt";
+			filenameV = std::to_string(5 + (i - 1) * 7) + "_V.txt";
+			filenameP = std::to_string(5 + (i - 1) * 7) + "_P.txt";
+			write_to_file(filenameP.c_str(), nParticles, pot_target);
+			write_to_file(filenameX.c_str(), nParticles, x_target);
+			write_to_file(filenameY.c_str(), nParticles, y_target);
+			write_to_file(filenameQ.c_str(), nParticles, q_target);
 // compute scalar velocity
-for(size_t i(0); i<nParticles; ++i){
-	vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
-}
-write_to_file(filenameV.c_str(), nParticles, vel);*/
+			for (size_t i(0); i < nParticles; ++i) {
+				vel[i] = sqrt(v_target[i] * v_target[i] + u_target[i] * u_target[i]);
+			}
+			write_to_file(filenameV.c_str(), nParticles, vel);
+		}
 
 		//! Perform one diffusion iteration (convert to and from matrices for the ADI solver)
 		arrayToMatrix(q_target, q_targetM, true);
@@ -178,43 +194,47 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 		matrixToArray(q_diffused, q_diffusedM, true);
 
 //! ---------------------------------------------------------- after ADI diff = 6, 13
-/*filenameX = std::to_string(6+(i-1)*7) + "_X.txt";
-filenameY = std::to_string(6+(i-1)*7) + "_Y.txt";
-filenameQ = std::to_string(6+(i-1)*7) + "_Q.txt";
-filenameV = std::to_string(6+(i-1)*7) + "_V.txt";
-filenameP = std::to_string(6+(i-1)*7) + "_P.txt";
-write_to_file(filenameP.c_str(), nParticles, pot_target);
-write_to_file(filenameX.c_str(), nParticles, x_target);
-write_to_file(filenameY.c_str(), nParticles, y_target);
-write_to_file(filenameQ.c_str(), nParticles, q_diffused);
+		if(writeIntermediate) {
+			filenameX = std::to_string(6 + (i - 1) * 7) + "_X.txt";
+			filenameY = std::to_string(6 + (i - 1) * 7) + "_Y.txt";
+			filenameQ = std::to_string(6 + (i - 1) * 7) + "_Q.txt";
+			filenameV = std::to_string(6 + (i - 1) * 7) + "_V.txt";
+			filenameP = std::to_string(6 + (i - 1) * 7) + "_P.txt";
+			write_to_file(filenameP.c_str(), nParticles, pot_target);
+			write_to_file(filenameX.c_str(), nParticles, x_target);
+			write_to_file(filenameY.c_str(), nParticles, y_target);
+			write_to_file(filenameQ.c_str(), nParticles, q_diffused);
 // compute scalar velocity
-for(size_t i(0); i<nParticles; ++i){
-	vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
-}
-write_to_file(filenameV.c_str(), nParticles, vel);*/
+			for (size_t i(0); i < nParticles; ++i) {
+				vel[i] = sqrt(v_target[i] * v_target[i] + u_target[i] * u_target[i]);
+			}
+			write_to_file(filenameV.c_str(), nParticles, vel);
+		}
 
 		//! Perform one advection iteration
 		advection(nParticles, deltaT, u_target, v_target, x_target, y_target);
 
 //! ---------------------------------------------------------- after advection = 7, 14
-/*filenameX = std::to_string(7+(i-1)*7) + "_X.txt";
-filenameY = std::to_string(7+(i-1)*7) + "_Y.txt";
-filenameQ = std::to_string(7+(i-1)*7) + "_Q.txt";
-filenameV = std::to_string(7+(i-1)*7) + "_V.txt";
-filenameP = std::to_string(7+(i-1)*7) + "_P.txt";
-write_to_file(filenameP.c_str(), nParticles, pot_target);
-write_to_file(filenameX.c_str(), nParticles, x_target);
-write_to_file(filenameY.c_str(), nParticles, y_target);
-write_to_file(filenameQ.c_str(), nParticles, q_diffused);
+		if(writeIntermediate) {
+			filenameX = std::to_string(7 + (i - 1) * 7) + "_X.txt";
+			filenameY = std::to_string(7 + (i - 1) * 7) + "_Y.txt";
+			filenameQ = std::to_string(7 + (i - 1) * 7) + "_Q.txt";
+			filenameV = std::to_string(7 + (i - 1) * 7) + "_V.txt";
+			filenameP = std::to_string(7 + (i - 1) * 7) + "_P.txt";
+			write_to_file(filenameP.c_str(), nParticles, pot_target);
+			write_to_file(filenameX.c_str(), nParticles, x_target);
+			write_to_file(filenameY.c_str(), nParticles, y_target);
+			write_to_file(filenameQ.c_str(), nParticles, q_diffused);
 // compute scalar velocity
-for(size_t i(0); i<nParticles; ++i){
-	vel[i] = sqrt(v_target[i]*v_target[i] + u_target[i]*u_target[i]);
-}
-write_to_file(filenameV.c_str(), nParticles, vel);*/
+			for (size_t i(0); i < nParticles; ++i) {
+				vel[i] = sqrt(v_target[i] * v_target[i] + u_target[i] * u_target[i]);
+			}
+			write_to_file(filenameV.c_str(), nParticles, vel);
+		}
 
 		//! Check if for this iteration the output should be written to a file
 		//! If so; write output to file
-		if(i%writeFreq == 0){
+		if(writeFinal && i%writeFreq == 0){
 			filenameX = std::to_string(i) + "_X.txt";
 			filenameY = std::to_string(i) + "_Y.txt";
 			filenameQ = std::to_string(i) + "_Q.txt";
@@ -237,10 +257,10 @@ write_to_file(filenameV.c_str(), nParticles, vel);*/
 
 	}
 
-	free(x_source); 
-	free(y_source); 
-	free(q_source); 
-	free(rhs); 
+	free(x_source);
+	free(y_source);
+	free(q_source);
+	free(rhs);
 //!	free(x_target); should not be freed, since it has the same address as x_source which has already been freed
 //!	free(y_target); should not be freed, since it has the same address as y_source which has already been freed
 	free(u_target);

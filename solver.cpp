@@ -17,7 +17,7 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
     const int M = sqrt(N);
 
     // Assuming lexicographical ordering of the grid particles
-//#pragma omp parallel for
+#pragma omp parallel for
     for (int i = 0; i < N; ++i) {
         // Check for boundary conditions, velocity at boundaries is 0!
         if(i < M || i%M ==0 || i%M==M-1 || i > (M-1)*M){
@@ -42,7 +42,7 @@ void vorticity(const int N, const value_type dx, value_type * const u, value_typ
     const int n = sqrt(N);
 
     // Assuming lexicographical ordering of the grid particles
-//#pragma omp parallel for
+#pragma omp parallel for
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             value_type u_y;
@@ -80,7 +80,7 @@ void vorticity(const int N, const value_type dx, value_type * const u, value_typ
  */
 void advection(const int N, const value_type dt, value_type * const u, value_type * const v, value_type * const x, value_type * const y){
     // Use forward explicit Euler
-//#pragma omp parallel for
+#pragma omp parallel for
     for (int i = 0; i < N; ++i) {
         x[i] += u[i] * dt;
         y[i] += v[i] * dt;
