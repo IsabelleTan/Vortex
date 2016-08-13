@@ -5,6 +5,7 @@
 #include "solver.h"
 #include <cmath>
 #include <cassert>
+#include <iostream>
 
 
 /*
@@ -15,20 +16,22 @@
 void velocity(const int N, const value_type h, value_type * const u, value_type * const v, value_type * const phi){
     // Compute the number of particles in one row or column of the grid
     const int M = sqrt(N);
+    // TODO take this away
+    assert(M*M==N);
 
-    // Assuming lexicographical ordering of the grid particles
 #pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
-        // Check for boundary conditions, velocity at boundaries is 0!
-        if(i < M || i%M ==0 || i%M==M-1 || i > (M-1)*M){
-            u[i] = 0;
-            v[i] = 0;
-        } else {
-            // Compute the partial derivatives with central differences to obtain the u and v velocities
-            u[i] = (phi[i-M] - phi[i+M])/(2*h);
-            v[i] = (phi[i-1]-  phi[i+1])/(2*h);
+    for (int i = 0; i < M; ++i) {
+        for (int j = 0; j < M; ++j) {
+            if(i==0 || i==M-1 || j==0 || j== M-1){
+                u[i*M+j] = 0;
+                v[i*M+j] = 0;
+            } else {
+                u[i*M+j] = (phi[(i-1)*M + j] - phi[(i+1)*M + j]) /(2*h);
+                v[i*M+j] = (phi[i*M + j-1] - phi[i*M + j+1]) /(2*h);
+            }
+            // TODO take this away
+            assert( (std::isfinite(u[i])) && (std::isfinite(v[i])) );
         }
-        assert( (std::isfinite(u[i])) && (std::isfinite(v[i])) );
     }
 }
 

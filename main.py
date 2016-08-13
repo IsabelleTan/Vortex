@@ -171,7 +171,7 @@ def animateParticles(t0, t_end, writeFreq, folder, colormap = plt.get_cmap("viri
     Writer = anim.writers['ffmpeg']
     writer = Writer(fps=10, metadata=dict(artist='Me'), bitrate=1800)
 
-    ani.save('diffusion_rectangle.mp4', writer=writer)
+    ani.save('single_vortex_p2p_vel_ij.mp4', writer=writer)
 
     print(q_min, q_max)
 
@@ -339,13 +339,13 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
 
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
-t_end = 5
+t_end = 20
 writeFreq = 1
 #foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
-foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/Test_tune"
+foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/Test_velocity_ij"
 
 # Make an animation
-#animateParticles(t_0, t_end, writeFreq, foldername)
+animateParticles(t_0, t_end, writeFreq, foldername)
 
 # Make a scatter pot of the x and y data
 # scatterPlot(foldername, 0, 6, 1)
@@ -358,7 +358,7 @@ foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/
 
 # Plot (x,y), velocities, vorticities and potential at every important computation step of the first iteration
 # (for debugging)
-valuesPlot(foldername, t_0, t_end, writeFreq)
+#valuesPlot(foldername, t_0, t_end, writeFreq)
 
 # Plot the cutoff function
 #nParticles, data = readFile("/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/cut_off.txt")

@@ -109,6 +109,7 @@ void run_simulation(){
 		}
 
 		potential(theta_dist,x_source,y_source,rhs,nParticles,x_target,y_target,nParticles,pot_target);
+		//potential_p2p(theta_dist, x_source, y_source, rhs, nParticles, x_target, y_target, nParticles, pot_target);
 
 //! ---------------------------------------------------------- after potential = 2, 9
 		if(writeIntermediate) {
