@@ -88,7 +88,7 @@ def interpolate(dataX, dataY, dataQ):
 
 
     #Create a new grid
-    grid_x, grid_y = np.mgrid[xmin:xmax:200j, ymin:ymax:200j]
+    grid_x, grid_y = np.mgrid[xmin:xmax:400j, ymin:ymax:400j]
 
     # Interpolate data onto grid
     coordinates = np.column_stack((dataX, dataY))
@@ -203,6 +203,65 @@ def scatterPlot(folder, t_0, t_end, writeFreq):
 
     return
 
+def velFieldPlot(folder, t_0, t_end, iter):
+    # Go to current directory
+    curDir = os.getcwd()
+    os.chdir(curDir)
+
+    # Prepare image
+    fig = plt.figure()
+    fig.add_subplot(111)
+
+    # Read data
+    filenameX = folder + "/" + str(iter) + "_X.txt"
+    filenameY = folder + "/" + str(iter) + "_Y.txt"
+    filenameU = folder + "/" + str(iter) + "_U.txt"
+    filenameV = folder + "/" + str(iter) + "_V.txt"
+    nParticles, X = readFile(filenameX)
+    nParticles, Y = readFile(filenameY)
+    nParticles, U = readFile(filenameU)
+    nParticles, V = readFile(filenameV)
+
+    # Interpolate onto grid
+    U_grid = interpolate(X,Y,U)
+    V_grid = interpolate(X,Y,V)
+
+    # Compute the extent of the coordinates
+    xmin = np.min(X)
+    ymin = np.min(Y)
+    xmax = np.max(X)
+    ymax = np.max(Y)
+
+    # Make an XY grid corresponding to the interpolated locations of U and V
+    Y_grid, X_grid = np.mgrid[xmin:xmax:400j, ymin:ymax:400j]
+
+    # Make a speed grid
+    speed = np.sqrt(U_grid**2 + V_grid**2)
+    print(speed.max())
+    if(speed.max() != 0):
+        lw = 3*speed/speed.max()
+    else:
+        lw = 1
+        print("Maximum speed is 0.")
+
+
+    # Make a streamfunction plot
+    plt.streamplot(X_grid, Y_grid, U_grid.T, V_grid.T,          # data
+                   density=[0.5, 1],
+                   color='DarkRed',
+                   linewidth=lw)
+
+    plt.title('Streamline Plot, at t = 0.00001 sec')
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.show(fig)
+
+
+    return
+
+
+
+
 def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")):
     # Go to the script's directory
     curDir = os.getcwd()
@@ -283,10 +342,10 @@ t_0 = 0
 t_end = 20
 writeFreq = 1
 #foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
-foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/doubleVortex"
+foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/streamlinePlotSingle"
 
 # Make an animation
-animateParticles(t_0, t_end, writeFreq, foldername)
+#animateParticles(t_0, t_end, writeFreq, foldername)
 
 # Make a scatter pot of the x and y data
 # scatterPlot(foldername, 0, 6, 1)
@@ -308,3 +367,7 @@ animateParticles(t_0, t_end, writeFreq, foldername)
 #plt.xlabel("The percentage of the distance of the center of the domain to the boundary")
 #plt.ylabel(("The scaling factor"))
 #plt.show()
+
+# Plot a the streamlines of timestep "iter"
+iter = 1
+velFieldPlot(foldername, t_0, t_end, iter)
