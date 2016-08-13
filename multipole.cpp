@@ -101,7 +101,7 @@ void potential(double theta,
 		evaluate(nodes, s4+3, xsorted, ysorted, qsorted, thetasquared, potdst+i, xdst[i], ydst[i]); /* square # 01 11 */ 
 			
 		// assert that the potential we just computed isn't infinite nor NaN
-		assert(std::isfinite(*(potdst+i)));
+		// assert(std::isfinite(*(potdst+i)));
 		
 	}
 		
