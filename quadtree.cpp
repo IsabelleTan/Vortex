@@ -145,11 +145,12 @@ void build(const value_type* const x, const value_type* const y, const value_typ
  */
 void split(Node* parent, Node* tree, int depth, unsigned int* index, value_type* xsorted, value_type* ysorted, value_type* mass_sorted, int k, int* newNodeIndex){
 // Capture and update the newNodeIndex atomically to avoid race condition
-#pragma omp atomic capture
-    {
+/* In case of omp tasking make this atomic to avoid race conditions
+ * #pragma omp atomic capture
+    {} */
         parent->child_id = *newNodeIndex;
         *newNodeIndex += 4;
-    }
+
 
     // Compute the level of the children
     unsigned int children_level = parent->level +1;

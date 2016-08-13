@@ -104,7 +104,8 @@ void run_simulation(){
 
 		//! Compute the potential at the target locations
 		for(size_t k(0); k<nParticles; ++k){
-			rhs[k] = (-0.5/MPI) * deltaX * deltaX * q_source[k] ;
+			//TODO modified this to contain a tuning parameter
+			rhs[k] = tune*(-0.5/MPI) * deltaX * deltaX * q_source[k] ;
 		}
 
 		potential(theta_dist,x_source,y_source,rhs,nParticles,x_target,y_target,nParticles,pot_target);

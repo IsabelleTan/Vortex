@@ -35,7 +35,6 @@ void velocity(const int N, const value_type h, value_type * const u, value_type 
 /*
  * This function computes the vorticity of the particles by taking the curl of the velocity.
  * Central differences are used for the derivatives and the boundary velocities are assumed to be 0.
- * TODO Maybe the domain is too small to assume that the boundary velocities are 0 (see Guido's mail)
  */
 void vorticity(const int N, const value_type dx, value_type * const u, value_type * const v, value_type * const q){
     // Compute the number of particles in one row or column

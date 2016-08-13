@@ -280,17 +280,17 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
         filenameX = folder + "/" + str(t) + "_X.txt"
         filenameY = folder + "/" + str(t) + "_Y.txt"
         filenameQ = folder + "/" + str(t) + "_Q.txt"
-        filenameV = folder + "/" + str(t) + "_V.txt"
+        filenameVel = folder + "/" + str(t) + "_Vel.txt"
         filenameP = folder + "/" + str(t) + "_P.txt"
         nParticles, dataX = readFile(filenameX)
         nParticles, dataY = readFile(filenameY)
         nParticles, dataQ = readFile(filenameQ)
-        nParticles, dataV = readFile(filenameV)
+        nParticles, dataVel = readFile(filenameVel)
         nParticles, dataP = readFile(filenameP)
 
         # Compute the minimum and maximum q, x and y values
-        v_min = np.min(dataV)
-        v_max = np.max(dataV)
+        v_min = np.min(dataVel)
+        v_max = np.max(dataVel)
         q_min = np.min(dataQ)
         q_max = np.max(dataQ)
         p_min = np.min(dataP)
@@ -305,16 +305,16 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
         print("(x,y) min/max values : ", xmin, xmax, ymin, ymax)
 
         # Interpolate the data
-        data_gridV = interpolate(dataX, dataY, dataV)
+        data_gridVel = interpolate(dataX, dataY, dataVel)
         data_gridQ = interpolate(dataX, dataY, dataQ)
         data_gridP = interpolate(dataX, dataY, dataP)
 
-        plt.imshow(data_gridV.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = v_min, vmax = v_max)
+        plt.imshow(data_gridVel.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = v_min, vmax = v_max)
         plt.title("velocity at step " + str(t))
         plt.colorbar()
         plt.show()
         
-        print("velocity :    ", np.min(dataV), np.max(dataV))
+        print("velocity :    ", np.min(dataVel), np.max(dataVel))
 
         plt.imshow(data_gridQ.T, cmap=colormap, extent=(xmin,xmax,ymin,ymax), vmin = q_min, vmax = q_max)
         plt.title("vorticity at step " + str(t))
@@ -339,10 +339,10 @@ def valuesPlot(folder, t_0, t_end, writeFreq, colormap = plt.get_cmap("viridis")
 
 # Animate from t_0 to t_end (inclusive)
 t_0 = 0
-t_end = 20
+t_end = 5
 writeFreq = 1
 #foldername = "/home/shoshijak/Documents/ETH-FS16/HPC/p-shared"
-foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/streamlinePlotSingle"
+foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/Test_output_files/Test_tune"
 
 # Make an animation
 #animateParticles(t_0, t_end, writeFreq, foldername)
@@ -358,7 +358,7 @@ foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/
 
 # Plot (x,y), velocities, vorticities and potential at every important computation step of the first iteration
 # (for debugging)
-#valuesPlot(foldername, t_0, t_end, writeFreq)
+valuesPlot(foldername, t_0, t_end, writeFreq)
 
 # Plot the cutoff function
 #nParticles, data = readFile("/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/cut_off.txt")
@@ -369,5 +369,5 @@ foldername = "/Users/Isabelle/Documents/Studie/Master/Vakken/SS16/HPCSE2/Vortex/
 #plt.show()
 
 # Plot a the streamlines of timestep "iter"
-iter = 1
-velFieldPlot(foldername, t_0, t_end, iter)
+#iter = 1
+#velFieldPlot(foldername, t_0, t_end, iter)

@@ -20,7 +20,6 @@ struct Node
     value_type r; 				// the radius of the smallest circle bounding the node with center at the center of mass of the node
     value_type* rxps; 			// real      part of p2e expansion
     value_type* ixps; 			// imaginary part of p2e expansion
-    
 };
 
 /*

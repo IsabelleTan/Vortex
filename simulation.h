@@ -8,16 +8,17 @@
 
 // PI
 #define MPI 3.141593
+#define tune  0.80
 
 // Particles
-#define nParticles 160000
-#define deltaX 0.05
+#define nParticles 40000
+#define deltaX 0.1
 #define viscosity 0.1
 
 // Time
 #define t_0 0
 #define deltaT 0.00001
-#define timeIterations 1
+#define timeIterations 5
 #define writeFreq 1
 
 // Initial Condition

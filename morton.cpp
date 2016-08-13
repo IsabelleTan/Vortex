@@ -105,7 +105,7 @@ void sort(const int N, unsigned int* index, unsigned int* keys) 																
 	// index	is now sorted in ascending order
 	// keys		contains permutation that sorts "index".
 	
-	/// memory bandwidth is the limiting ressource
+	/// memory bandwidth is the limiting resource
 	
 	/// can I avoid the "keys" and "temp" array 
 	/// by just putting the x and y in a 3-uple with the indices and sorting that? 
@@ -123,6 +123,7 @@ void sort(const int N, unsigned int* index, unsigned int* keys) 																
 
 	__gnu_parallel::sort(temp, temp+N);						// sort by ascending indices. Alongside this, the keys get automatically sorted as well 
 
+	//TODO You only need to fill the keys array I think.
 	#pragma omp parallel for	
 	for(size_t i=0; i<N; ++i){
 		index[i] = temp[i].first;							/// do I actually need to reorder "index"? It is not reused in "void reorder"... is it reused somewhere else? If not, I can probably delete this line.
