@@ -1,0 +1,486 @@
+\documentclass[a4paper,12pt,twoside]{article}
+
+\usepackage[english]{babel}	
+\usepackage[utf8x]{inputenc} 
+\usepackage[T1]{fontenc}
+
+\usepackage{graphicx}
+\usepackage{float, caption, subcaption}
+
+\usepackage[colorlinks,bookmarks=false,linkcolor=blue,urlcolor=blue]{hyperref}
+\usepackage{array, multirow, tabularx}
+\usepackage[table]{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+
+\paperheight=297mm
+\paperwidth=210mm
+
+\setlength{\textheight}{235mm}
+\setlength{\topmargin}{-1.2cm}
+\setlength{\textwidth}{15cm}
+\setlength{\oddsidemargin}{0.56cm}
+\setlength{\evensidemargin}{0.56cm}
+
+\pagestyle{plain}
+
+% quelques abreviations utiles
+\def \be {\begin{equation}}
+\def \ee {\end{equation}}
+\def \dd  {{\rm d}}
+
+\newcommand{\mail}[1]{{\href{mailto:#1}{#1}}}
+\newcommand{\ftplink}[1]{{\href{ftp://#1}{#1}}}
+\newcommand{\bigO}[1]{\ensuremath{\mathop{}\mathopen{}\mathcal{O}\mathopen{}\left(#1\right)}}
+   \newcommand{\smallO}[1]{\ensuremath{\mathop{}\mathopen{}{\scriptstyle\mathcal{O}}\mathopen{}\left(#1\right)}}
+
+
+\begin{document}
+\title{Interaction of two Lamb-Oseen vertices
+\\ \bigskip {\large HPCSE II project report (FS16)}}
+\date{\today}
+\author{Alice Shoshana Jakobovits {\small with Isabelle Tan}}
+\maketitle
+\tableofcontents % Table des matieres
+
+% Quelques options pour les espacements entre lignes, l'identation 
+% des nouveaux paragraphes, et l'espacement entre paragraphes
+\baselineskip=16pt
+\parindent=15pt
+\parskip=5pt
+
+\newpage
+
+\section{Introduction} \label{sec:intro}
+
+The goal of our project is to simulate two interacting Lamb-Oseen vertices, using a vortex method in an unbounded domain. In a second step, we will optimize this simulation and analyze the performance of our code.
+
+Solving: cf notes 
+	
+In this report, we will first list the kernels in our program, then present the results of our simulation. Next, we will discuss the performance metrics of selected kernels, and lastly, suggest a few further improvements.
+
+\section{Overview of kernels} \label{sec:overviewkernels}
+
+A list of kernels is now presented in order to give an overview of the project as well as for future reference. All of these we have coded ourselves, except for Python visualization inspired by scripts found on the internet. 
+
+\begin{description}
+\item[Multipole solver] solves the Poisson equation given in \ref{eq:Poisson} on a target grid
+\begin{description}
+	\item[Quadtree] build the quadtree 
+	\begin{description}
+		\item[preparation]
+			\begin{description}
+			\item[extent] compute the boundaries of the square containing all particles 
+			\item[morton] compute the morton index of each particle 
+			\item[sort] sort the morton indices
+			\item[reorder] reorder the particles according to morton indices 
+			\end{description}
+		\item[build] partition the domain recursively and assign particles to each node 
+	\end{description}
+	\item[Potential] compute the potential on a target grid 
+		\begin{description}
+		\item[p2e] particle to node expansion 
+		\item[e2p] expansion to particle 
+		\item[p2p] particle-to-particle interaction 
+		\end{description}
+\end{description}
+\item[Velocity] compute the velocity (cf \ref{eq:vel})
+\item[Vorticity] compute the vorticiy (cf \ref{eq:vort})
+\item[Diffusion] perform a diffusion step using the ADI scheme (cf \ref{eq:diff})
+\item[Advection] perform the advection step (cf \ref{eq:adv})
+\end{description}
+
+
+\section{Results}
+
+There exists an analytical solution for ... . give equation, which allows us to test 
+
+Unfortunately, we have not succeeded in implementing a . Let us point out the steps of the simulation that do yield satisfying results and those that still present problems, by presenting the step by step frames of one iteration of a simple simulation. The parameters of this simulation are given in the appendix \ref{sec:animparam}. 
+
+Show step / step of iteration, comment: what makes sense, what is incorrect. Tests performed. Diff with analytical solution 
+Give parameters!!
+
+ref to Video of diffusion 
+
+P2E: convergence plots wrt orders
+
+
+\paragraph{Initial Conditions}
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width =\textwidth]{frames/init}
+		\caption{before}
+		%\label{fig:ComparClassique:x:superpos}
+		\end{subfigure}
+		~
+		\begin{subfigure}[b]{0.48\textwidth}
+			\includegraphics[width=\textwidth]{frames/potential}
+			\caption{after}
+			%		\label{fig:ComparClassique:x:compar}
+		\end{subfigure}
+\end{figure}
+
+\paragraph{Potential}
+
+\begin{figure}
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width =\textwidth]{frames/velocity}
+		%\caption{...}
+		%\label{fig:ComparClassique:P:superpos}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{frames/vorticity}
+		%		\caption{...}
+		%		\label{fig:ComparClassique:P:compar}
+	\end{subfigure}
+\end{figure}
+
+\paragraph{Velocity}
+
+\begin{figure}
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width =\textwidth]{frames/velocity}
+		%\caption{...}
+		%\label{fig:ComparClassique:P:superpos}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{frames/vorticity}
+		%		\caption{...}
+		%		\label{fig:ComparClassique:P:compar}
+	\end{subfigure}
+\end{figure}
+
+\paragraph{Vorticity} 
+
+\begin{figure}
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width =\textwidth]{frames/velocity}
+		%\caption{...}
+		%\label{fig:ComparClassique:P:superpos}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{frames/vorticity}
+		%		\caption{...}
+		%		\label{fig:ComparClassique:P:compar}
+	\end{subfigure}
+\end{figure}
+
+\paragraph{Diffusion}
+
+\begin{figure}
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width =\textwidth]{frames/velocity}
+		%\caption{...}
+		%\label{fig:ComparClassique:P:superpos}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{frames/vorticity}
+		%		\caption{...}
+		%		\label{fig:ComparClassique:P:compar}
+	\end{subfigure}
+\end{figure}
+
+\paragraph{Advection}
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width =\textwidth]{frames/init}
+		\caption{t = 0}
+		%\label{fig:ComparClassique:x:superpos}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{frames/potential}
+		\caption{t = X s.}
+		%		\label{fig:ComparClassique:x:compar}
+	\end{subfigure}
+	\caption{vorticity at two different time steps}
+	\label{fig:onetimestep}
+\end{figure}
+
+
+
+\section{Performance analysis for selected kernels} \label{sec:perfanal}
+
+Even though our program does not quite run as we wanted, let us still analyze its performance. To do so, all performance metrics were measured using a personal computer, the characteristics thereof are given in table \ref{tab:parametersPC}.
+
+\begin{table}{H}
+\begin{center}\begin{tabular}{|l|c|} \hline
+number of cores & 2 \\ \hline
+number of threads & 4 \\ \hline
+clock rate & 2.6 GHz \\ \hline
+\end{tabular}\end{center}
+\caption{characteristics of the machine on which presented simulations were run}
+\label{tab:parametersPC}
+\end{table}
+
+These characteristics allow us to compute the theoretical peak performance of this machine: 
+
+\begin{equation}
+	PP_{theoretical} = 
+	\underbrace{256}_\text{SIMD width} \cdot
+	\underbrace{2.6}_\text{clock rate} \cdot
+	\underbrace{4}_\text{threads} \cdot 
+	\underbrace{2}_\text{FMA}
+	= 
+	... UNITS
+	\label{eq:peakperf}
+\end{equation}
+
+Let us note that this performance is overly optimistic, since the 4 threads the machine can run are mapped onto 2 cores, not 4, and as such do not perform as well as 4 threads mapped onto 4 cores.
+
+In the rest of this section, we will present a performance analysis for selected kernels from our program, starting with the quadtree building. 
+
+\subsection{Quadtree building} \label{sec:perf:quadtree}
+
+As presented in section \ref{sec:overviewkernels}, the preparation of the building of the quadtree is composed of 4 kernels: extent, morton, sort and reorder.
+
+\begin{figure}[H]
+
+\end{figure}
+Timings averaged over 100 samples 
+
+
+These kernels are quite straightforward to parallelize, as they work on independent data. For the "sort"-kernel, we used the sorting function \_\_gnu\_parallel::sort() from the <parallel/algorithm> library.
+
+morton: implemented with bitwise operations: very fast
+
+of the following 4 functions, Sorting takes most of the time. Reordering is also quite time-consuming as it requires irregular memory accesses that produce frequent cache-misses.
+
+For the common conventional sorting algorithms (merge-, quick- sorts) the number of comparisons is on the same order as the number of memory moves. As we use 8 bytes per element (Morton index and index in the unsorted array), comparison-over-byte ratio is no more than 1. Therefore we can conclude that memory bandwidth is the limiting resource for the sorting. assuming that STL performs mergesort or quicksort internally, the expected number of memory transfers is about 2N log2 N, and this corresponds to 2N log2 N bytes of memory traffic (2 is here because one transfer consists of one read and one write)
+
+vectorize?
+SORT difficult: there are very irregular memory accesses, but some implementations exist 
+
+REORDER impossible: irregular data access patterns 
+
+BUILD 
+write some blabla. It's a challenge, not straightforward //izing bc 
+parallelize with OpenMP tasking (see more details in exercises) . Similarly to sorting, memory bandwidth is the limiting resource for building the tree.
+
+\subsection{Poisson solver}
+
+3x do not expose TLP in these 3 kernels
+because we will expose it in potential()
+E2P computed during building of the tree to save time
+
+\paragraph{potential target eval (computation of stream function onto grid}
+
+ACCURACY 
+Testing POTENTIAL with 216064 sources and 354 targets (theta 5.000e-01)...
+ * Comparing our potential to our p2p
+ * l-infinity errors: 1.230e-08 (absolute) 5.733e-04 (relative)
+ * l-1 errors: 6.798e-07 (absolute) 8.700e-04 (relative)
+
+ALGORITHM COMPLEXITY
+speedup with # threads 
+
+mathematical scaling for target eval: 
+ours, theoretically O(nlogn), why? 
+!! our p2e is in build: not taken into account in this timing, but since p2e and e2p are nlogn (cf BG p.18), only changes by a constant factor
+naive eval: O(n²)
+#nodes = 4^depth 
+choose depth = nlogn 
+tree build: loop over particles, assign to node = nlogn 
+
+embarrassingly parallel
+Assuming that ... we start on level 2 of tree to spare useless checks 
+
+strong scaling
+
+
+\paragraph{P2E}
+Vectorized General layout: SoA.
+not //ized bc in potential which is // ized itself. We wanna avoid nested //ism 
+operational intensity:  For each source particle, the P2E needs to process 3 double precision numbers (i.e. 3*8 = 24 bytes) and perform 12 floating point operations per expansion. Therefore, the operational intensity of the kernel is equal to 12*p/24, where p is the order of expansions.
+
+For the relation between the accuracy of the expansions and the order of the expansions, see the lecture notes about the multipole expansion (by Greengard), at the bottom of page 8. Complexity is O(N*log(N)) ?
+
+compare vectorized by hand and non-vectorized in a scaling plot with n 
+take from Isabelle's excel sheet 
+
+\subsection{Velocity and vorticity computation}
+
+independent data, no race conditions: straightforward parallelizing. Speedup = 
+
+
+Kernel
+Speed-up
+morton()
+2.24
+p2e()
+1.32
+potential()
+2.18
+velocity()
+1.85
+vorticity()
+1.51
+advection()
+1.87
+
+\subsection{Diffusion}
+
+Particle Strength Exchange doesn't make sense because we're on a grid. 
+
+ref to video of diffusion 
+
+% read PDF on ADI diffusion 
+
+what are the challenges in // izing this? 
+
+\subsection{Overview / running an entire simulation and bottleneck}
+
+pie chart: which kernel takes the most time? Why? How does that change with n ? 
+
+\section{Further improvements}
+
+fix that bug and actually visualize
+ 
+parallelize tree building
+
+adaptive time-step using Lagrangian time-step criterion 
+
+work on optimization: use BLAS / Eigen 
+
+\section{Conclusion}
+approach an optimization pblm both from perspective of code (techinques...) and math/phys (fmm).
+Collab code
+exp in //, asking ourselves the right questions
+surprized at ratio time coding / time debugging 
+learned most from debugging
+
+\section{Appendix}
+
+\subsection{Parameters for the simulation shown in \ref{sec:results}} \label{sec:animparam}
+
+\begin{center}\begin{tabular}{|l|c|} \hline
+	number of particles & 40000 \\ \hline
+	$\Delta$x & 0.1 \\ \hline
+	viscosity $\nu$ & 0.1 \\ \hline
+	$\Delta$T & 0.0001 \\ \hline
+	number of iterations &  5 \\ \hline
+	core radius $\sigma_0$ & 1 \\ \hline
+	circulation $\Gamma$ & 10 \\ \hline
+	depth of tree & 16 \\ \hline
+	$k_{leaf}$ &  32 \\ \hline
+	expansion order & 12 \\ \hline
+	$\theta_{distance} & 0.5 \\ \hline
+\end{tabular}\end{center}
+	
+
+
+
+\section{LATEX memo}
+\begin{equation}
+\psi(x,0) = \text{C}\cdot\text{exp}(ik_0x)\cdot\text{exp}\left( \frac{-(x-x_0)^2}{2\sigma^2} \right)   
+~~, ~~~~~~k_0 = \frac{2 n\pi}{L}
+\label{eq:th:OndeInitGauss}
+\end{equation}
+
+\begin{equation}
+V(x) = \text{min}
+\left( 
+V_0\frac{\left( x-\Delta \right)^2}{\left( x_R - x_L \right)^2}  , 
+V_0\frac{\left( x+\Delta \right)^2}{\left( x_R - x_L \right)^2}  
+\right)
+\label{eq:th:potentiel}
+\end{equation}
+
+\begin{equation}
+i \hbar \frac{\partial \psi(\vec{x},t)}{\partial t}
+=
+-\frac{\hbar^2}{2m}\nabla^2\psi(\vec{x},t)
++
+V(\vec{x})\psi(\vec{x},t)
+\label{eq:th:Schrodinger}
+\end{equation}
+
+\begin{equation}
+\psi(x,t) 
+=
+\frac{1}{\sqrt{2\pi}}
+\int_{-\infty}^{+\infty}
+\hat{\psi}(k)
+\text{exp}\left( i(kx-\omega(k)t \right)
+dk
+\label{eq:th:Schrodinger:SolGen}
+\end{equation}
+
+\begin{equation}
+H[\psi] = -\frac{\hbar^2}{2m}\nabla^2\psi + V\psi
+\label{eq:Hamiltonien:Def}
+\end{equation}
+
+\ref{eq:th:Schrodinger}
+
+\begin{equation}
+i\hbar\frac{\partial \psi}{\partial t} = H\psi
+\label{eq:th:Schrodinger:avecH}
+\end{equation}
+et sa solution peut s'écrire sous la forme
+\begin{equation}
+\psi(\vec{x},t) =
+\underbrace{\left( e^{-\frac{i}{\hbar}tH} \right)}_\text{propagateur}
+\underbrace{\psi(\vec{x}, 0)}_\text{cond. initiale}
+\label{eq:th:Schrodinger:sol:avecH}
+\end{equation}
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width =\textwidth]{graphes/conv_deltax.png}
+\caption{convergence qualitative de l'incertitude sur la position pour différentes valeurs de $\Delta t$}
+\label{fig:convdeltax}
+\end{subfigure}
+~
+\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{graphes/conv_p.png}
+				\caption{convergence qualitative de la quantité de mouvement pour différentes valeurs de $\Delta t$}
+		\label{fig:convp}
+\end{subfigure}
+
+
+\caption{}
+\label{fig:conv1}
+\end{figure}
+
+
+
+\begin{equation}
+\left\lbrace
+\begin{array}{r c l} 
+x \leq 200 &~~~~,~~& V(x) = 1.0 \\
+200 \geq x \leq 200 &~~~~,~~& V(x) = 1.0 + \frac{b(x-200)}{40} \\
+x \geq 240 &~~~~,~~& V(x) = 1.0 + b \\
+\end{array}
+\right.
+\label{eq:PotVar:FormeMarche}
+\end{equation}
+
+\section{References}
+
+% project description 
+% 2x printed notes 
+% class lecture notes 
+
+%% Pour faire éventuellement une bibliographie : 
+%\begin{thebibliography}{99}
+%\bibitem{Duschmoll_PRL} 
+ %A. Duschmoll, R. Schnok, {\it Phys. Rev. Lett.} {\bf 112} 010015 (2010)
+%\bibitem{Abi_Science}
+ %D.D. Abi, {\it et al}, {\it Science} {\bf 22} 1242 (2007)
+%\end{thebibliography}
+
+\end{document} %%%% THE END %%%%
+
+
